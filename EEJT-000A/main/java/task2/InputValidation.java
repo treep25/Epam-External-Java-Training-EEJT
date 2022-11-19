@@ -17,7 +17,7 @@ public class InputValidation {
     }
     public static boolean isExtValid(String ext){
         if(ext != null
-                && Pattern.matches("[.]{1,}[\\D]+", ext)){
+                && Pattern.matches("[.]{1}[\\D]+", ext)){
             return true;
         }
         return false;

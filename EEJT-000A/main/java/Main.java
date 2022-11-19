@@ -11,15 +11,17 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         Scanner scanner = new Scanner(System.in);
         Scanner scanner1 = new Scanner(System.in);
-        FileView fileView = new FileView("UTF8.txt");
-
         System.out.println("--------------------TASK1--------------------");
-        System.out.println(fileView.readFile());
-        System.out.println("---------------------------------------------");
-
+        FileView fileView = new FileView("UTF8.txt");
+        List<String> text = fileView.readFile();
+        for (String a:
+             text) {
+                System.out.println(a);
+        }
+       System.out.println("---------------------------------------------");
+        System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         System.out.println("--------------------TASK2--------------------");
         Parameters parameters = new Parameters();
         System.out.println("> искать по имени файла ? (0/1)");

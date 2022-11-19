@@ -37,7 +37,9 @@ public class SearchingController {
                 SearchByParam newSearchByParam = searchByParam;
                 searchByParam = new SearchByName(newSearchByParam);
             }
-            return searchByParam.search(parameters, list);
+            if(searchByParam != null){
+                return searchByParam.search(parameters, list);
+            }
         }
         return List.of("Вы не ввели ни одного параметра!");
     }
