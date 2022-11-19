@@ -21,13 +21,19 @@ public class FileView {
         stringBuilder = new StringBuilder();
     }
 
-    public String readFile() {
-        Path path = Paths.get(fileName);
-        try (Stream<String> stream = Files.lines(path, StandardCharsets.UTF_8)) {
-            stream.forEach(stringBuilder::append);
+    public List<String> readFile() {
+        File file = new File(fileName);
+        List<String> list = new ArrayList<>();
+        try (FileReader fr = new FileReader(file);
+             BufferedReader bufferedReader = new BufferedReader(fr)) {
+            String line = bufferedReader.readLine();
+            while (line != null) {
+                list.add(line);
+                line = bufferedReader.readLine();
+            }
         } catch (IOException e) {
-            e.printStackTrace();
-        }//TODO big files
-        return stringBuilder.toString();
+            return List.of("Данного файла не существует");
+        }
+        return list;
     }
 }
