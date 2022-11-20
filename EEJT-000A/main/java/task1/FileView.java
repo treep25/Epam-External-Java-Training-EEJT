@@ -28,8 +28,9 @@ public class FileView {
                 list.add(line);
                 line = bufferedReader.readLine();
             }
-        } catch (IOException e) {
-            return List.of("Данного файла не существует");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return List.of("Данного файла не существует: ", ex.getMessage());
         }
         return list;
     }
