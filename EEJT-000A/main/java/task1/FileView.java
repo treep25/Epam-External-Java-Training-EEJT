@@ -14,18 +14,15 @@ import java.util.stream.Stream;
 public class FileView {
 
     private String fileName;
-    private StringBuilder stringBuilder;
 
     public FileView(String fileName) {
         this.fileName = "EEJT-000A/" + fileName;
-        stringBuilder = new StringBuilder();
     }
 
     public List<String> readFile() {
         File file = new File(fileName);
         List<String> list = new ArrayList<>();
-        try (FileReader fr = new FileReader(file);
-             BufferedReader bufferedReader = new BufferedReader(fr)) {
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
             String line = bufferedReader.readLine();
             while (line != null) {
                 list.add(line);
