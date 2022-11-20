@@ -9,24 +9,15 @@ import java.util.regex.Pattern;
 
 public class InputValidation {
     public static boolean isNameValid(String name){
-        if(name != null
-                && name.matches("[^!@#$%^&*()+= ~]+")) {
-            return true;
-        }
-        return false;
+        return name != null
+                && name.matches("[^!@#$%^&*()+= ~]+");
     }
     public static boolean isExtValid(String ext){
-        if(ext != null
-                &&ext.matches("[.]{1}[\\D]+")){
-            return true;
-        }
-        return false;
+        return ext != null
+                && ext.matches("[.]{1}[\\D]+");
     }
     public static boolean isSizeValid(String sizeMin , String sizeMax){
-        if((sizeMax != null&&sizeMin!=null)
-                && (Integer.parseInt(sizeMax)-Integer.parseInt(sizeMin) >0)&& Integer.parseInt(sizeMin)>0){
-            return true;
-        }
-        return false;
+        return (sizeMax != null && sizeMin != null)
+                && (Integer.parseInt(sizeMax) - Integer.parseInt(sizeMin) > 0) && Integer.parseInt(sizeMin) > 0;
     }
 }
