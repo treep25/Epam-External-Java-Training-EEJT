@@ -1,12 +1,13 @@
 package task2;
 
 public class Parameters {
-    private String name ;
-    private String ext ;
+    private String name;
+    private String ext;
     private String sizeLess;
     private String sizeMore;
     private String dateLess;
     private String dateMore;
+
     public Parameters() {
     }
 
