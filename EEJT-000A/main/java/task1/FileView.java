@@ -23,10 +23,8 @@ public class FileView {
         File file = new File(fileName);
         List<String> list = new ArrayList<>();
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
-            String line = bufferedReader.readLine();
-            while (line != null) {
-                list.add(line);
-                line = bufferedReader.readLine();
+            while (bufferedReader.ready()) {
+                list.add(bufferedReader.readLine());
             }
         } catch (IOException ex) {
             ex.printStackTrace();
