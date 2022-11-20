@@ -21,21 +21,17 @@ public class SearchingController {
             }
             if (parameters.getSizeMore() != null
                     && parameters.getSizeLess() != null) {
-                SearchByParam newSearchByParam = null;
-                searchByParam = new SearchBySizeChange(newSearchByParam);
+                searchByParam = new SearchBySizeChange(searchByParam);
             }
             if ((parameters.getDateMore()) != null
                     && (parameters.getDateLess()) != null) {
-                SearchByParam newSearchByParam = searchByParam;
-                searchByParam = new SearchByDateChange(newSearchByParam);
+                searchByParam = new SearchByDateChange(searchByParam);
             }
             if ((parameters.getExt()) != null) {
-                SearchByParam newSearchByParam = searchByParam;
-                searchByParam = new SearchByExtension(newSearchByParam);
+                searchByParam = new SearchByExtension(searchByParam);
             }
             if ((parameters.getName()) != null) {
-                SearchByParam newSearchByParam = searchByParam;
-                searchByParam = new SearchByName(newSearchByParam);
+                searchByParam = new SearchByName(searchByParam);
             }
             if(searchByParam != null){
                 return searchByParam.search(parameters, list);
