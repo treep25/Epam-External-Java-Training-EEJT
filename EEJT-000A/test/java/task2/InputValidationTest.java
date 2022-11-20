@@ -4,9 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static task2.InputValidation.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class InputValidationTest {
     private List<String> trueListName = List.of("name1","nNAME1_Q","qwewr123");
@@ -21,20 +19,20 @@ class InputValidationTest {
 
     @Test
     void isNameValidTest() {
-        trueListName.forEach(x1->assertTrue(isNameValid(x1)));
-        falseListName.forEach(x1->assertFalse(isNameValid(x1)));
+        trueListName.forEach(x1->assertTrue(InputValidation.isNameValid(x1)));
+        falseListName.forEach(x1->assertFalse(InputValidation.isNameValid(x1)));
     }
 
     @Test
     void isExtValidTest() {
-        trueListExt.forEach(x1->assertTrue(isExtValid(x1)));
-        falseListExt.forEach(x1->assertFalse(isExtValid(x1)));
+        trueListExt.forEach(x1->assertTrue(InputValidation.isExtValid(x1)));
+        falseListExt.forEach(x1->assertFalse(InputValidation.isExtValid(x1)));
     }
 
     @Test
     void isSizeValidTest() {
-        assertTrue(isSizeValid(trueSizeMin,trueSizeMax));
-        assertFalse(isSizeValid(falseSizeMin,falseSizeMax));
-        assertFalse(isSizeValid(falseSizeMin1,falseSizeMax));
+        assertTrue(InputValidation.isSizeValid(trueSizeMin,trueSizeMax));
+        assertFalse(InputValidation.isSizeValid(falseSizeMin,falseSizeMax));
+        assertFalse(InputValidation.isSizeValid(falseSizeMin1,falseSizeMax));
     }
 }
