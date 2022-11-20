@@ -19,8 +19,8 @@ public class SearchingController {
             if (isNull(list)) {
                 list = new ArrayList<>();
             }
-            if ((parameters.getSizeMore()) != null
-                    && (parameters.getSizeLess()) != null) {
+            if (parameters.getSizeMore() != null
+                    && parameters.getSizeLess() != null) {
                 SearchByParam newSearchByParam = null;
                 searchByParam = new SearchBySizeChange(newSearchByParam);
             }
