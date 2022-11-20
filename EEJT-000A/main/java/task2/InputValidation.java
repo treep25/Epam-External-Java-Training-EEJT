@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 public class InputValidation {
     public static boolean isNameValid(String name){
         if(name != null
-                && Pattern.matches("[^!@#$%^&*()+= ~]+", name)){
+                && name.matches("[^!@#$%^&*()+= ~]+")) {
             return true;
         }
         return false;
