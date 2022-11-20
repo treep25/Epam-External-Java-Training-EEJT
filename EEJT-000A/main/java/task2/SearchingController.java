@@ -15,7 +15,7 @@ public class SearchingController {
     }
 
     public List<String> doChain(List<String> list) {
-        if (!isNull(parameters)) {
+        if (parameters == null) {
             if (isNull(list)) {
                 list = new ArrayList<>();
             }
