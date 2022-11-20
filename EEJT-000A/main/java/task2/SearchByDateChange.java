@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 public class SearchByDateChange implements SearchByParam {
 
     private SearchByParam searchByParam;
-    private final String Patt = "yyyy-MM-dd HH:mm:ss";
+    private final String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
 
     public SearchByDateChange(SearchByParam searchByParam) {
         this.searchByParam = searchByParam;
@@ -33,7 +33,7 @@ public class SearchByDateChange implements SearchByParam {
                     for (File f :
                             fileList) {
                         Date date = new Date(f.lastModified());
-                        SimpleDateFormat sd = new SimpleDateFormat(Patt);
+                        SimpleDateFormat sd = new SimpleDateFormat(DATE_PATTERN);
                         list.add(dir + File.separator + f.getName() + " (" + sd.format(date) + ")");
                     }
                 } else {
@@ -49,7 +49,7 @@ public class SearchByDateChange implements SearchByParam {
                 if (file.exists()) {
                     if (isFileMatches(file,parameters)) {
                         Date date = new Date(file.lastModified());
-                        SimpleDateFormat sd = new SimpleDateFormat(Patt);
+                        SimpleDateFormat sd = new SimpleDateFormat(DATE_PATTERN);
                         list1.add(dir + File.separator + file.getName() + " (" + sd.format(date) + ")" );
                     }
                 }
