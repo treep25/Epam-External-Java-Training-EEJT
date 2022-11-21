@@ -66,7 +66,7 @@ public class Main {
             parameters.setSizeMore(more);
         }
         SearchingController searchingController = new SearchingController(parameters);
-        List<String> list = searchingController.doChain(new ArrayList<>());
+        List<String> list = searchingController.doChain();
         list.forEach(System.out::println);
         System.out.println("---------------------------------------------");
     }
