@@ -2,7 +2,6 @@ package task2;
 
 import java.io.File;
 import java.util.List;
-import java.util.Locale;
 import java.util.Objects;
 
 public class SearchByName implements SearchByParam {
@@ -13,7 +12,7 @@ public class SearchByName implements SearchByParam {
         this.searchByParam = searchByParam;
     }
 
-    private boolean isNextChain (SearchByParam searchByParam){
+    private boolean hasNextChain(SearchByParam searchByParam){
         return searchByParam != null;
     }
 
@@ -34,7 +33,7 @@ public class SearchByName implements SearchByParam {
         } else {
             list.add(dir + ": " + "Данная папка вероятно не сущетсвует");
         }
-        if(isNextChain(searchByParam)){
+        if(hasNextChain(searchByParam)){
             return searchByParam.search(parameters,list);
         }
         return list;

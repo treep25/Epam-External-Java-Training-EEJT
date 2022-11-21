@@ -26,7 +26,7 @@ public class SearchBySizeChange implements SearchByParam {
                 && file.length() <= Integer.parseInt(parameters.getSizeMore());
     }
 
-    private boolean isNextChain(SearchByParam searchByParam) {
+    private boolean hasNextChain(SearchByParam searchByParam) {
         return searchByParam != null;
     }
 
@@ -65,7 +65,7 @@ public class SearchBySizeChange implements SearchByParam {
             }
             list = list1;
         }
-        if (isNextChain(searchByParam)) {
+        if (hasNextChain(searchByParam)) {
             return searchByParam.search(parameters, list);
         }
         return list;

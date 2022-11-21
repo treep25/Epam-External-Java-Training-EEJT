@@ -14,7 +14,7 @@ public class SearchByDateChange implements SearchByParam {
     public SearchByDateChange(SearchByParam searchByParam) {
         this.searchByParam = searchByParam;
     }
-    private boolean isNextChain (SearchByParam searchByParam){
+    private boolean hasNextChain(SearchByParam searchByParam){
         return searchByParam != null;
     }
     private boolean isFileMatches(File file , Parameters parameters){
@@ -56,7 +56,7 @@ public class SearchByDateChange implements SearchByParam {
             });
             list = list1;
         }
-        if(isNextChain(searchByParam)){
+        if(hasNextChain(searchByParam)){
             return searchByParam.search(parameters,list);
         }
         return list;

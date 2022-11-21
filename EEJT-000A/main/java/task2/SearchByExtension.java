@@ -11,7 +11,7 @@ public class SearchByExtension implements SearchByParam {
     public SearchByExtension(SearchByParam searchByParam) {
         this.searchByParam = searchByParam;
     }
-    private boolean isNextChain (SearchByParam searchByParam){
+    private boolean hasNextChain(SearchByParam searchByParam){
         return searchByParam != null;
     }
 
@@ -36,7 +36,7 @@ public class SearchByExtension implements SearchByParam {
         }else{
             list = list.stream().filter(x1->x1.endsWith(parameters.getExt().toLowerCase())).collect(Collectors.toList());
         }
-        if(isNextChain(searchByParam)){
+        if(hasNextChain(searchByParam)){
             return searchByParam.search(parameters,list);
         }
         return list;
