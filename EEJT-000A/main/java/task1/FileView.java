@@ -27,7 +27,6 @@ public class FileView {
                 list.add(bufferedReader.readLine());
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
             return List.of("Данного файла не существует: ", ex.getMessage());
         }
         return list;
