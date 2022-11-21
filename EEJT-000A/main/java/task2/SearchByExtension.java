@@ -15,7 +15,7 @@ public class SearchByExtension implements SearchByParam {
                 throw new FileNotFoundException();
             }
         } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e.getMessage());
         }
         this.searchByParam = searchByParam;
     }
