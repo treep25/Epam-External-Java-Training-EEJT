@@ -14,15 +14,17 @@ public class SearchByDateChange implements SearchByParam {
     public SearchByDateChange(SearchByParam searchByParam) {
         this.searchByParam = searchByParam;
     }
-    private boolean hasNextChain(SearchByParam searchByParam){
+
+    private boolean hasNextChain(SearchByParam searchByParam) {
         return searchByParam != null;
     }
-    private boolean isFileMatches(File file , Parameters parameters){
+
+    private boolean isFileMatches(File file, Parameters parameters) {
         return file.lastModified() <= Timestamp.valueOf(parameters.getDateMore()).getTime()
-                && file.lastModified() >= Timestamp.valueOf(parameters.getDateLess()).getTime() ;
+                && file.lastModified() >= Timestamp.valueOf(parameters.getDateLess()).getTime();
     }
 
-    private List<String> isTheFileFit(List<File> fileList , Parameters parameters) {
+    private List<String> isTheFileFit(List<File> fileList, Parameters parameters) {
         List<String> list = new ArrayList<>();
         fileList = fileList.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
         for (File f :
@@ -33,6 +35,7 @@ public class SearchByDateChange implements SearchByParam {
         }
         return list;
     }
+
     @Override
     public List<String> search(Parameters parameters, List<String> list) {
         if (list.isEmpty()) {
@@ -52,17 +55,17 @@ public class SearchByDateChange implements SearchByParam {
             list.forEach(x1 -> {
                 File file = new File(x1);
                 if (file.exists()) {
-                    if (isFileMatches(file,parameters)) {
+                    if (isFileMatches(file, parameters)) {
                         Date date = new Date(file.lastModified());
                         SimpleDateFormat sd = new SimpleDateFormat(DATE_PATTERN);
-                        list1.add(dir + File.separator + file.getName() + " (" + sd.format(date) + ")" );
+                        list1.add(dir + File.separator + file.getName() + " (" + sd.format(date) + ")");
                     }
                 }
             });
             list = list1;
         }
-        if(hasNextChain(searchByParam)){
-            return searchByParam.search(parameters,list);
+        if (hasNextChain(searchByParam)) {
+            return searchByParam.search(parameters, list);
         }
         return list;
     }

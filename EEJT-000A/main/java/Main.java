@@ -16,11 +16,11 @@ public class Main {
         System.out.println("--------------------TASK1--------------------");
         FileView fileView = new FileView("UTF8.txt");
         List<String> text = fileView.readFile();
-        for (String a:
-             text) {
-                System.out.println(a);
+        for (String a :
+                text) {
+            System.out.println(a);
         }
-       System.out.println("---------------------------------------------");
+        System.out.println("---------------------------------------------");
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         System.out.println("--------------------TASK2--------------------");
         Parameters parameters = new Parameters();
@@ -28,7 +28,7 @@ public class Main {
         if (scanner.nextInt() == 1) {
             System.out.println("Введите имя файла");
             String name = scanner1.nextLine();
-            while (!InputValidation.isNameValid(name)){
+            while (!InputValidation.isNameValid(name)) {
                 System.out.println("Не корректный ввод , еще раз");
                 name = scanner1.nextLine();
             }
@@ -38,7 +38,7 @@ public class Main {
         if (scanner.nextInt() == 1) {
             System.out.println("Введите расширение .abc");
             String ext = scanner1.nextLine();
-            while (!InputValidation.isExtValid(ext)){
+            while (!InputValidation.isExtValid(ext)) {
                 System.out.println("Не корректный ввод , еще раз");
                 ext = scanner1.nextLine();
             }
@@ -57,7 +57,7 @@ public class Main {
             System.out.println("Введите диапозон  , например 123");
             String less = scanner1.nextLine();
             String more = scanner1.nextLine();
-            while (!InputValidation.isSizeValid(less,more)){
+            while (!InputValidation.isSizeValid(less, more)) {
                 System.out.println("Не корректный ввод , еще раз");
                 less = scanner1.nextLine();
                 more = scanner1.nextLine();

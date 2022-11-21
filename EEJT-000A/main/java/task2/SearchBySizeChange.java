@@ -32,7 +32,7 @@ public class SearchBySizeChange implements SearchByParam {
                 && file.length() <= Integer.parseInt(parameters.getSizeMore());
     }
 
-    private List<String> isTheFileFit(List<File> fileList , Parameters parameters) {
+    private List<String> isTheFileFit(List<File> fileList, Parameters parameters) {
         List<String> list = new ArrayList<>();
         fileList = fileList.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
         for (File f :
@@ -41,6 +41,7 @@ public class SearchBySizeChange implements SearchByParam {
         }
         return list;
     }
+
     private boolean hasNextChain(SearchByParam searchByParam) {
         return searchByParam != null;
     }

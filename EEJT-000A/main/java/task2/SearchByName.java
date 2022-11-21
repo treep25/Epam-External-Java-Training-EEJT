@@ -12,7 +12,7 @@ public class SearchByName implements SearchByParam {
         this.searchByParam = searchByParam;
     }
 
-    private boolean hasNextChain(SearchByParam searchByParam){
+    private boolean hasNextChain(SearchByParam searchByParam) {
         return searchByParam != null;
     }
 
@@ -33,8 +33,8 @@ public class SearchByName implements SearchByParam {
         } else {
             list.add(dir + ": " + "Данная папка вероятно не сущетсвует");
         }
-        if(hasNextChain(searchByParam)){
-            return searchByParam.search(parameters,list);
+        if (hasNextChain(searchByParam)) {
+            return searchByParam.search(parameters, list);
         }
         return list;
     }

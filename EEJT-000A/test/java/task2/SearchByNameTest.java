@@ -26,6 +26,6 @@ class SearchByNameTest {
         SearchByParam searchByName = new SearchByName(searchByParam);
         Parameters par = new Parameters();
         par.setName("UTF8");
-        assertEquals(List.of(dir+ File.separator+"UTF8"+".txt"),searchByName.search(par,new ArrayList<>()));
+        assertEquals(List.of(dir + File.separator + "UTF8" + ".txt"), searchByName.search(par, new ArrayList<>()));
     }
 }
