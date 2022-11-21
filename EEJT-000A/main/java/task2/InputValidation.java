@@ -1,11 +1,6 @@
 package task2;
 
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.util.regex.Pattern;
-
 public class InputValidation {
     public static boolean isNameValid(String name) {
         return name != null
