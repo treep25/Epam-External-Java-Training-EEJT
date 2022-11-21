@@ -1,6 +1,7 @@
 package task2;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -12,6 +13,13 @@ public class SearchBySizeChange implements SearchByParam {
     private SearchByParam searchByParam;
 
     public SearchBySizeChange(SearchByParam searchByParam) {
+        try {
+            if (!new File(dir).exists()) {
+                throw new FileNotFoundException();
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         this.searchByParam = searchByParam;
     }
 
@@ -35,8 +43,7 @@ public class SearchBySizeChange implements SearchByParam {
     private List<String> isTheFileFit(List<File> fileList, Parameters parameters) {
         List<String> list = new ArrayList<>();
         fileList = fileList.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
-        for (File f :
-                fileList) {
+        for (File f : fileList) {
             list.add(dir + File.separator + f.getName() + " (" + f.length() + ")");
         }
         return list;
@@ -47,36 +54,43 @@ public class SearchBySizeChange implements SearchByParam {
     }
 
     @Override
-    public List<String> search(Parameters parameters, List<String> list) {
-        if (list.isEmpty()) {
-            File file = new File(dir);
-            if (file.exists()) {
-                List<File> fileList = List.of(Objects.requireNonNull(file.listFiles()));
-                if (!fileList.isEmpty()) {
-                    list = isTheFileFit(fileList, parameters);
-                } else {
-                    list.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
-                }
-            } else {
-                list.add(dir + ": " + "Данная папка вероятно не сущетсвует");
-            }
+    public List<String> searchFileWhenListWithParamEmpty(Parameters parameters, List<String> paramList) {
+        File file = new File(dir);
+        List<File> fileList = List.of(Objects.requireNonNull(file.listFiles()));
+        if (!fileList.isEmpty()) {
+            paramList = isTheFileFit(fileList, parameters);
         } else {
-            List<String> list1 = new ArrayList<>();
-            for (String res :
-                    list) {
-                File file = new File(getFileDir(res.toCharArray()));
-                if (file.exists()) {
-                    if (isFileMatches(file, parameters)) {
-                        list1.add(res + "(" + file.length() + ")");
-                    }
+            paramList.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
+        }
+        return paramList;
+    }
+
+    @Override
+    public List<String> searchFileWhenListWithParamNotEmpty(Parameters parameters, List<String> paramList) {
+        List<String> newParamList = new ArrayList<>();
+        for (String res :
+                paramList) {
+            File file = new File(getFileDir(res.toCharArray()));
+            if (file.exists()) {
+                if (isFileMatches(file, parameters)) {
+                    newParamList.add(res + "(" + file.length() + ")");
                 }
             }
-            list = list1;
+        }
+        return newParamList;
+    }
+
+    @Override
+    public List<String> search(Parameters parameters, List<String> paramList) {
+        if (paramList.isEmpty()) {
+            paramList = searchFileWhenListWithParamEmpty(parameters, new ArrayList<>());
+        } else {
+            paramList = searchFileWhenListWithParamNotEmpty(parameters, paramList);
         }
         if (hasNextChain(searchByParam)) {
-            return searchByParam.search(parameters, list);
+            return searchByParam.search(parameters, paramList);
         }
-        return list;
+        return paramList;
     }
 }
 

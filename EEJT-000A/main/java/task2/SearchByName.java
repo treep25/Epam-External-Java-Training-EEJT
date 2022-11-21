@@ -1,6 +1,7 @@
 package task2;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Objects;
 
@@ -9,6 +10,13 @@ public class SearchByName implements SearchByParam {
     private SearchByParam searchByParam;
 
     public SearchByName(SearchByParam searchByParam) {
+        try {
+            if (!new File(dir).exists()) {
+                throw new FileNotFoundException();
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         this.searchByParam = searchByParam;
     }
 
@@ -17,26 +25,32 @@ public class SearchByName implements SearchByParam {
     }
 
     @Override
-    public List<String> search(Parameters parameters, List<String> list) {
+    public List<String> searchFileWhenListWithParamEmpty(Parameters parameters, List<String> paramList) {
         File file = new File(dir);
-        if (file.exists()) {
-            List<File> fileList = List.of(Objects.requireNonNull(file.listFiles(
-                    (x1, x2) -> x2.startsWith(parameters.getName()))));
-            if (!fileList.isEmpty()) {
-                for (File f :
-                        fileList) {
-                    list.add(dir + File.separator + f.getName());
-                }
-            } else {
-                list.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
+        List<File> fileList = List.of(Objects.requireNonNull(file.listFiles(
+                (x1, x2) -> x2.startsWith(parameters.getName()))));
+        if (!fileList.isEmpty()) {
+            for (File f : fileList) {
+                paramList.add(dir + File.separator + f.getName());
             }
         } else {
-            list.add(dir + ": " + "Данная папка вероятно не сущетсвует");
+            paramList.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
         }
+        return paramList;
+    }
+
+    @Override
+    public List<String> searchFileWhenListWithParamNotEmpty(Parameters parameters, List<String> paramList) {
+        return null;
+    }
+
+    @Override
+    public List<String> search(Parameters parameters, List<String> paramList) {
+        paramList = searchFileWhenListWithParamEmpty(parameters, paramList);
         if (hasNextChain(searchByParam)) {
-            return searchByParam.search(parameters, list);
+            return searchByParam.search(parameters, paramList);
         }
-        return list;
+        return paramList;
     }
 }
 

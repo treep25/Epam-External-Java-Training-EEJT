@@ -1,6 +1,7 @@
 package task2;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -9,6 +10,13 @@ public class SearchByExtension implements SearchByParam {
     private SearchByParam searchByParam;
 
     public SearchByExtension(SearchByParam searchByParam) {
+        try {
+            if (!new File(dir).exists()) {
+                throw new FileNotFoundException();
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         this.searchByParam = searchByParam;
     }
 
@@ -16,30 +24,36 @@ public class SearchByExtension implements SearchByParam {
         return searchByParam != null;
     }
 
-
     @Override
-    public List<String> search(Parameters parameters, List<String> list) {
-        if (list.isEmpty()) {
-            File file = new File(dir);
-            if (file.exists()) {
-                List<File> fileList = List.of(Objects.requireNonNull(file.listFiles(
-                        (x1, x2) -> x2.toLowerCase().endsWith(parameters.getExt()))));
-                if (!fileList.isEmpty()) {
-                    for (File f : fileList) {
-                        list.add(dir + File.separator + f.getName());
-                    }
-                } else {
-                    list.add(dir + ": " + "Данная папка не содержит файлов с расширением" + parameters.getExt());
-                }
-            } else {
-                list.add(dir + ": " + "Данная папка вероятно не сущетсвует");
+    public List<String> searchFileWhenListWithParamEmpty(Parameters parameters, List<String> paramList) {
+        File file = new File(dir);
+        List<File> fileList = List.of(Objects.requireNonNull(file.listFiles(
+                (x1, x2) -> x2.toLowerCase().endsWith(parameters.getExt()))));
+        if (!fileList.isEmpty()) {
+            for (File f : fileList) {
+                paramList.add(dir + File.separator + f.getName());
             }
         } else {
-            list = list.stream().filter(x1 -> x1.endsWith(parameters.getExt().toLowerCase())).collect(Collectors.toList());
+            paramList.add(dir + ": " + "Данная папка вероятно не сущетсвует");
+        }
+        return paramList;
+    }
+
+    @Override
+    public List<String> searchFileWhenListWithParamNotEmpty(Parameters parameters, List<String> paramList) {
+        return paramList.stream().filter(x1 -> x1.endsWith(parameters.getExt().toLowerCase())).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> search(Parameters parameters, List<String> paramList) {
+        if (paramList.isEmpty()) {
+            paramList = searchFileWhenListWithParamEmpty(parameters, paramList);
+        } else {
+            paramList = searchFileWhenListWithParamNotEmpty(parameters, paramList);
         }
         if (hasNextChain(searchByParam)) {
-            return searchByParam.search(parameters, list);
+            return searchByParam.search(parameters, paramList);
         }
-        return list;
+        return paramList;
     }
 }
