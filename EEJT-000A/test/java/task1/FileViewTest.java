@@ -23,7 +23,8 @@ class FileViewTest {
     void readFileError() {
         FileView fileView = new FileView("teqweqweqwest.t22xt");
         List <String> list1 = new ArrayList<>();
-        list1.add("Данного файла не существует");
+        list1.add("Данного файла не существует: ");
+        list1.add("EEJT-000A\\teqweqweqwest.t22xt (Не удается найти указанный файл)");
         List<String> result = fileView.readFile();
         assertEquals(list1,result);
     }
