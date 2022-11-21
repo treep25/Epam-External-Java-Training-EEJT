@@ -1,13 +1,19 @@
 package task2;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class SearchBySizeChange implements SearchByParam {
     private SearchByParam searchByParam;
+
+    public SearchBySizeChange(SearchByParam searchByParam) {
+        this.searchByParam = searchByParam;
+    }
 
     private String getFileDir(char[] ar) {
         StringBuilder stringBuilder = new StringBuilder();
@@ -26,12 +32,17 @@ public class SearchBySizeChange implements SearchByParam {
                 && file.length() <= Integer.parseInt(parameters.getSizeMore());
     }
 
+    private List<String> isTheFileFit(List<File> fileList , Parameters parameters) {
+        List<String> list = new ArrayList<>();
+        fileList = fileList.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
+        for (File f :
+                fileList) {
+            list.add(dir + File.separator + f.getName() + " (" + f.length() + ")");
+        }
+        return list;
+    }
     private boolean hasNextChain(SearchByParam searchByParam) {
         return searchByParam != null;
-    }
-
-    public SearchBySizeChange(SearchByParam searchByParam) {
-        this.searchByParam = searchByParam;
     }
 
     @Override
@@ -41,11 +52,7 @@ public class SearchBySizeChange implements SearchByParam {
             if (file.exists()) {
                 List<File> fileList = List.of(Objects.requireNonNull(file.listFiles()));
                 if (!fileList.isEmpty()) {
-                    fileList = fileList.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
-                    for (File f :
-                            fileList) {
-                        list.add(dir + File.separator + f.getName() + " (" + f.length() + ")");
-                    }
+                    list = isTheFileFit(fileList, parameters);
                 } else {
                     list.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
                 }

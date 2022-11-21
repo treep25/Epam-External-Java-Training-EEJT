@@ -22,6 +22,17 @@ public class SearchByDateChange implements SearchByParam {
                 && file.lastModified() >= Timestamp.valueOf(parameters.getDateLess()).getTime() ;
     }
 
+    private List<String> isTheFileFit(List<File> fileList , Parameters parameters) {
+        List<String> list = new ArrayList<>();
+        fileList = fileList.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
+        for (File f :
+                fileList) {
+            Date date = new Date(f.lastModified());
+            SimpleDateFormat sd = new SimpleDateFormat(DATE_PATTERN);
+            list.add(dir + File.separator + f.getName() + " (" + sd.format(date) + ")");
+        }
+        return list;
+    }
     @Override
     public List<String> search(Parameters parameters, List<String> list) {
         if (list.isEmpty()) {
@@ -29,13 +40,7 @@ public class SearchByDateChange implements SearchByParam {
             if (file.exists()) {
                 List<File> fileList = List.of(Objects.requireNonNull(file.listFiles()));
                 if (!fileList.isEmpty()) {
-                    fileList =fileList.stream().filter(x1 -> isFileMatches(x1,parameters)).collect(Collectors.toList());
-                    for (File f :
-                            fileList) {
-                        Date date = new Date(f.lastModified());
-                        SimpleDateFormat sd = new SimpleDateFormat(DATE_PATTERN);
-                        list.add(dir + File.separator + f.getName() + " (" + sd.format(date) + ")");
-                    }
+                    list = isTheFileFit(fileList, parameters);
                 } else {
                     list.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
                 }
