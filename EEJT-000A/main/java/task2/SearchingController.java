@@ -14,10 +14,10 @@ public class SearchingController {
     }
 
     private void generateChainMapSearching() {
-        chainMapSearching.put(parameters -> parameters.getSizeMore() != null && parameters.getSizeLess() != null, SearchBySizeChange::new);
-        chainMapSearching.put(parameters -> parameters.getDateMore() != null && parameters.getDateLess() != null, SearchByDateChange::new);
-        chainMapSearching.put(parameters -> parameters.getExt() != null, SearchByExtension::new);
-        chainMapSearching.put(parameters -> parameters.getName() != null, SearchByName::new);
+        chainMapSearching.put(parameters -> parameters.sizeMore() != null && parameters.sizeLess() != null, SearchBySizeChange::new);
+        chainMapSearching.put(parameters -> parameters.dateMore() != null && parameters.dateLess() != null, SearchByDateChange::new);
+        chainMapSearching.put(parameters -> parameters.ext() != null, SearchByExtension::new);
+        chainMapSearching.put(parameters -> parameters.name() != null, SearchByName::new);
     }
 
     public List<String> doChain() {

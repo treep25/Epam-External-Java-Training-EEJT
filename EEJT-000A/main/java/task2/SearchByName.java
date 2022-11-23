@@ -27,8 +27,8 @@ public class SearchByName implements SearchByParam {
     @Override
     public List<String> searchFileWhenListWithParamEmpty(Parameters parameters, List<String> paramList) {
         File file = new File(dir);
-        List<File> fileList = List.of(Objects.requireNonNull(file.listFiles(
-                (x1, x2) -> x2.startsWith(parameters.getName()))));
+        List<File> fileList = List.of(file.listFiles(
+                (x1, x2) -> x2.startsWith(parameters.getName())));
         if (!fileList.isEmpty()) {
             for (File f : fileList) {
                 paramList.add(dir + File.separator + f.getName());
