@@ -36,17 +36,21 @@ public class SearchBySizeChange implements SearchByParam {
     }
 
     private boolean isFileMatches(File file, Parameters parameters) {
-        return file.length() >= Integer.parseInt(parameters.getSizeLess())
-                && file.length() <= Integer.parseInt(parameters.getSizeMore());
+        return file.length() >= Integer.parseInt(parameters.sizeLess())
+                && file.length() <= Integer.parseInt(parameters.sizeMore());
     }
 
     private List<String> isTheFileFit(List<File> fileList, Parameters parameters) {
-        List<String> list = new ArrayList<>();
+        List<String> paramList = new ArrayList<>();
         fileList = fileList.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
-        for (File f : fileList) {
-            list.add(dir + File.separator + f.getName() + " (" + f.length() + ")");
+        if (!fileList.isEmpty()) {
+            for (File f : fileList) {
+                paramList.add(dir + File.separator + f.getName() + " (" + f.length() + ")");
+            }
+        } else {
+            paramList.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
         }
-        return list;
+        return paramList;
     }
 
     private boolean hasNextChain(SearchByParam searchByParam) {
@@ -56,13 +60,8 @@ public class SearchBySizeChange implements SearchByParam {
     @Override
     public List<String> searchFileWhenListWithParamEmpty(Parameters parameters, List<String> paramList) {
         File file = new File(dir);
-        List<File> fileList = List.of(Objects.requireNonNull(file.listFiles()));
-        if (!fileList.isEmpty()) {
-            paramList = isTheFileFit(fileList, parameters);
-        } else {
-            paramList.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
-        }
-        return paramList;
+        List<File> fileList = List.of(file.listFiles());
+        return isTheFileFit(fileList, parameters);
     }
 
     @Override

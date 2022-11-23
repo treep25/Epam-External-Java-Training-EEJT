@@ -28,17 +28,21 @@ public class SearchByDateChange implements SearchByParam {
     }
 
     private boolean isFileMatches(File file, Parameters parameters) {
-        return file.lastModified() <= Timestamp.valueOf(parameters.getDateMore()).getTime()
-                && file.lastModified() >= Timestamp.valueOf(parameters.getDateLess()).getTime();
+        return file.lastModified() <= Timestamp.valueOf(parameters.dateMore()).getTime()
+                && file.lastModified() >= Timestamp.valueOf(parameters.dateLess()).getTime();
     }
 
     private List<String> isTheFileFit(List<File> fileList, Parameters parameters) {
         List<String> paramList = new ArrayList<>();
         fileList = fileList.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
-        for (File f : fileList) {
-            Date date = new Date(f.lastModified());
-            SimpleDateFormat sd = new SimpleDateFormat(DATE_PATTERN);
-            paramList.add(dir + File.separator + f.getName() + " (" + sd.format(date) + ")");
+        if (!fileList.isEmpty()) {
+            for (File f : fileList) {
+                Date date = new Date(f.lastModified());
+                SimpleDateFormat sd = new SimpleDateFormat(DATE_PATTERN);
+                paramList.add(dir + File.separator + f.getName() + " (" + sd.format(date) + ")");
+            }
+        } else {
+            paramList.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
         }
         return paramList;
     }
@@ -46,13 +50,8 @@ public class SearchByDateChange implements SearchByParam {
     @Override
     public List<String> searchFileWhenListWithParamEmpty(Parameters parameters, List<String> paramList) {
         File file = new File(dir);
-        List<File> fileList = List.of(Objects.requireNonNull(file.listFiles()));
-        if (!fileList.isEmpty()) {
-            paramList = isTheFileFit(fileList, parameters);
-        } else {
-            paramList.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
-        }
-        return paramList;
+        List<File> fileList = List.of(file.listFiles());
+        return isTheFileFit(fileList, parameters);
     }
 
     @Override

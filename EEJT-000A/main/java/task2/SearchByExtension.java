@@ -27,8 +27,8 @@ public class SearchByExtension implements SearchByParam {
     @Override
     public List<String> searchFileWhenListWithParamEmpty(Parameters parameters, List<String> paramList) {
         File file = new File(dir);
-        List<File> fileList = List.of(Objects.requireNonNull(file.listFiles(
-                (x1, x2) -> x2.toLowerCase().endsWith(parameters.getExt()))));
+        List<File> fileList = List.of(file.listFiles(
+                (x1, x2) -> x2.toLowerCase().endsWith(parameters.ext())));
         if (!fileList.isEmpty()) {
             for (File f : fileList) {
                 paramList.add(dir + File.separator + f.getName());
@@ -41,7 +41,7 @@ public class SearchByExtension implements SearchByParam {
 
     @Override
     public List<String> searchFileWhenListWithParamNotEmpty(Parameters parameters, List<String> paramList) {
-        return paramList.stream().filter(x1 -> x1.endsWith(parameters.getExt().toLowerCase())).collect(Collectors.toList());
+        return paramList.stream().filter(x1 -> x1.endsWith(parameters.ext().toLowerCase())).collect(Collectors.toList());
     }
 
     @Override
