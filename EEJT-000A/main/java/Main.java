@@ -23,48 +23,50 @@ public class Main {
         System.out.println("---------------------------------------------");
         System.setOut(new PrintStream(System.out, true, StandardCharsets.UTF_8));
         System.out.println("--------------------TASK2--------------------");
-        Parameters parameters = new Parameters();
+
+        String name = null;
+        String extension = null;
+        String dateLess = null;
+        String dateMore = null;
+        String sizeLess = null;
+        String sizeMore = null;
+
         System.out.println("> искать по имени файла ? (0/1)");
         if (scanner.nextInt() == 1) {
             System.out.println("Введите имя файла");
-            String name = scanner1.nextLine();
+            name = scanner1.nextLine();
             while (!InputValidation.isNameValid(name)) {
                 System.out.println("Не корректный ввод , еще раз");
                 name = scanner1.nextLine();
             }
-            parameters.setName(name);
         }
         System.out.println("> искать по расширению файла ? (0/1)");
         if (scanner.nextInt() == 1) {
             System.out.println("Введите расширение .abc");
-            String ext = scanner1.nextLine();
-            while (!InputValidation.isExtValid(ext)) {
+            extension = scanner1.nextLine();
+            while (!InputValidation.isExtValid(extension)) {
                 System.out.println("Не корректный ввод , еще раз");
-                ext = scanner1.nextLine();
+                extension = scanner1.nextLine();
             }
-            parameters.setExt(ext);
         }
         System.out.println("> искать по диапазону дат изменения файла ? (0/1)");
         if (scanner.nextInt() == 1) {
             System.out.println("Введите диапозон , например 2012-11-16 20:48:16");
-            String less = scanner1.nextLine();
-            String more = scanner1.nextLine();
-            parameters.setDateLess(less);
-            parameters.setDateMore(more);
+            dateLess = scanner1.nextLine();
+            dateMore = scanner1.nextLine();
         }
         System.out.println("> искать по диапазону размеров файла ? (0/1)");
         if (scanner.nextInt() == 1) {
             System.out.println("Введите диапозон  , например 123");
-            String less = scanner1.nextLine();
-            String more = scanner1.nextLine();
-            while (!InputValidation.isSizeValid(less, more)) {
+            sizeLess = scanner1.nextLine();
+            sizeMore = scanner1.nextLine();
+            while (!InputValidation.isSizeValid(sizeLess, sizeMore)) {
                 System.out.println("Не корректный ввод , еще раз");
-                less = scanner1.nextLine();
-                more = scanner1.nextLine();
+                sizeLess = scanner1.nextLine();
+                sizeMore = scanner1.nextLine();
             }
-            parameters.setSizeLess(less);
-            parameters.setSizeMore(more);
         }
+        Parameters parameters = new Parameters(name, extension, dateLess, dateMore, sizeLess, sizeMore);
         SearchingController searchingController = new SearchingController(parameters);
         List<String> list = searchingController.doChain();
         list.forEach(System.out::println);
