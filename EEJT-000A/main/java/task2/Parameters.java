@@ -1,67 +1,60 @@
 package task2;
 
-public class Parameters {
-    private String name;
-    private String ext;
-    private String sizeLess;
-    private String sizeMore;
-    private String dateLess;
-    private String dateMore;
+import java.util.Objects;
 
-    public Parameters() {
+public record Parameters(String name, String ext, String dateLess, String dateMore, String sizeLess, String sizeMore) {
+    public Parameters {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Parameters that)) {
+            return false;
+        }
+        return Objects.equals(getName(), that.getName()) && Objects.equals(ext, that.ext) && Objects.equals(sizeLess, that.sizeLess) && Objects.equals(sizeMore, that.sizeMore) && Objects.equals(dateLess, that.dateLess) && Objects.equals(dateMore, that.dateMore);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getName() != null ? getName().hashCode() : 0;
+        result = 31 * result + (ext != null ? ext.hashCode() : 0);
+        result = 31 * result + (sizeLess != null ? sizeLess.hashCode() : 0);
+        result = 31 * result + (sizeMore != null ? sizeMore.hashCode() : 0);
+        result = 31 * result + (dateLess != null ? dateLess.hashCode() : 0);
+        result = 31 * result + (dateMore != null ? dateMore.hashCode() : 0);
+        return result;
     }
 
     public String getName() {
         return name;
     }
 
-    public Parameters setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public String getExt() {
+    @Override
+    public String ext() {
         return ext;
     }
 
-    public Parameters setExt(String ext) {
-        this.ext = ext;
-        return this;
-    }
-
-    public String getSizeLess() {
+    @Override
+    public String sizeLess() {
         return sizeLess;
     }
 
-    public Parameters setSizeLess(String sizeLess) {
-        this.sizeLess = sizeLess;
-        return this;
-    }
-
-    public String getSizeMore() {
+    @Override
+    public String sizeMore() {
         return sizeMore;
     }
 
-    public Parameters setSizeMore(String sizeMore) {
-        this.sizeMore = sizeMore;
-        return this;
-    }
-
-    public String getDateLess() {
+    @Override
+    public String dateLess() {
         return dateLess;
     }
 
-    public Parameters setDateLess(String dateLess) {
-        this.dateLess = dateLess;
-        return this;
-    }
-
-    public String getDateMore() {
+    @Override
+    public String dateMore() {
         return dateMore;
     }
 
-    public Parameters setDateMore(String dateMore) {
-        this.dateMore = dateMore;
-        return this;
-    }
 }
