@@ -15,7 +15,7 @@ class SearchByNameTest {
     @Test
     void searchConfig() {
         SearchByParam SearchByName = new SearchByName(searchByParam);
-        Parameters par = new Parameters("P", null, null, null, null, null);
+        Parameters par = new Parameters("{N", null, null, null, null, null);
         List<String> list = List.of(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
         assertEquals(list, SearchByName.search(par, new ArrayList<>()));
     }
@@ -24,6 +24,6 @@ class SearchByNameTest {
     void search() {
         SearchByParam searchByName = new SearchByName(searchByParam);
         Parameters par = new Parameters("UTF8", null, null, null, null, null);
-        assertEquals(List.of(dir + File.separator + "UTF8" + ".txt"), searchByName.search(par, new ArrayList<>()));
+        assertEquals(List.of("C:\\Users\\User\\IdeaProjects\\Epam-External-Java-Training-EEJT\\EEJT-000A\\UTF8.txt"), searchByName.search(par, new ArrayList<>()));
     }
 }

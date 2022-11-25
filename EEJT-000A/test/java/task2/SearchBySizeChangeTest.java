@@ -23,7 +23,7 @@ class SearchBySizeChangeTest {
     void searchWhenListIsEmptyTest() {
         SearchByParam searchBySizeChange = new SearchBySizeChange(searchByParam);
         Parameters par = new Parameters(null, null, null, null, "848444", "848449");
-        List<String> list = List.of("EEJT-000A\\ANSI.txt (848444)");
+        List<String> list = List.of("C:\\Users\\User\\IdeaProjects\\Epam-External-Java-Training-EEJT\\EEJT-000A\\ANSI.txt 848444bytes");
         assertEquals(list, searchBySizeChange.search(par, new ArrayList<>()));
     }
 
