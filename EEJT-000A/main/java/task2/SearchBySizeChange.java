@@ -40,12 +40,40 @@ public class SearchBySizeChange implements SearchByParam {
                 && file.length() <= Integer.parseInt(parameters.sizeMore());
     }
 
+    List<File> fileListMain = new ArrayList<>();
+
+    private void searchingThroughTheDirectory(File file) {
+        if (file.isDirectory()) {
+            List<File> fileList = List.of(file.listFiles());
+            if (!fileList.isEmpty()) {
+                for (File f : fileList) {
+                    if (!f.isDirectory()) {
+                        fileListMain.add(f);
+                    } else {
+                        searchingThroughTheDirectory(f);
+                    }
+                }
+            }
+        }
+    }
+
     private List<String> isTheFileFit(List<File> fileList, Parameters parameters) {
         List<String> paramList = new ArrayList<>();
-        fileList = fileList.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
         if (!fileList.isEmpty()) {
             for (File f : fileList) {
-                paramList.add(dir + File.separator + f.getName() + " (" + f.length() + ")");
+                if (!f.isDirectory()) {
+                    fileListMain.add(f);
+                } else {
+                    searchingThroughTheDirectory(f);
+                }
+            }
+            fileListMain = fileListMain.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
+            if (fileListMain.isEmpty()) {
+                paramList.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
+                return paramList;
+            }
+            for (File f : fileListMain) {
+                paramList.add(f.getAbsolutePath() + " " + f.length() + "bytes");
             }
         } else {
             paramList.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
@@ -61,6 +89,7 @@ public class SearchBySizeChange implements SearchByParam {
     public List<String> searchFileWhenListWithParamEmpty(Parameters parameters, List<String> paramList) {
         File file = new File(dir);
         List<File> fileList = List.of(file.listFiles());
+
         return isTheFileFit(fileList, parameters);
     }
 
@@ -72,7 +101,7 @@ public class SearchBySizeChange implements SearchByParam {
             File file = new File(getFileDir(res.toCharArray()));
             if (file.exists()) {
                 if (isFileMatches(file, parameters)) {
-                    newParamList.add(res + "(" + file.length() + ")");
+                    newParamList.add(res + " (" + file.length() + ") bytes");
                 }
             }
         }

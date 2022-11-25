@@ -32,14 +32,43 @@ public class SearchByDateChange implements SearchByParam {
                 && file.lastModified() >= Timestamp.valueOf(parameters.dateLess()).getTime();
     }
 
+    List<File> fileListMain = new ArrayList<>();
+
+    private void searchingThroughTheDirectory(File file) {
+        if (file.isDirectory()) {
+            List<File> fileList = List.of(file.listFiles());
+            if (!fileList.isEmpty()) {
+                for (File f : fileList) {
+                    if (!f.isDirectory()) {
+                        fileListMain.add(f);
+                    } else {
+                        searchingThroughTheDirectory(f);
+                    }
+                }
+            }
+
+        }
+    }
+
     private List<String> isTheFileFit(List<File> fileList, Parameters parameters) {
         List<String> paramList = new ArrayList<>();
-        fileList = fileList.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
         if (!fileList.isEmpty()) {
             for (File f : fileList) {
+                if (!f.isDirectory()) {
+                    fileListMain.add(f);
+                } else {
+                    searchingThroughTheDirectory(f);
+                }
+            }
+            fileListMain = fileListMain.stream().filter(x1 -> isFileMatches(x1, parameters)).collect(Collectors.toList());
+            if (fileListMain.isEmpty()) {
+                paramList.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
+                return paramList;
+            }
+            for (File f : fileListMain) {
                 Date date = new Date(f.lastModified());
                 SimpleDateFormat sd = new SimpleDateFormat(DATE_PATTERN);
-                paramList.add(dir + File.separator + f.getName() + " (" + sd.format(date) + ")");
+                paramList.add(f.getAbsolutePath() + " (" + sd.format(date) + ")");
             }
         } else {
             paramList.add(dir + ": " + "Данная папка не содержит файлов таких конфигураций");
@@ -51,6 +80,7 @@ public class SearchByDateChange implements SearchByParam {
     public List<String> searchFileWhenListWithParamEmpty(Parameters parameters, List<String> paramList) {
         File file = new File(dir);
         List<File> fileList = List.of(file.listFiles());
+
         return isTheFileFit(fileList, parameters);
     }
 
@@ -63,7 +93,7 @@ public class SearchByDateChange implements SearchByParam {
                 if (isFileMatches(file, parameters)) {
                     Date date = new Date(file.lastModified());
                     SimpleDateFormat sd = new SimpleDateFormat(DATE_PATTERN);
-                    newParamList.add(dir + File.separator + file.getName() + " (" + sd.format(date) + ")");
+                    newParamList.add(file.getAbsolutePath() + " (" + sd.format(date) + ")");
                 }
             }
         });
