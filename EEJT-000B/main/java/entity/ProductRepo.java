@@ -3,7 +3,8 @@ package entity;
 import java.util.List;
 
 public class ProductRepo {
-    private List<Product> productList = List.of(new Product(1L, "Weed chair", 1200L),
+    private List<Product> productList = List.of(
+            new Product(1L, "Weed chair", 1200L),
             new Product(2L, "Table", 300L),
             new Product(3L, "Laptop", 3300L),
             new Product(4L, "Notebook", 2500L),

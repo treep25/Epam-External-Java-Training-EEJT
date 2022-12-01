@@ -2,11 +2,12 @@ package tcp.commands;
 
 import entity.Product;
 import entity.ProductRepo;
+import services.Command;
 
-public class GetItemByNumber implements Command<String> {
+public class GetItemByNumberTCPCommand implements Command<String> {
     private final String request;
 
-    public GetItemByNumber(String request) {
+    public GetItemByNumberTCPCommand(String request) {
         this.request = request;
     }
 

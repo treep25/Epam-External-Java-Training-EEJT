@@ -9,10 +9,11 @@ import java.util.Scanner;
 
 public class Client {
     public static void main(String[] args) {
-        try (Socket socket = new Socket("localhost", 3009)) {
+        try (Socket socket = new Socket("localhost", 3009);
+             PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
+             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+
             Scanner scanner = new Scanner(System.in);
-            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 
             System.out.println(bufferedReader.readLine());
             System.out.println(bufferedReader.readLine());
@@ -28,7 +29,7 @@ public class Client {
             }
 
         } catch (IOException ex) {
-            System.out.println("tcp.Client exception " + ex.getMessage());
+            System.out.println("Client exception " + ex.getMessage());
             throw new RuntimeException(ex);
         }
 
