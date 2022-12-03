@@ -1,11 +1,12 @@
-package services.factory;
+package tcp;
 
 import services.Server;
+import services.AbstractFactory;
 
-public class HttpServerFactory extends AbstractFactory {
+public class TcpServerFactory extends AbstractFactory {
     Server server;
 
-    public HttpServerFactory(Server server) {
+    public TcpServerFactory(Server server) {
         this.server = server;
     }
 

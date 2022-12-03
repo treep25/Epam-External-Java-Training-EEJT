@@ -1,21 +1,18 @@
 package tcp;
 
 import services.Command;
-import services.ConsoleIO;
+import io.ConsoleIO;
 import tcp.commands.CountAmountOfProductsTCPCommand;
 import tcp.commands.GetItemByNumberTCPCommand;
 import tcp.commands.UnknownCommand;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 
+//TODO mahe like in http
 public class TcpServerHandler extends Thread {
     private ConsoleIO console;
     private Map<Predicate<String>, Command> commandMap;
@@ -45,7 +42,6 @@ public class TcpServerHandler extends Thread {
                 commandMap = new HashMap<>();
                 console.print("TCP Client request is " + request);
                 mapInitCommands(request);
-
                 for (Map.Entry<Predicate<String>, Command> entry : commandMap.entrySet()) {
                     if (entry.getKey().test(request)) {
                         String response = (String) entry.getValue().execute();

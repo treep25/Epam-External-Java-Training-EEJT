@@ -1,4 +1,4 @@
-package entity;
+package product;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class ProductRepo {
             new Product(9L, "Iphone", 3000L),
             new Product(10L, "Bluetooth micro", 12000L));
 
-    public List<Product> getSomeProducts() {
+    public List<Product> getProducts() {
         return productList;
     }
 }

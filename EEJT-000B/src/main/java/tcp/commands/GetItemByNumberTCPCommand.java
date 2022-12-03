@@ -1,7 +1,7 @@
 package tcp.commands;
 
-import entity.Product;
-import entity.ProductRepo;
+import product.Product;
+import product.ProductRepo;
 import services.Command;
 
 public class GetItemByNumberTCPCommand implements Command<String> {
@@ -14,7 +14,7 @@ public class GetItemByNumberTCPCommand implements Command<String> {
     @Override
     public String execute() {
         ProductRepo productRepo = new ProductRepo();
-        Product product = productRepo.getSomeProducts().get(Integer.parseInt(request));
+        Product product = productRepo.getProducts().get(Integer.parseInt(request));
         return product.name() + "|" + product.price();
     }
 }

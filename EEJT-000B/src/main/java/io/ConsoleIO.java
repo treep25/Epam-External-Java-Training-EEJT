@@ -1,14 +1,14 @@
-package services;
+package io;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
-public class ConsoleIO {
+public class ConsoleIO implements Closeable {
+    // TODO AUTOCLOSE two classes Console Socket
     private Socket socket;
+
     private PrintWriter printWriter;
+
     private BufferedReader bufferedReader;
 
     public ConsoleIO(Socket socket) {
@@ -64,6 +64,11 @@ public class ConsoleIO {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+    }
+
+    @Override
+    public void close() throws IOException {
 
     }
 
