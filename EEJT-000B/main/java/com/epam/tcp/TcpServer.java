@@ -1,6 +1,5 @@
 package com.epam.tcp;
 
-import com.epam.http.HttpServerHandler;
 import com.epam.io.ConsoleIO;
 import com.epam.product.ProductRepo;
 import com.epam.Server;
@@ -21,7 +20,7 @@ public class TcpServer extends Server {
         consoleIO = new ConsoleIO();
     }
 
-    private TcpServerHandler creatThreadServerHttp(Socket socket) {
+    public TcpServerHandler creatThreadServerTcp(Socket socket) {
         return new TcpServerHandler(socket, productRepo);
     }
 
@@ -29,7 +28,7 @@ public class TcpServer extends Server {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             while (run) {
                 Socket socket = serverSocket.accept();
-                creatThreadServerHttp(socket).start();
+                creatThreadServerTcp(socket).start();
             }
         } catch (IOException ex) {
             consoleIO.print("Server exception" + ex.getMessage());
