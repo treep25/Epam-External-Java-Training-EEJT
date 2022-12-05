@@ -6,8 +6,6 @@ import com.epam.http.MapResponse;
 import org.junit.jupiter.api.Test;
 import com.epam.product.ProductRepo;
 
-//import java.util.Map;
-
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,7 +27,6 @@ class CountAmountOfProductsHTTPCommandTest {
         //when
         when(productRepoMock.getSize()).thenReturn(4);
         JsonResponse actual = testObj.execute(commandPlug);
-
         //then
         assertEquals(expectedObj.getJson(), actual.getJson());
     }

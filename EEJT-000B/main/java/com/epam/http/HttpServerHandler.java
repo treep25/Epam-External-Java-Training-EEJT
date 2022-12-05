@@ -29,8 +29,8 @@ public class HttpServerHandler extends Thread {
         socketIO.write("");
     }
 
-    private void isUnknownCommandBody(JsonResponse response, SocketIO socketIO) {
-        if (response.getJson().equals(new MapResponse(Map.of("message", "No such command")).getJson())) {
+    private void isUnknownCommandBody(String request, JsonResponse response, SocketIO socketIO) {
+        if (response.getJson().equals(new MapResponse(Map.of(request, "No such command")).getJson())) {
             getHeader(socketIO, 404, response.getJson(), CONTENT_TYPES.get("type"));
         } else {
             getHeader(socketIO, 200, "Ok", CONTENT_TYPES.get("type"));
@@ -56,7 +56,7 @@ public class HttpServerHandler extends Thread {
                 consoleIO.print("HTTP Request is - " + requestParsed);
 
                 JsonResponse response = commandMap.getCommand(method + requestParsed).execute(requestParsed);
-                isUnknownCommandBody(response, socketIO);
+                isUnknownCommandBody(requestParsed, response, socketIO);
 
                 System.out.println("HTTP Server response is " + response.getJson());
                 socketIO.write(response.getJson());
