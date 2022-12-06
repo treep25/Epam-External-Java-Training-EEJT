@@ -14,6 +14,26 @@
             <version>5.9.0</version>
             <scope>test</scope>
         </dependency>
+<<<<<<< EEJT-000B
+        <!-- https://mvnrepository.com/artifact/org.mockito/mockito-core -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>4.8.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.13.0</version>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13</version>
+        </dependency>
+    </dependencies>
+=======
         <!-- https://mvnrepository.com/artifact/commons-cli/commons-cli -->
         <dependency>
             <groupId>commons-cli</groupId>
@@ -23,9 +43,15 @@
     </dependencies>
 
 
+>>>>>>> master
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
     </properties>
+    <build>
+        <sourceDirectory>EEJT-000B/main/java</sourceDirectory>
+        <testSourceDirectory>EEJT-000B/test/java</testSourceDirectory>
+
+    </build>
 
 </project>
