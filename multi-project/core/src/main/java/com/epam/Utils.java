@@ -1,15 +1,14 @@
 package com.epam;
 
-import com.epam.StringUtils;
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class Utils {
     public static boolean isAllPositiveNumbers(String... str) {
-        if (str.length > 0) {
-            boolean flag = false;
-            for (String number : str) {
-                flag = StringUtils.isPositiveNumber(number);
-            }
-            return flag;
+        if (ArrayUtils.isNotEmpty(str) && str.length > 0) {
+            return Arrays.stream(str).allMatch(StringUtils::isPositiveNumber);
         }
         return false;
     }
