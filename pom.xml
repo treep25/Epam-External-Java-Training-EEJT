@@ -38,7 +38,6 @@
             <version>1.4</version>
         </dependency>
     </dependencies>
-
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -46,7 +45,6 @@
     <build>
         <sourceDirectory>EEJT-000B/main/java</sourceDirectory>
         <testSourceDirectory>EEJT-000B/test/java</testSourceDirectory>
-
     </build>
 
 </project>
