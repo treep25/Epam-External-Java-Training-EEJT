@@ -44,8 +44,16 @@ class UtilsTest {
     }
 
     @Test
-    void returnFalseWhenNullCaseTest() {
+    void returnFalseWhenEmptyCaseTest() {
         String[] arrayTestObjs = new String[]{};
+
+        assertFalse(Utils.isAllPositiveNumbers(arrayTestObjs));
+
+    }
+
+    @Test
+    void returnFalseWhenNullCaseTest() {
+        String[] arrayTestObjs = null;
 
         assertFalse(Utils.isAllPositiveNumbers(arrayTestObjs));
 
