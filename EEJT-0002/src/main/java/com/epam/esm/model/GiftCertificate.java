@@ -12,6 +12,7 @@ public class GiftCertificate {
     private Integer price;
     private Integer duration;
     private Date createDate;
+
     private Date lastUpdateDate;
 
     public Long getId() {
@@ -75,5 +76,18 @@ public class GiftCertificate {
     public GiftCertificate setLastUpdateDate(Date lastUpdateDate) {
         this.lastUpdateDate = lastUpdateDate;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "GiftCertificate{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", duration=" + duration +
+                ", createDate=" + createDate +
+                ", lastUpdateDate=" + lastUpdateDate +
+                '}';
     }
 }

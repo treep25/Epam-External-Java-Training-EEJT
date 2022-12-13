@@ -5,13 +5,10 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
-public class GiftCertificateRowMapper implements RowMapper<Map<Long, GiftCertificate>> {
+public class GiftCertificateRowMapper implements RowMapper<GiftCertificate> {
     @Override
-    public Map<Long, GiftCertificate> mapRow(ResultSet resultSet, int rowNum) throws SQLException {
-        Map<Long, GiftCertificate> giftCertificateMap = new HashMap<>();
+    public GiftCertificate mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         GiftCertificate giftCertificate = new GiftCertificate();
         giftCertificate.setId(resultSet.getLong("id"));
         giftCertificate.setName(resultSet.getString("name"));
@@ -20,7 +17,7 @@ public class GiftCertificateRowMapper implements RowMapper<Map<Long, GiftCertifi
         giftCertificate.setDuration(resultSet.getInt("duration"));
         giftCertificate.setCreateDate(resultSet.getDate("create_date"));
         giftCertificate.setLastUpdateDate(resultSet.getDate("last_update_date"));
-        giftCertificateMap.put(giftCertificate.getId(), giftCertificate);
-        return giftCertificateMap;
+        return giftCertificate;
     }
+
 }
