@@ -6,18 +6,27 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-public class ResponseEntity implements Response<List<GiftCertificate>> {
+public class ResponseEntity {
 
     private List<GiftCertificate> giftCertificateList;
-    private HttpStatus status;
+    private final HttpStatus status;
+    private GiftCertificate giftCertificate;
 
     public ResponseEntity(List<GiftCertificate> giftCertificateList, HttpStatus status) {
         this.giftCertificateList = giftCertificateList;
         this.status = status;
     }
 
-    @Override
-    public List<GiftCertificate> getEntity() {
-        return null;
+    public ResponseEntity(GiftCertificate giftCertificate, HttpStatus status) {
+        this.status = status;
+        this.giftCertificate = giftCertificate;
+    }
+
+    public List<GiftCertificate> getCertificates() {
+        return giftCertificateList;
+    }
+
+    public HttpStatus getStatus() {
+        return status;
     }
 }
