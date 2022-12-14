@@ -9,4 +9,6 @@ public interface GiftCertificateRepository {
     List<GiftCertificate> getAllGiftCertificates();
 
     HttpStatus createCertificate(GiftCertificate giftCertificate);
+
+    GiftCertificate getCertificateById(long id);
 }
