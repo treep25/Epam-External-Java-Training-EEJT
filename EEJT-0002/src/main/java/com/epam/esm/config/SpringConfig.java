@@ -20,9 +20,9 @@ import javax.sql.DataSource;
 import java.util.Objects;
 
 @Configuration
+@EnableWebMvc
 @ComponentScan("com.epam.esm")
 @PropertySource("classpath:database.properties")
-@EnableWebMvc
 public class SpringConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
@@ -36,7 +36,6 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Bean
     public SpringResourceTemplateResolver templateResolver() {
-        System.out.println("templateResolver");
         SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
         templateResolver.setApplicationContext(applicationContext);
         templateResolver.setPrefix("/WEB-INF/views/");
@@ -46,7 +45,6 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Bean
     public SpringTemplateEngine templateEngine() {
-        System.out.println("templateEngine");
         SpringTemplateEngine templateEngine = new SpringTemplateEngine();
         templateEngine.setTemplateResolver(templateResolver());
         templateEngine.setEnableSpringELCompiler(true);
@@ -55,7 +53,6 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
-        System.out.println("configureViewResolvers");
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(templateEngine());
         registry.viewResolver(resolver);
@@ -73,7 +70,6 @@ public class SpringConfig implements WebMvcConfigurer {
 
     @Bean
     public JdbcTemplate jdbcTemplate() {
-        System.out.println(new JdbcTemplate(dataSource()));
         return new JdbcTemplate(dataSource());
     }
 }
