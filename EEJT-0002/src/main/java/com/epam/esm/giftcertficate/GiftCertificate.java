@@ -1,10 +1,7 @@
-package com.epam.esm.model;
-
-import org.springframework.stereotype.Component;
+package com.epam.esm.giftcertficate;
 
 import java.sql.Date;
 
-@Component
 public class GiftCertificate {
     private Long id;
     private String name;
@@ -27,11 +24,11 @@ public class GiftCertificate {
         return description;
     }
 
-    public Integer getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public Integer getDuration() {
+    public int getDuration() {
         return duration;
     }
 
