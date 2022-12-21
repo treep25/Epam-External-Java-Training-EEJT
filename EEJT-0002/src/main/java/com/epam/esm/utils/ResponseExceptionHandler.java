@@ -1,21 +1,18 @@
-package com.epam.esm.giftcertficate;
+package com.epam.esm.utils;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import org.springframework.web.util.NestedServletException;
 
 import java.sql.SQLSyntaxErrorException;
 import java.util.Map;
 
 @ControllerAdvice
-public class ResponseGiftCertificateExceptionHandler extends ResponseEntityExceptionHandler {
+public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {IllegalArgumentException.class, IllegalStateException.class})
     protected ResponseEntity<?> handleConflictException(RuntimeException ex, WebRequest request) {
