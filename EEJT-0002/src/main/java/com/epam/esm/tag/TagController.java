@@ -20,6 +20,15 @@ public class TagController {
         this.tagService = tagService;
     }
 
+    @PostMapping(value = "/createTag", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> createTag(@RequestBody Tag tag) {
+        if (DataValidation.isValidTag(tag)) {
+            tagService.createTag(tag);
+            return new ResponseEntity<>(Map.of("status", HttpStatus.CREATED), HttpStatus.CREATED);
+        }
+        throw new IllegalArgumentException("Something went wrong during the request, check your fields");
+    }
+
     @GetMapping(value = "/getAll")
     public ResponseEntity<?> getAllTags() {
         return new ResponseEntity<>(Map.of("tags", tagService.getAllTags()), HttpStatus.OK);
@@ -28,7 +37,7 @@ public class TagController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getById(@PathVariable long id) {
         if (DataValidation.moreThenZero(id)) {
-            return new ResponseEntity<>(Map.of("tags", tagService.getTagById(id)), HttpStatus.OK);
+            return new ResponseEntity<>(Map.of("tag", tagService.getTagById(id)), HttpStatus.OK);
         }
         throw new IllegalArgumentException("incorrect tag id=" + id);
     }
@@ -40,14 +49,5 @@ public class TagController {
             return ResponseEntity.ok(Map.of("status", HttpStatus.OK));
         }
         throw new IllegalArgumentException("incorrect tag id=" + id);
-    }
-
-    @PostMapping(value = "/createTag", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createTag(@RequestBody Tag tag) {
-        if (DataValidation.isValidTag(tag)) {
-            tagService.createTag(tag);
-            return ResponseEntity.ok(Map.of("status", HttpStatus.OK));
-        }
-        throw new IllegalArgumentException("Something went wrong during the request, check your fields");
     }
 }
