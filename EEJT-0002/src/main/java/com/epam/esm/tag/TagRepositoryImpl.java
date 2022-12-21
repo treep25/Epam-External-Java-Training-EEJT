@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -31,17 +32,22 @@ public class TagRepositoryImpl implements TagRepository {
     @Override
     public List<Tag> getAllTags() {
         return jdbcTemplate.query("SELECT * FROM tag", (resultSet, i) ->
-                new Tag(resultSet.getLong("id"), resultSet.getString("name")));
+                new Tag().setId(resultSet.getLong("id")).setName(resultSet.getString("name")));
     }
 
     @Override
-    public Tag getTagById(long id) {
-        return jdbcTemplate.queryForObject("SELECT * FROM tag WHERE id = ?", new Object[]{id}, (resultSet, i) ->
-                new Tag(resultSet.getLong("id"), resultSet.getString("name")));
+    public List<Tag> getTagById(long id) {
+        return jdbcTemplate.query("SELECT * FROM tag WHERE id = ?", new Long[]{id}, (resultSet, i) ->
+                new Tag().setId(resultSet.getLong("id")).setName(resultSet.getString("name")));
     }
 
     @Override
-    public boolean getTagByName(String name) {
+    public boolean isTagWithThisNameExists(String name) {
         return Boolean.TRUE.equals(jdbcTemplate.queryForObject("SELECT EXISTS(SELECT * FROM tag WHERE name=?)", Boolean.class, name));
+    }
+
+    @Override
+    public long getIdByTag(Tag tag) {
+        return jdbcTemplate.queryForObject("SELECT id FROM tag WHERE name = ?", new String[]{tag.getName()}, Long.class);
     }
 }
