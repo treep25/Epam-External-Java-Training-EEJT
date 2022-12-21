@@ -1,6 +1,9 @@
 package com.epam.esm.giftcertficate;
 
-import java.sql.Date;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 public class GiftCertificate {
     private Long id;
@@ -8,9 +11,9 @@ public class GiftCertificate {
     private String description;
     private Integer price;
     private Integer duration;
-    private Date createDate;
+    private String createDate;
 
-    private Date lastUpdateDate;
+    private String lastUpdateDate;
 
     public Long getId() {
         return id;
@@ -32,11 +35,11 @@ public class GiftCertificate {
         return duration;
     }
 
-    public Date getCreateDate() {
+    public String getCreateDate() {
         return createDate;
     }
 
-    public Date getLastUpdateDate() {
+    public String getLastUpdateDate() {
         return lastUpdateDate;
     }
 
@@ -66,13 +69,21 @@ public class GiftCertificate {
     }
 
     public GiftCertificate setCreateDate(Date createDate) {
-        this.createDate = createDate;
+        this.createDate = getDateIso(createDate);
         return this;
     }
 
     public GiftCertificate setLastUpdateDate(Date lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
+
+        this.lastUpdateDate = getDateIso(lastUpdateDate);
         return this;
+    }
+
+    private String getDateIso(Date date) {
+        TimeZone tz = TimeZone.getTimeZone("UTC");
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+        df.setTimeZone(tz);
+        return df.format(date);
     }
 
     @Override
