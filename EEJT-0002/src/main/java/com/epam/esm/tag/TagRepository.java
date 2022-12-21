@@ -1,7 +1,6 @@
 package com.epam.esm.tag;
 
 import java.util.List;
-import java.util.Map;
 
 public interface TagRepository {
     void createTag(Tag tag);
@@ -10,7 +9,9 @@ public interface TagRepository {
 
     List<Tag> getAllTags();
 
-    Tag getTagById(long id);
+    List<Tag> getTagById(long id);
 
-    boolean getTagByName(String name);
+    boolean isTagWithThisNameExists(String name);
+
+    long getIdByTag(Tag tag);
 }
