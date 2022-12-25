@@ -11,7 +11,9 @@ public interface TagRepository {
 
     List<Tag> getTagById(long id);
 
-    boolean isTagWithThisNameExists(String name);
+    boolean isTagWithNameExists(String name);
 
     long getIdByTag(Tag tag);
+
+    List<Tag> getAllTagsByCertificateId(long id);
 }
