@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.function.Predicate;
 
 public interface GiftCertificateRepository {
     List<GiftCertificate> getAllGiftCertificates();
@@ -17,15 +18,11 @@ public interface GiftCertificateRepository {
 
     int deleteCertificate(long id);
 
-    int updateGiftCertificate(long id, Map<String, ?> updatesMap);
+    int updateGiftCertificate(long id, Optional<Map<String, String>> updatesMap);
 
     long getIdByGiftCertificate(GiftCertificate giftCertificate);
 
-    void createGiftCertificateTag(long tagId, long giftCertificateId);
-
     boolean isGiftCertificateExist(GiftCertificate giftCertificate);
 
-    int deleteGiftCertificateTag(long GiftCertificateId);
-
-    Optional<String> getGiftCertificateNameById(long id);
+    void createGiftCertificateTagList(List<Long> tagsId, long giftCertificateId);
 }
