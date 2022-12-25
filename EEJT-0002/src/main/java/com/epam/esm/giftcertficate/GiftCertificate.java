@@ -1,13 +1,17 @@
 package com.epam.esm.giftcertficate;
 
-import java.util.Date;
+import com.epam.esm.tag.Tag;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 public class GiftCertificate {
     private Long id;
     private String name;
+    private List<Tag> tags;
     private String description;
     private Integer price;
     private Integer duration;
@@ -23,25 +27,22 @@ public class GiftCertificate {
         return name;
     }
 
+    public List<Tag> getTags() {
+        return tags;
+    }
+
     public String getDescription() {
         return description;
     }
 
-    public int getPrice() {
+    public Integer getPrice() {
         return price;
     }
 
-    public int getDuration() {
+    public Integer getDuration() {
         return duration;
     }
 
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public String getLastUpdateDate() {
-        return lastUpdateDate;
-    }
 
     public GiftCertificate setId(Long id) {
         this.id = id;
@@ -50,6 +51,11 @@ public class GiftCertificate {
 
     public GiftCertificate setName(String name) {
         this.name = name;
+        return this;
+    }
+
+    public GiftCertificate setTags(List<Tag> tags) {
+        this.tags = tags;
         return this;
     }
 
@@ -86,16 +92,4 @@ public class GiftCertificate {
         return df.format(date);
     }
 
-    @Override
-    public String toString() {
-        return "GiftCertificate{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", duration=" + duration +
-                ", createDate=" + createDate +
-                ", lastUpdateDate=" + lastUpdateDate +
-                '}';
-    }
 }
