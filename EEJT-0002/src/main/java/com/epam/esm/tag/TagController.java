@@ -20,7 +20,7 @@ public class TagController {
         this.tagService = tagService;
     }
 
-    @PostMapping(value = "/createTag", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createTag(@RequestBody Tag tag) {
         if (DataValidation.isValidTag(tag)) {
             tagService.createTag(tag);
@@ -29,7 +29,7 @@ public class TagController {
         throw new IllegalArgumentException("Something went wrong during the request, check your fields");
     }
 
-    @GetMapping(value = "/getAll")
+    @GetMapping()
     public ResponseEntity<?> getAllTags() {
         return new ResponseEntity<>(Map.of("tags", tagService.getAllTags()), HttpStatus.OK);
     }
@@ -42,7 +42,7 @@ public class TagController {
         throw new IllegalArgumentException("incorrect tag id=" + id);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         if (DataValidation.moreThenZero(id)) {
             tagService.deleteTag(id);
