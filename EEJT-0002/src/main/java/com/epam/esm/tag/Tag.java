@@ -10,7 +10,7 @@ public class Tag {
         return name;
     }
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
@@ -25,10 +25,21 @@ public class Tag {
     }
 
     @Override
-    public String toString() {
-        return "Tag{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Tag)) return false;
+
+        Tag tag = (Tag) o;
+
+        if (!getId().equals(tag.getId())) return false;
+        return getName().equals(tag.getName());
     }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getName().hashCode();
+        return result;
+    }
+
 }
