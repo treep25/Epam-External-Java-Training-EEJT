@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(value = "/certificates", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -19,16 +20,18 @@ public class GiftCertificateController {
         this.giftCertificateService = giftCertificateService;
     }
 
-    @PostMapping(value = "/createCertificate", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createCertificate(@RequestBody GiftCertificate giftCertificate) {
+
         if (DataValidation.isValidCertificate(giftCertificate)) {
             giftCertificateService.createCertificate(giftCertificate);
+
             return new ResponseEntity<>(Map.of("status", HttpStatus.CREATED), HttpStatus.CREATED);
         }
         throw new IllegalArgumentException("Something went wrong during the request, check your fields");
     }
 
-    @GetMapping(value = "/getAll")
+    @GetMapping()
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(Map.of("gift certificates", giftCertificateService.getAllCertificates()));
     }
@@ -36,28 +39,31 @@ public class GiftCertificateController {
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> getById(@PathVariable long id) {
         if (DataValidation.moreThenZero(id)) {
+
             return ResponseEntity.ok(Map.of("gift certificate", giftCertificateService.getCertificateById(id)));
         }
         throw new IllegalArgumentException("incorrect id=" + id);
     }
 
-    @PatchMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> updateCertificate(@RequestBody Map<String, ?> updatesMap, @PathVariable long id) {
+    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> updateCertificate(@RequestBody GiftCertificate giftCertificate, @PathVariable long id) {
         if (DataValidation.moreThenZero(id)) {
-            if (DataValidation.isUpdatesMapValid(updatesMap)) {
-                giftCertificateService.updateGiftCertificate(id, updatesMap);
-                return ResponseEntity.ok(Map.of("status", HttpStatus.OK));
+            Optional<Map<String, String>> updatesMap = DataValidation.isGiftCertificateValidForUpdating(giftCertificate);
+            if (updatesMap.isPresent()) {
+
+                return ResponseEntity.ok(Map.of("gift certificate", giftCertificateService.updateGiftCertificate(id, giftCertificate.getTags(), updatesMap)));
             }
             throw new IllegalArgumentException("Something went wrong during the request, check your fields");
         }
         throw new IllegalArgumentException("incorrect id=" + id);
     }
 
-    @DeleteMapping(value = "/delete/{id}")
+    @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteCertificate(@PathVariable long id) {
         if (DataValidation.moreThenZero(id)) {
             giftCertificateService.deleteGiftCertificate(id);
-            return ResponseEntity.ok(Map.of("status", HttpStatus.OK));
+
+            return new ResponseEntity<>(Map.of("status", HttpStatus.NO_CONTENT), HttpStatus.NO_CONTENT);
         }
         throw new IllegalArgumentException("incorrect id=" + id);
     }
