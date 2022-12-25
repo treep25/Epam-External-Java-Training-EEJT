@@ -10,10 +10,12 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import javax.swing.text.html.Option;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Predicate;
 
 @Repository
 public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
@@ -27,11 +29,17 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
         this.transactionTemplate = transactionTemplate;
     }
 
+    private List<Tag> getAllTagsByCertificateId(long certificateId) {
+        return jdbcTemplate.query(SqlQuery.GiftCertificate.GET_ALL_TAGS_BY_CERTIFICATE_ID, new Long[]{certificateId}, (resultSet, i) ->
+                new Tag().setId(resultSet.getLong("id")).setName(resultSet.getString("name")));
+    }
+
     @Override
     public List<GiftCertificate> getAllGiftCertificates() {
         return jdbcTemplate.query(SqlQuery.GiftCertificate.GET_ALL_CERTIFICATES, (resultSet, i) ->
                 new GiftCertificate().setId(resultSet.getLong("id")).
                         setName(resultSet.getString("name")).
+                        setTags(getAllTagsByCertificateId(resultSet.getLong("id"))).
                         setDescription(resultSet.getString("description")).
                         setPrice(resultSet.getInt("price")).
                         setDuration(resultSet.getInt("duration")).
@@ -56,6 +64,7 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
                 new GiftCertificate().
                         setId(resultSet.getLong("id")).
                         setName(resultSet.getString("name")).
+                        setTags(getAllTagsByCertificateId(resultSet.getLong("id"))).
                         setDescription(resultSet.getString("description")).
                         setPrice(resultSet.getInt("price")).
                         setPrice(resultSet.getInt("price")).
@@ -70,45 +79,44 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
     }
 
     @Override
-    public int updateGiftCertificate(long id, Map<String, ?> updatesMap) {
-        List<Object> listObj = new ArrayList<>();
+    public int updateGiftCertificate(long id, Optional<Map<String, String>> updatesMap) {
+        List<Object> updatesParam = new ArrayList<>();
+
         StringBuilder generatedQuery = new StringBuilder("UPDATE gift_certificate SET ");
-        for (Map.Entry<String, ?> entry : updatesMap.entrySet()) {
-            generatedQuery.append(entry.getKey()).append("= ? ,");
-            listObj.add(entry.getValue());
-        }
+        updatesMap.get().forEach((key, value) -> {
 
+            generatedQuery.append(key).append("= ? ,");
+            updatesParam.add(value);
+        });
         generatedQuery.append("last_update_date = ? WHERE id = ?");
-        listObj.addAll(List.of(Instant.now(), id));
 
-        return jdbcTemplate.update(generatedQuery.toString(), listObj.toArray());
+        updatesParam.addAll(List.of(Instant.now(), id));
+
+        return jdbcTemplate.update(generatedQuery.toString(), updatesParam.toArray());
     }
 
     @Override
     public long getIdByGiftCertificate(GiftCertificate giftCertificate) {
-        return jdbcTemplate.queryForObject("SELECT id FROM gift_certificate WHERE name = ? AND description = ? AND price = ? AND duration = ?",
+        return jdbcTemplate.queryForObject(SqlQuery.GiftCertificate.GET_ID_BY_GIFT_CERTIFICATE,
                 new Object[]{giftCertificate.getName(), giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration()}
                 , Long.class);
     }
 
+    @Override
     public boolean isGiftCertificateExist(GiftCertificate giftCertificate) {
-        return Boolean.TRUE.equals(jdbcTemplate.queryForObject("SELECT EXISTS(SELECT * FROM gift_certificate WHERE name=? AND description = ? AND price = ? AND duration = ?)", Boolean.class,
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(SqlQuery.GiftCertificate.IS_GIFT_CERTIFICATE_EXIST, Boolean.class,
                 giftCertificate.getName(), giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration()));
     }
 
-    @Override
-    public void createGiftCertificateTag(long tagId, long giftCertificateId) {
+    private void createGiftCertificateTag(long tagId, long giftCertificateId) {
         transactionTemplate.execute((TransactionCallback<Object>) transactionStatus ->
-                jdbcTemplate.update("INSERT INTO gift_certificate_tag (gift_certificate_id,tag_id) VALUES (?,?)", giftCertificateId, tagId));
+                jdbcTemplate.update(SqlQuery.GiftCertificate.CREATE_GIFT_CERTIFICATE_TAG, giftCertificateId, tagId));
     }
 
     @Override
-    public int deleteGiftCertificateTag(long giftCertificateId) {
-        return jdbcTemplate.update("DELETE FROM gift_certificate_tag WHERE gift_certificate_id = ?", giftCertificateId);
-    }
-
-    @Override
-    public Optional<String> getGiftCertificateNameById(long id) {
-        return Optional.ofNullable(jdbcTemplate.queryForObject("SELECT name FROM gift_certificate WHERE id = ?", new Long[]{id}, String.class));
+    public void createGiftCertificateTagList(List<Long> tagsId, long giftCertificateId) {
+        for (long tagId : tagsId) {
+            createGiftCertificateTag(tagId, giftCertificateId);
+        }
     }
 }
