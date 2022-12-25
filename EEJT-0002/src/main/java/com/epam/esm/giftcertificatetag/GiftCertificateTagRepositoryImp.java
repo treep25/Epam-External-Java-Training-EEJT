@@ -8,11 +8,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Map;
 
 
 @Repository
-public class GiftCertificateTagRepositoryImp {
+public class GiftCertificateTagRepositoryImp implements GiftCertificateTagRepository {
     private final JdbcTemplate jdbcTemplate;
 
     @Autowired
@@ -20,28 +19,61 @@ public class GiftCertificateTagRepositoryImp {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<?> getGiftCertificatesAndTags() {
-        return jdbcTemplate.query("SELECT t.id, t.name, gc.id, gc.name, description, price,duration, create_date, last_update_date FROM  gift_certificate_tag gct INNER JOIN tag t ON gct.tag_id = t.id INNER JOIN gift_certificate gc ON gct.gift_certificate_id = gc.id",
-                (resultSet, i) -> Map.of(new Tag().setId(resultSet.getLong(1)).setName(resultSet.getString(2)),
-                        new GiftCertificate().setId(resultSet.getLong(3)).setName(resultSet.getString(4)).setDescription(resultSet.getString(5)).setPrice(resultSet.getInt(6)).setDuration(resultSet.getInt(7)).setCreateDate(resultSet.getDate(8)).setLastUpdateDate(resultSet.getDate(9))));
+    public List<GiftCertificate> getGiftCertificateTagsByTagName(String tagName) {
+        return jdbcTemplate.query(SqlQuery.TagGiftCertificate.GET_GIFT_CERTIFICATE_TAGS_BY_TAG_NAME, new String[]{tagName}, (resultSet, i) ->
+                new GiftCertificate().setId(resultSet.getLong("id")).
+                        setName(resultSet.getString("name")).
+                        setTags(getAllTagsByCertificateIdOrderByTagName(resultSet.getLong("id"), tagName)).
+                        setDescription(resultSet.getString("description")).
+                        setPrice(resultSet.getInt("price")).
+                        setDuration(resultSet.getInt("duration")).
+                        setCreateDate(resultSet.getDate("create_date")).
+                        setLastUpdateDate(resultSet.getDate("last_update_date")));
     }
 
-    public List<?> getGiftCertificatesAndTagsByNameOrByPartOfName(String partOfName) {
-        return jdbcTemplate.query("SELECT t.id, t.name, gc.id, gc.name, description, price,duration, create_date, last_update_date FROM  gift_certificate_tag gct INNER JOIN tag t ON gct.tag_id = t.id AND t.name LIKE ? INNER JOIN gift_certificate gc ON gct.gift_certificate_id = gc.id", new String[]{partOfName + "%"},
-                (resultSet, i) -> Map.of(new Tag().setId(resultSet.getLong(1)).setName(resultSet.getString(2)),
-                        new GiftCertificate().setId(resultSet.getLong(3)).setName(resultSet.getString(4)).setDescription(resultSet.getString(5)).setPrice(resultSet.getInt(6)).setDuration(resultSet.getInt(7)).setCreateDate(resultSet.getDate(8)).setLastUpdateDate(resultSet.getDate(9))));
-
+    public List<GiftCertificate> getGiftCertificatesAndTagsByNameOrByPartOfName(String partOfName) {
+        return jdbcTemplate.query(SqlQuery.TagGiftCertificate.GET_GIFT_CERTIFICATE_AND_TAGS_BY_NAME_OR_BY_PART_OF_NAME, new String[]{partOfName + "%"},
+                (resultSet, i) -> new GiftCertificate().setId(resultSet.getLong("id")).
+                        setName(resultSet.getString("name")).
+                        setTags(getAllTagsByCertificate(resultSet.getLong("id"))).
+                        setDescription(resultSet.getString("description")).
+                        setPrice(resultSet.getInt("price")).
+                        setDuration(resultSet.getInt("duration")).
+                        setCreateDate(resultSet.getDate("create_date")).
+                        setLastUpdateDate(resultSet.getDate("last_update_date")));
     }
 
-    public List<?> sortingAscDescByDate(String method) {
+    public List<GiftCertificate> sortingAscDescByDate(String method) {
         return jdbcTemplate.query(SqlQuery.TagGiftCertificate.getTypeOfSortingForDate(method),
-                (resultSet, i) -> Map.of(new Tag().setId(resultSet.getLong(1)).setName(resultSet.getString(2)),
-                        new GiftCertificate().setId(resultSet.getLong(3)).setName(resultSet.getString(4)).setDescription(resultSet.getString(5)).setPrice(resultSet.getInt(6)).setDuration(resultSet.getInt(7)).setCreateDate(resultSet.getDate(8)).setLastUpdateDate(resultSet.getDate(9))));
+                (resultSet, i) -> new GiftCertificate().setId(resultSet.getLong("id")).
+                        setName(resultSet.getString("name")).
+                        setTags(getAllTagsByCertificate(resultSet.getLong("id"))).
+                        setDescription(resultSet.getString("description")).
+                        setPrice(resultSet.getInt("price")).
+                        setDuration(resultSet.getInt("duration")).
+                        setCreateDate(resultSet.getDate("create_date")).
+                        setLastUpdateDate(resultSet.getDate("last_update_date")));
     }
 
-    public List<?> sortingAscDescByDateAndByName(String method) {
-        return jdbcTemplate.query(SqlQuery.TagGiftCertificate.getTypeOfSortingForDateAndName(method),
-                (resultSet, i) -> Map.of(new Tag().setId(resultSet.getLong(1)).setName(resultSet.getString(2)),
-                        new GiftCertificate().setId(resultSet.getLong(3)).setName(resultSet.getString(4)).setDescription(resultSet.getString(5)).setPrice(resultSet.getInt(6)).setDuration(resultSet.getInt(7)).setCreateDate(resultSet.getDate(8)).setLastUpdateDate(resultSet.getDate(9))));
+    public List<GiftCertificate> sortingAscDescByDateAndByName(String method1, String method2) {
+        return jdbcTemplate.query(SqlQuery.TagGiftCertificate.getTypeOfSortingForDateAndName(method1, method2),
+                (resultSet, i) -> new GiftCertificate().setId(resultSet.getLong("id")).
+                        setName(resultSet.getString("name")).
+                        setTags(getAllTagsByCertificate(resultSet.getLong("id"))).
+                        setDescription(resultSet.getString("description")).
+                        setPrice(resultSet.getInt("price")).
+                        setDuration(resultSet.getInt("duration")).
+                        setCreateDate(resultSet.getDate("create_date")).
+                        setLastUpdateDate(resultSet.getDate("last_update_date")));
+    }
+
+    private List<Tag> getAllTagsByCertificateIdOrderByTagName(long certificateId, String tagName) {
+        return jdbcTemplate.query(SqlQuery.TagGiftCertificate.GET_ALL_TAGS_BY_GIFT_CERTIFICATE_ID_ORDER_BY_TAG_NAME, new Object[]{certificateId, tagName}, (resultSet, i) ->
+                new Tag().setId(resultSet.getLong("id")).setName(resultSet.getString("name")));
+    }
+
+    private List<Tag> getAllTagsByCertificate(long certificateId) {
+        return jdbcTemplate.query(SqlQuery.TagGiftCertificate.GET_ALL_TAGS_BY_GIFT_CERTIFICATE_ID, new Long[]{certificateId}, (resultSet, i) ->
+                new Tag().setId(resultSet.getLong("id")).setName(resultSet.getString("name")));
     }
 }
