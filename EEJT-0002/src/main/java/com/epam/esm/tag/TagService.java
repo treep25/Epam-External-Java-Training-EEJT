@@ -4,6 +4,7 @@ import com.epam.esm.utils.ItemNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -40,16 +41,36 @@ public class TagService {
     }
 
     public void deleteTag(long id) {
-        if (tagRepositoryImpl.deleteTag(id) < 1) {
+        if (tagRepositoryImpl.deleteTag(id) != 1) {
             throw new ItemNotFoundException("there is no gift certificate with id= " + id);
         }
     }
 
     public boolean isTagByNameExists(String name) {
-        return tagRepositoryImpl.isTagWithThisNameExists(name);
+        return tagRepositoryImpl.isTagWithNameExists(name);
+    }
+
+    public void isTagsExistOrElseCreate(List<Tag> tags) {
+        for (Tag tag : tags) {
+            if (!isTagByNameExists(tag.getName())) {
+                createTag(tag);
+            }
+        }
     }
 
     public long getTagIdByName(Tag tag) {
         return tagRepositoryImpl.getIdByTag(tag);
+    }
+
+    public List<Long> getTagsIdByNames(List<Tag> tags) {
+        List<Long> listTagsId = new ArrayList<>();
+        for (Tag tag : tags) {
+            listTagsId.add(getTagIdByName(tag));
+        }
+        return listTagsId;
+    }
+
+    public List<Tag> getAllTagsByCertificateId(long id) {
+        return tagRepositoryImpl.getAllTagsByCertificateId(id);
     }
 }
