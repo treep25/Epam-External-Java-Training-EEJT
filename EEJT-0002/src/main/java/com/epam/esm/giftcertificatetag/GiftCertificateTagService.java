@@ -12,39 +12,39 @@ import java.util.Map;
 @Service
 public class GiftCertificateTagService {
 
-    private final GiftCertificateTagRepositoryImp giftCertificateTagRepositoryImp;
+    private final GiftCertificateTagRepository giftCertificateTagRepository;
 
     @Autowired
-    public GiftCertificateTagService(GiftCertificateTagRepositoryImp giftCertificateTagRepositoryImp) {
-        this.giftCertificateTagRepositoryImp = giftCertificateTagRepositoryImp;
+    public GiftCertificateTagService(GiftCertificateTagRepository giftCertificateTagRepository) {
+        this.giftCertificateTagRepository = giftCertificateTagRepository;
     }
 
-    public List<?> getGiftCertificatesAndTags() {
-        List<?> giftCertificatesAndTags = giftCertificateTagRepositoryImp.getGiftCertificatesAndTags();
-        if (!giftCertificatesAndTags.isEmpty()) {
-            return giftCertificatesAndTags;
+    public List<GiftCertificate> getGiftCertificatesByTagName(String tagName) {
+        List<GiftCertificate> listGiftCertificateTags = giftCertificateTagRepository.getGiftCertificateTagsByTagName(tagName);
+        if (!listGiftCertificateTags.isEmpty()) {
+            return listGiftCertificateTags;
         }
-        throw new ItemNotFoundException("There are no tags");
+        throw new ItemNotFoundException("There are no certificates with tag name = " + tagName);
     }
 
-    public List<?> getGiftCertificatesAndTagsByNameOrByPartOfName(String partOfName) {
-        List<?> giftCertificatesAndTagsByName = giftCertificateTagRepositoryImp.getGiftCertificatesAndTagsByNameOrByPartOfName(partOfName);
+    public List<GiftCertificate> getGiftCertificatesAndTagsByNameOrByPartOfName(String partOfName) {
+        List<GiftCertificate> giftCertificatesAndTagsByName = giftCertificateTagRepository.getGiftCertificatesAndTagsByNameOrByPartOfName(partOfName);
         if (!giftCertificatesAndTagsByName.isEmpty()) {
             return giftCertificatesAndTagsByName;
         }
-        throw new ItemNotFoundException("There are no tags with name =" + partOfName);
+        throw new ItemNotFoundException("There are no gift certificates with name or starting with  =" + partOfName);
     }
 
-    public List<?> sortingAscDescByDate(String method) {
-        List<?> sortingTagsAndCertificates = giftCertificateTagRepositoryImp.sortingAscDescByDate(method);
+    public List<GiftCertificate> sortingAscDescByDate(String method) {
+        List<GiftCertificate> sortingTagsAndCertificates = giftCertificateTagRepository.sortingAscDescByDate(method);
         if (!sortingTagsAndCertificates.isEmpty()) {
             return sortingTagsAndCertificates;
         }
         throw new ItemNotFoundException("There are no tags and certificates");
     }
 
-    public List<?> sortingAscDescByDateAndByName(String method) {
-        List<?> sortingTagsAndCertificates = giftCertificateTagRepositoryImp.sortingAscDescByDateAndByName(method);
+    public List<GiftCertificate> sortingAscDescByDateAndByName(String method1, String method2) {
+        List<GiftCertificate> sortingTagsAndCertificates = giftCertificateTagRepository.sortingAscDescByDateAndByName(method1, method2);
         if (!sortingTagsAndCertificates.isEmpty()) {
             return sortingTagsAndCertificates;
         }
