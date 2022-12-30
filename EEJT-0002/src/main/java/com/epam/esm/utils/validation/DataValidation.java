@@ -1,7 +1,7 @@
-package com.epam.esm.utils;
+package com.epam.esm.utils.validation;
 
-import com.epam.esm.giftcertficate.GiftCertificate;
-import com.epam.esm.tag.Tag;
+import com.epam.esm.giftcertficate.model.GiftCertificate;
+import com.epam.esm.tag.model.Tag;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
