@@ -1,6 +1,4 @@
-package com.epam.esm.tag;
-
-import com.epam.esm.giftcertficate.GiftCertificate;
+package com.epam.esm.tag.model;
 
 public class Tag {
     private Long id;

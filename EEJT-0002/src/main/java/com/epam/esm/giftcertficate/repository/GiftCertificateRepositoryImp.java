@@ -1,21 +1,16 @@
-package com.epam.esm.giftcertficate;
+package com.epam.esm.giftcertficate.repository;
 
-import com.epam.esm.tag.Tag;
-import com.epam.esm.utils.SqlQuery;
+import com.epam.esm.giftcertficate.model.GiftCertificate;
+import com.epam.esm.tag.model.Tag;
+import com.epam.esm.utils.query.SqlQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallback;
 import org.springframework.transaction.support.TransactionTemplate;
 
-import javax.swing.text.html.Option;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.Instant;
 import java.util.*;
-import java.util.function.Predicate;
 
 @Repository
 public class GiftCertificateRepositoryImp implements GiftCertificateRepository {

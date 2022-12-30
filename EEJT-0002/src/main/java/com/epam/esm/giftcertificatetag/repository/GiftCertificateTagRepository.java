@@ -1,6 +1,6 @@
-package com.epam.esm.giftcertificatetag;
+package com.epam.esm.giftcertificatetag.repository;
 
-import com.epam.esm.giftcertficate.GiftCertificate;
+import com.epam.esm.giftcertficate.model.GiftCertificate;
 
 import java.util.List;
 

@@ -1,6 +1,8 @@
-package com.epam.esm.giftcertficate;
+package com.epam.esm.giftcertficate.controller;
 
-import com.epam.esm.utils.DataValidation;
+import com.epam.esm.giftcertficate.service.GiftCertificateService;
+import com.epam.esm.giftcertficate.model.GiftCertificate;
+import com.epam.esm.utils.validation.DataValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

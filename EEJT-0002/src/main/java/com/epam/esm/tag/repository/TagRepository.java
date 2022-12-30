@@ -1,9 +1,11 @@
-package com.epam.esm.tag;
+package com.epam.esm.tag.repository;
+
+import com.epam.esm.tag.model.Tag;
 
 import java.util.List;
 
 public interface TagRepository {
-    void createTag(Tag tag);
+    int createTag(Tag tag);
 
     int deleteTag(long id);
 

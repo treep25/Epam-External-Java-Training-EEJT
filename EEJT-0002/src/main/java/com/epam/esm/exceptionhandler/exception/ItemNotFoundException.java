@@ -1,4 +1,4 @@
-package com.epam.esm.utils;
+package com.epam.esm.exceptionhandler.exception;
 
 public class ItemNotFoundException extends RuntimeException {
 

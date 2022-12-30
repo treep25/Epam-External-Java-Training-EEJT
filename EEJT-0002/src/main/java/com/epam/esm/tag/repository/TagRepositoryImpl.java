@@ -1,14 +1,12 @@
-package com.epam.esm.tag;
+package com.epam.esm.tag.repository;
 
-import com.epam.esm.utils.SqlQuery;
+import com.epam.esm.tag.model.Tag;
+import com.epam.esm.utils.query.SqlQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.ResultSet;
-import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 @Repository
 public class TagRepositoryImpl implements TagRepository {
@@ -21,8 +19,8 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public void createTag(Tag tag) {
-        jdbcTemplate.update(SqlQuery.Tag.CREATE_TAG, tag.getName());
+    public int createTag(Tag tag) {
+        return jdbcTemplate.update(SqlQuery.Tag.CREATE_TAG, tag.getName());
     }
 
     @Override

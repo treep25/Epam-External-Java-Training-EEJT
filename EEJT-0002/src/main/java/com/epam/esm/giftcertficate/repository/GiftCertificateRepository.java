@@ -1,13 +1,10 @@
-package com.epam.esm.giftcertficate;
+package com.epam.esm.giftcertficate.repository;
 
-import com.epam.esm.giftcertficate.GiftCertificate;
-import com.epam.esm.tag.Tag;
+import com.epam.esm.giftcertficate.model.GiftCertificate;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.function.Predicate;
 
 public interface GiftCertificateRepository {
     List<GiftCertificate> getAllGiftCertificates();

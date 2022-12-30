@@ -1,6 +1,7 @@
-package com.epam.esm.giftcertificatetag;
+package com.epam.esm.giftcertificatetag.controller;
 
-import com.epam.esm.utils.DataValidation;
+import com.epam.esm.giftcertificatetag.service.GiftCertificateTagService;
+import com.epam.esm.utils.validation.DataValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -8,10 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.xml.datatype.Duration;
-import java.util.List;
-import java.util.Locale;
 
 @RestController
 @RequestMapping(value = "/tag-with-certificates", produces = MediaType.APPLICATION_JSON_VALUE)

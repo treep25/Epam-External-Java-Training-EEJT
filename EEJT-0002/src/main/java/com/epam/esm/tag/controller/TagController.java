@@ -1,6 +1,8 @@
-package com.epam.esm.tag;
+package com.epam.esm.tag.controller;
 
-import com.epam.esm.utils.DataValidation;
+import com.epam.esm.tag.service.TagService;
+import com.epam.esm.tag.model.Tag;
+import com.epam.esm.utils.validation.DataValidation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,8 +25,9 @@ public class TagController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> createTag(@RequestBody Tag tag) {
         if (DataValidation.isValidTag(tag)) {
-            tagService.createTag(tag);
-            return new ResponseEntity<>(Map.of("status", HttpStatus.CREATED), HttpStatus.CREATED);
+            if (tagService.createTag(tag) == 1) {
+                return new ResponseEntity<>(Map.of("status", HttpStatus.CREATED), HttpStatus.CREATED);
+            }
         }
         throw new IllegalArgumentException("Something went wrong during the request, check your fields");
     }

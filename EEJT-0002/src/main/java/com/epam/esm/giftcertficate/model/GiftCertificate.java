@@ -1,6 +1,6 @@
-package com.epam.esm.giftcertficate;
+package com.epam.esm.giftcertficate.model;
 
-import com.epam.esm.tag.Tag;
+import com.epam.esm.tag.model.Tag;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

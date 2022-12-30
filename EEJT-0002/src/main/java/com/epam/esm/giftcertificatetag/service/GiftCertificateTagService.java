@@ -1,13 +1,12 @@
-package com.epam.esm.giftcertificatetag;
+package com.epam.esm.giftcertificatetag.service;
 
-import com.epam.esm.giftcertficate.GiftCertificate;
-import com.epam.esm.tag.Tag;
-import com.epam.esm.utils.ItemNotFoundException;
+import com.epam.esm.giftcertficate.model.GiftCertificate;
+import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
+import com.epam.esm.giftcertificatetag.repository.GiftCertificateTagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class GiftCertificateTagService {

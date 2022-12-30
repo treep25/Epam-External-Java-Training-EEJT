@@ -1,5 +1,6 @@
-package com.epam.esm.utils;
+package com.epam.esm.exceptionhandler.handler;
 
+import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

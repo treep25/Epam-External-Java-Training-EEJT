@@ -1,4 +1,4 @@
-package com.epam.esm.utils;
+package com.epam.esm.utils.query;
 
 import java.util.List;
 import java.util.Locale;

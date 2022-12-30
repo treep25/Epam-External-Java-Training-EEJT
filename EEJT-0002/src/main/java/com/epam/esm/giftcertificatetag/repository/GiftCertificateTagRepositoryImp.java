@@ -1,8 +1,8 @@
-package com.epam.esm.giftcertificatetag;
+package com.epam.esm.giftcertificatetag.repository;
 
-import com.epam.esm.giftcertficate.GiftCertificate;
-import com.epam.esm.tag.Tag;
-import com.epam.esm.utils.SqlQuery;
+import com.epam.esm.giftcertficate.model.GiftCertificate;
+import com.epam.esm.tag.model.Tag;
+import com.epam.esm.utils.query.SqlQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

@@ -1,6 +1,8 @@
-package com.epam.esm.tag;
+package com.epam.esm.tag.service;
 
-import com.epam.esm.utils.ItemNotFoundException;
+import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
+import com.epam.esm.tag.model.Tag;
+import com.epam.esm.tag.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,23 +11,23 @@ import java.util.List;
 
 @Service
 public class TagService {
-    private final TagRepositoryImpl tagRepositoryImpl;
+    private final TagRepository tagRepository;
 
     @Autowired
-    public TagService(TagRepositoryImpl tagRepositoryImpl) {
-        this.tagRepositoryImpl = tagRepositoryImpl;
+    public TagService(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
     }
 
-    public void createTag(Tag tag) {
+    public int createTag(Tag tag) {
         if (!isTagByNameExists(tag.getName())) {
-            tagRepositoryImpl.createTag(tag);
+            return tagRepository.createTag(tag);
         } else {
             throw new IllegalArgumentException("This tag has already existed");
         }
     }
 
     public List<Tag> getAllTags() {
-        List<Tag> allTags = tagRepositoryImpl.getAllTags();
+        List<Tag> allTags = tagRepository.getAllTags();
         if (!allTags.isEmpty()) {
             return allTags;
         }
@@ -33,21 +35,23 @@ public class TagService {
     }
 
     public List<Tag> getTagById(long id) {
-        List<Tag> tag = tagRepositoryImpl.getTagById(id);
+        List<Tag> tag = tagRepository.getTagById(id);
         if (!tag.isEmpty()) {
             return tag;
         }
-        throw new ItemNotFoundException("There are no gift certificate with id= " + id);
+        throw new ItemNotFoundException("There are no tags with id= " + id);
     }
 
-    public void deleteTag(long id) {
-        if (tagRepositoryImpl.deleteTag(id) != 1) {
-            throw new ItemNotFoundException("there is no gift certificate with id= " + id);
+    public int deleteTag(long id) {
+        int result = tagRepository.deleteTag(id);
+        if (result == 1) {
+            return result;
         }
+        throw new ItemNotFoundException("There is no tag with id= " + id);
     }
 
     public boolean isTagByNameExists(String name) {
-        return tagRepositoryImpl.isTagWithNameExists(name);
+        return tagRepository.isTagWithNameExists(name);
     }
 
     public void isTagsExistOrElseCreate(List<Tag> tags) {
@@ -58,19 +62,19 @@ public class TagService {
         }
     }
 
-    public long getTagIdByName(Tag tag) {
-        return tagRepositoryImpl.getIdByTag(tag);
+    public long getTagIdByTag(Tag tag) {
+        return tagRepository.getIdByTag(tag);
     }
 
-    public List<Long> getTagsIdByNames(List<Tag> tags) {
+    public List<Long> getTagsIdByTags(List<Tag> tags) {
         List<Long> listTagsId = new ArrayList<>();
         for (Tag tag : tags) {
-            listTagsId.add(getTagIdByName(tag));
+            listTagsId.add(getTagIdByTag(tag));
         }
         return listTagsId;
     }
 
     public List<Tag> getAllTagsByCertificateId(long id) {
-        return tagRepositoryImpl.getAllTagsByCertificateId(id);
+        return tagRepository.getAllTagsByCertificateId(id);
     }
 }
