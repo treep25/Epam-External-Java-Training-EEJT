@@ -1,5 +1,6 @@
 package com.epam.esm.utils.validation;
 
+import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.model.Tag;
 import org.apache.commons.lang3.StringUtils;
@@ -9,9 +10,9 @@ import java.util.*;
 public class DataValidation {
     public static boolean isValidCertificate(GiftCertificate giftCertificate) {
         return giftCertificate != null && isStringValid(giftCertificate.getName()) &&
-                giftCertificate.getDuration() > 0 &&
+                giftCertificate.getDuration() >= 0 &&
                 isStringValid(giftCertificate.getDescription()) &&
-                giftCertificate.getPrice() > 0 && isCertificateConsistsTagsOptionalValid(giftCertificate.getTags());
+                giftCertificate.getPrice() >= 0 && isCertificateConsistsTagsOptionalValid(giftCertificate.getTags());
     }
 
     public static boolean isCertificateConsistsTagsOptionalValid(List<Tag> tagList) {
@@ -33,40 +34,45 @@ public class DataValidation {
         return tag != null && isStringValid(tag.getName());
     }
 
-    public static Optional<Map<String, String>> isGiftCertificateValidForUpdating(GiftCertificate giftCertificate) {
-        Map<String, String> map = new HashMap<>();
+    private static String validateGiftCertificateForUpdating(GiftCertificate giftCertificate) {
+        StringJoiner answer = new StringJoiner(",");
         if (giftCertificate != null) {
+            if (giftCertificate.getName() != null && StringUtils.isNumeric(giftCertificate.getName())) {
+                answer.add("name " + giftCertificate.getName());
+            }
+            if (!isCertificateConsistsTagsOptionalValid(giftCertificate.getTags())) {
+                answer.add("tags" + giftCertificate.getTags().toString());
+            }
+            return answer.toString();
+        }
+        return "Gift certificate cannot be null for updating";
+    }
+
+    public static Optional<Map<String, String>> isGiftCertificateValidForUpdating(GiftCertificate giftCertificate) {
+
+        Map<String, String> map = new HashMap<>();
+        String answer = validateGiftCertificateForUpdating(giftCertificate);
+
+        if (answer.isEmpty()) {
             if (giftCertificate.getName() != null) {
-                if (StringUtils.isBlank(giftCertificate.getName()) || StringUtils.isEmpty(giftCertificate.getName())) {
-                    return Optional.empty();
-                }
+
                 map.put("name", giftCertificate.getName());
             }
             if (giftCertificate.getDescription() != null) {
-                if (StringUtils.isBlank(giftCertificate.getDescription()) || StringUtils.isEmpty(giftCertificate.getDescription())) {
-                    return Optional.empty();
-                }
+
                 map.put("description", giftCertificate.getDescription());
             }
-            if (giftCertificate.getPrice() != null) {
-                if (StringUtils.isBlank(giftCertificate.getPrice().toString()) || StringUtils.isEmpty(giftCertificate.getPrice().toString())) {
-                    return Optional.empty();
-                }
-                map.put("price", giftCertificate.getPrice().toString());
+            if (giftCertificate.getPrice() != null && giftCertificate.getPrice() >= 0) {
+
+                map.put("price", String.valueOf(giftCertificate.getPrice()));
             }
-            if (giftCertificate.getDuration() != null) {
-                if (StringUtils.isBlank(giftCertificate.getDuration().toString()) || StringUtils.isEmpty(giftCertificate.getDuration().toString())) {
-                    return Optional.empty();
-                }
-                map.put("duration", giftCertificate.getDuration().toString());
+            if (giftCertificate.getDuration() != null && giftCertificate.getDuration() >= 0) {
+
+                map.put("duration", String.valueOf(giftCertificate.getDuration()));
             }
-            if (giftCertificate.getTags() != null) {
-                if (!isCertificateConsistsTagsOptionalValid(giftCertificate.getTags())) {
-                    return Optional.empty();
-                }
-            }
+            return Optional.of(map);
         }
-        return Optional.of(map);
+        throw new ServerException("Something went wrong, check this fields " + answer);
     }
 
     public static boolean isStringValid(String obj) {
