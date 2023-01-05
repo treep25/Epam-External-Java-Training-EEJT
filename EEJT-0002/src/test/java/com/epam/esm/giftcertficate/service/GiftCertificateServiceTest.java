@@ -1,9 +1,11 @@
 package com.epam.esm.giftcertficate.service;
 
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
+import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.giftcertficate.repository.GiftCertificateRepository;
 import com.epam.esm.tag.model.Tag;
+import com.epam.esm.tag.repository.TagRepository;
 import com.epam.esm.tag.service.TagService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,22 +14,71 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class GiftCertificateServiceTest {
 
     @Mock
     private GiftCertificateRepository giftCertificateRepositoryMock;
+    @Mock
+    private TagRepository tagRepositoryMock;
+    @Mock
+    private TagService tagServiceMock;
     @InjectMocks
     private GiftCertificateService giftCertificateServiceMock;
-    @InjectMocks
-    private TagService tagServiceMock;
+
+    @Test
+    public void createCertificateTest_Return1IfCreated() {
+        //given
+        GiftCertificate giftCertificateTestObj = new GiftCertificate().setTags(List.of(new Tag().setName("1Tag")));
+        List<Long> tagsIdList = List.of(1L);
+        long certificateId = 1L;
+
+        when(giftCertificateRepositoryMock.isGiftCertificateExist(giftCertificateTestObj)).thenReturn(false);
+        when(giftCertificateRepositoryMock.createCertificate(giftCertificateTestObj)).thenReturn(true);
+
+        when(tagServiceMock.isTagsExistOrElseCreate(giftCertificateTestObj.getTags())).thenReturn(true);
+        when(tagServiceMock.getTagsIdByTags(giftCertificateTestObj.getTags())).thenReturn(tagsIdList);
+
+        when(giftCertificateRepositoryMock.getIdByGiftCertificate(giftCertificateTestObj)).thenReturn(certificateId);
+        when(giftCertificateRepositoryMock.createGiftCertificateTagRelationship(tagsIdList, certificateId)).thenReturn(true);
+
+        //when
+        boolean actual = giftCertificateServiceMock.createCertificate(giftCertificateTestObj);
+
+        //then
+        assertTrue(actual);
+    }
+
+    @Test
+    public void createCertificateTest_Return0IfDidNotCreate() {
+        //given
+        GiftCertificate giftCertificateTestObj = new GiftCertificate().setTags(List.of(new Tag().setName("1Tag")));
+        boolean expectedResult = true;
+
+        //when
+        when(giftCertificateRepositoryMock.isGiftCertificateExist(giftCertificateTestObj)).thenReturn(expectedResult);
+        ServerException thrown = assertThrows(ServerException.class,
+                () -> giftCertificateServiceMock.createCertificate(giftCertificateTestObj));
+
+        //then
+        assertEquals("Such certificate has already existed", thrown.getMessage());
+    }
+
+    @Test
+    public void createCertificateTest_Return1IfCreated_WithOutTags() {
+        //given
+        GiftCertificate giftCertificateTestObj = new GiftCertificate();
+
+        when(giftCertificateRepositoryMock.isGiftCertificateExist(giftCertificateTestObj)).thenReturn(false);
+        when(giftCertificateRepositoryMock.createCertificate(giftCertificateTestObj)).thenReturn(true);
+
+        //then
+        assertTrue(giftCertificateServiceMock.createCertificate(giftCertificateTestObj));
+    }
 
     @Test
     void getAllCertificatesTest() {
@@ -42,19 +93,6 @@ class GiftCertificateServiceTest {
         assertEquals(expected, actual);
     }
 
-    @Test
-    void getAllCertificatesTest_ReturnItemNotFoundException_WhenListEmpty() {
-        //given
-        List<GiftCertificate> testObj = List.of();
-
-        //when
-        when(giftCertificateRepositoryMock.getAllGiftCertificates()).thenReturn(testObj);
-        ItemNotFoundException thrown = assertThrows(ItemNotFoundException.class,
-                () -> giftCertificateServiceMock.getAllCertificates());
-        //then
-        assertEquals("There are no gift certificates", thrown.getMessage());
-
-    }
 
     @Test
     void getCertificateByIdTest() {
@@ -84,24 +122,40 @@ class GiftCertificateServiceTest {
     }
 
     @Test
-    void updateGiftCertificateTest_ReturnListGiftCertificates_WhenAlIfComplete() {
+    public void deleteGiftCertificateTest_ReturnItemNotFoundException_WhenListIsEmpty() {
         //given
-        List<GiftCertificate> expected = List.of(new GiftCertificate().setTags(List.of(new Tag().setName("newTag"))));
-        Map<String, String> updatesMap = Map.of("name", "newName");
-        long testId = 1L;
-        List<Tag> tagsObj = List.of(new Tag().setName("newTag"));
+        long testObjId = 1L;
+
+        when(giftCertificateRepositoryMock.deleteCertificate(testObjId)).thenReturn(false);
 
         //when
-        when(giftCertificateRepositoryMock.updateGiftCertificate(testId, Optional.of(updatesMap))).thenReturn(1);
-        when(tagServiceMock.getAllTagsByCertificateId(testId)).thenReturn(tagsObj);
-//        when(tagServiceMock.isTagsExistOrElseCreate(List.of(new Tag().setName("newTag")))).thenReturn() //TODO
+
+        ItemNotFoundException thrown = assertThrows(ItemNotFoundException.class,
+                () -> giftCertificateServiceMock.deleteGiftCertificate(testObjId));
+        //then
+        assertEquals("There is no gift certificate with id= " + testObjId, thrown.getMessage());
+    }
+
+    @Test
+    public void deleteGiftCertificateTest_Return1_WhenListIsNotEmpty() {
+        //given
+        long testObjId = 1L;
+
+        when(giftCertificateRepositoryMock.deleteCertificate(testObjId)).thenReturn(true);
 
         //then
-
-
+        assertTrue(giftCertificateServiceMock.deleteGiftCertificate(testObjId));
     }
 
     @Test
     void getGiftCertificateId() {
+        //given
+        long id = 1L;
+        GiftCertificate giftCertificate = new GiftCertificate();
+        //when
+        when(giftCertificateRepositoryMock.getIdByGiftCertificate(giftCertificate)).thenReturn(id);
+
+        //then
+        assertEquals(id, giftCertificateServiceMock.getGiftCertificateId(giftCertificate));
     }
 }

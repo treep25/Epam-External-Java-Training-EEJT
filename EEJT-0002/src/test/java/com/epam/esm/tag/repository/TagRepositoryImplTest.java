@@ -11,8 +11,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class TagRepositoryImplTest {
@@ -22,9 +21,9 @@ class TagRepositoryImplTest {
     @BeforeEach
     public void setUp() {
         this.db = new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.DERBY)
-                .addScript("sql/tag_repositories_test/create-db.sql")
-                .addScript("sql/tag_repositories_test/insert-tags.sql")
+                .setType(EmbeddedDatabaseType.H2)
+                .addScript("embedded_db/create-db.sql")
+                .addScript("embedded_db/tag_repositories_test/insert-tags.sql")
                 .build();
         this.tagRepository = new TagRepositoryImpl(new NamedParameterJdbcTemplate(db).getJdbcTemplate());
     }
@@ -32,35 +31,32 @@ class TagRepositoryImplTest {
     @Test
     void createTagTest() {
         //given
-        long expectedId = 1L;
         Tag testTagObj = new Tag().setName("testName");
         //when
-        int actual = tagRepository.createTag(testTagObj);
+        boolean actual = tagRepository.createTag(testTagObj);
         //then
-        assertEquals(expectedId, actual);
+        assertTrue(actual);
     }
 
     @Test
     void deleteTag_Return1WhenTagExists() {
         //given
-        long expectedId = 1L;
         int testId = 1;
         //when
-        int actual = tagRepository.deleteTag(testId);
+        boolean actual = tagRepository.deleteTag(testId);
         //then
-        assertEquals(expectedId, actual);
+        assertTrue(actual);
 
     }
 
     @Test
     void deleteTag_Return0_WhenNoSuchTag() {
         //given
-        long expectedId = 1L;
         int testId = 1;
         //when
-        int actual = tagRepository.deleteTag(testId);
+        boolean actual = tagRepository.deleteTag(testId);
         //then
-        assertEquals(expectedId, actual);
+        assertTrue(actual);
 
     }
 

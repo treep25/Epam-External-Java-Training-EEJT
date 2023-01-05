@@ -10,6 +10,8 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
+
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -22,40 +24,202 @@ class GiftCertificateTagRepositoryImpTest {
     @BeforeEach
     public void setUp() {
         this.db = new EmbeddedDatabaseBuilder()
-                .setType(EmbeddedDatabaseType.DERBY)
-                .addScript("sql/certificate_tag_repositories_test/create-db.sql")
-                .addScript("sql/certificate_tag_repositories_test/insert-gift-certificate-tags.sql")
+                .setType(EmbeddedDatabaseType.H2)
+                .addScript("embedded_db/create-db.sql")
+                .addScript("embedded_db/certificate_tag_repositories_test/insert-gift-certificate-tags.sql")
                 .build();
         this.giftCertificateTagRepository = new GiftCertificateTagRepositoryImp(new NamedParameterJdbcTemplate(db).getJdbcTemplate());
     }
 
     @Test
-    void getGiftCertificateTagsByTagName() {
+    void getGiftCertificateTagsByTagNameTest_ReturnListOFCertificates() {
         //given
         String tagNameObj = "SomeName1";
-        List<GiftCertificate> expected = List.of(new GiftCertificate().setName("").
+        List<GiftCertificate> expected = List.of(new GiftCertificate().setId(1L).setName("GiftCertificate1").
                 setTags(List.of(new Tag().setId(1L).setName("SomeName1"))).
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDate(new java.util.Date()).
-                setLastUpdateDate(new java.util.Date()));
+                setCreateDateString("2023-01-04T01:00Z").
+                setLastUpdateDateString("2023-01-04T01:00Z"));
+
         //when
-        List<GiftCertificate> actual = giftCertificateTagRepository.getGiftCertificateTagsByTagName(tagNameObj);//TODO
+        List<GiftCertificate> actual = giftCertificateTagRepository.getGiftCertificateTagsByTagName(tagNameObj);
         //then
         assertEquals(expected, actual);
     }
 
     @Test
-    void getGiftCertificatesAndTagsByNameOrByPartOfName() {
+    void getGiftCertificatesAndTagsByByPartOfNameTest_ReturnListOFCertificates() {
+
     }
 
     @Test
-    void sortingAscDescByDate() {
+    void getGiftCertificatesAndTagsByNameTest_ReturnListOFCertificates() {
+
     }
 
     @Test
-    void sortingAscDescByDateAndByName() {
+    void sortingAscDescByDateTestASC_ReturnListOFCertificates() {
+        //given
+        List<GiftCertificate> expected = new ArrayList<>();
+
+        expected.add(new GiftCertificate().setId(2L).setName("Gift2").
+                setTags(List.of(new Tag().setId(2L).setName("SomeName2"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2022-01-04T01:00Z").
+                setLastUpdateDateString("2022-01-04T01:00Z"));
+
+        expected.add(new GiftCertificate().setId(1L).setName("GiftCertificate1").
+                setTags(List.of(new Tag().setId(1L).setName("SomeName1"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2023-01-04T01:00Z").
+                setLastUpdateDateString("2023-01-04T01:00Z"));
+
+
+        //when
+        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDate("ASC");
+        //then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void sortingAscDescByDateTestDESC_ReturnListOFCertificates() {
+        //given
+        List<GiftCertificate> expected = new ArrayList<>();
+
+        expected.add(new GiftCertificate().setId(1L).setName("GiftCertificate1").
+                setTags(List.of(new Tag().setId(1L).setName("SomeName1"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2023-01-04T01:00Z").
+                setLastUpdateDateString("2023-01-04T01:00Z"));
+
+        expected.add(new GiftCertificate().setId(2L).setName("Gift2").
+                setTags(List.of(new Tag().setId(2L).setName("SomeName2"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2022-01-04T01:00Z").
+                setLastUpdateDateString("2022-01-04T01:00Z"));
+
+        //when
+        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDate("DESC");
+        //then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void sortingAscDescByDateAndByNameTestASCAndDESC_ReturnListOfGiftCertificates() {
+        //given
+        List<GiftCertificate> expected = new ArrayList<>();
+
+        expected.add(new GiftCertificate().setId(2L).setName("Gift2").
+                setTags(List.of(new Tag().setId(2L).setName("SomeName2"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2022-01-04T01:00Z").
+                setLastUpdateDateString("2022-01-04T01:00Z"));
+
+        expected.add(new GiftCertificate().setId(1L).setName("GiftCertificate1").
+                setTags(List.of(new Tag().setId(1L).setName("SomeName1"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2023-01-04T01:00Z").
+                setLastUpdateDateString("2023-01-04T01:00Z"));
+
+        //when
+        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("ASC", "DESC");
+        //then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void sortingAscDescByDateAndByNameTestDESCAndASC_ReturnListOfGiftCertificates() {
+        //given
+        List<GiftCertificate> expected = new ArrayList<>();
+
+        expected.add(new GiftCertificate().setId(1L).setName("GiftCertificate1").
+                setTags(List.of(new Tag().setId(1L).setName("SomeName1"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2023-01-04T01:00Z").
+                setLastUpdateDateString("2023-01-04T01:00Z"));
+
+        expected.add(new GiftCertificate().setId(2L).setName("Gift2").
+                setTags(List.of(new Tag().setId(2L).setName("SomeName2"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2022-01-04T01:00Z").
+                setLastUpdateDateString("2022-01-04T01:00Z"));
+
+        //when
+        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("DESC", "ASC");
+        //then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void sortingAscDescByDateAndByNameTestDESCAndDESC_ReturnListOfGiftCertificates() {
+        //given
+        List<GiftCertificate> expected = new ArrayList<>();
+
+        expected.add(new GiftCertificate().setId(1L).setName("GiftCertificate1").
+                setTags(List.of(new Tag().setId(1L).setName("SomeName1"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2023-01-04T01:00Z").
+                setLastUpdateDateString("2023-01-04T01:00Z"));
+
+        expected.add(new GiftCertificate().setId(2L).setName("Gift2").
+                setTags(List.of(new Tag().setId(2L).setName("SomeName2"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2022-01-04T01:00Z").
+                setLastUpdateDateString("2022-01-04T01:00Z"));
+
+        //when
+        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("DESc", "DESC");
+        //then
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void sortingAscDescByDateAndByNameTestASCAndASC_ReturnListOfGiftCertificates() {
+        //given
+        List<GiftCertificate> expected = new ArrayList<>();
+
+        expected.add(new GiftCertificate().setId(2L).setName("Gift2").
+                setTags(List.of(new Tag().setId(2L).setName("SomeName2"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2022-01-04T01:00Z").
+                setLastUpdateDateString("2022-01-04T01:00Z"));
+
+        expected.add(new GiftCertificate().setId(1L).setName("GiftCertificate1").
+                setTags(List.of(new Tag().setId(1L).setName("SomeName1"))).
+                setDescription("description").
+                setPrice(12).
+                setDuration(123).
+                setCreateDateString("2023-01-04T01:00Z").
+                setLastUpdateDateString("2023-01-04T01:00Z"));
+
+        //when
+        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("ASC", "asc");
+        //then
+        assertEquals(expected, actual);
     }
 
     @AfterEach

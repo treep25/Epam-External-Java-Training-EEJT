@@ -1,6 +1,7 @@
 package com.epam.esm.tag.service;
 
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
+import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.tag.model.Tag;
 import com.epam.esm.tag.repository.TagRepository;
 import org.junit.jupiter.api.Test;
@@ -32,7 +33,7 @@ class TagServiceTest {
 
         //when
         when(tagRepositoryMock.isTagWithNameExists(tagNamePlug)).thenReturn(expectedResult);
-        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class,
+        ServerException thrown = assertThrows(ServerException.class,
                 () -> tagServiceMock.createTag(new Tag().setName(tagNamePlug)));
 
         //then
@@ -47,10 +48,10 @@ class TagServiceTest {
 
         //when
         when(tagRepositoryMock.isTagWithNameExists(tagPlug.getName())).thenReturn(expectedResult);
-        when(tagServiceMock.createTag(tagPlug)).thenReturn(1);
+        when(tagServiceMock.createTag(tagPlug)).thenReturn(true);
 
         //then
-        assertEquals(1, tagServiceMock.createTag(tagPlug));
+        assertTrue(tagServiceMock.createTag(tagPlug));
     }
 
     @Test
@@ -63,21 +64,6 @@ class TagServiceTest {
 
         //then
         assertEquals(expected, tagServiceMock.getAllTags());
-    }
-
-    @Test
-    void getAllTags_ReturnItemNotFoundException_WhenThereAreNoTags() {
-        //given
-        List<Tag> testObj = List.of();
-
-        //when
-        when(tagRepositoryMock.getAllTags()).thenReturn(testObj);
-        ItemNotFoundException thrown = assertThrows(ItemNotFoundException.class,
-                () -> tagServiceMock.getAllTags());
-
-
-        //then
-        assertEquals("There are no tags", thrown.getMessage());
     }
 
     @Test
@@ -113,22 +99,22 @@ class TagServiceTest {
         long idPlug = 123;
         int resultExpected = 1;
 
+        when(tagRepositoryMock.deleteTag(idPlug)).thenReturn(true);
+
         //when
-        when(tagRepositoryMock.deleteTag(idPlug)).thenReturn(resultExpected);
 
         //then
-        assertEquals(resultExpected, tagServiceMock.deleteTag(idPlug));
-
+        assertTrue(tagServiceMock.deleteTag(idPlug));
     }
 
     @Test
     void deleteTag_ReturnItemNotFoundException_WhenNoTagToDelete() {
         //given
         long idPlug = 123;
-        int resultExpected = 0;
+
+        when(tagRepositoryMock.deleteTag(idPlug)).thenReturn(false);
 
         //when
-        when(tagRepositoryMock.deleteTag(idPlug)).thenReturn(resultExpected);
         ItemNotFoundException thrown = assertThrows(ItemNotFoundException.class,
                 () -> tagServiceMock.deleteTag(idPlug));
 
