@@ -2,10 +2,7 @@ package com.epam.esm.giftcertficate.repository;
 
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.model.Tag;
-import com.epam.esm.tag.repository.TagRepository;
-import com.epam.esm.tag.repository.TagRepositoryImpl;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -46,16 +43,16 @@ class GiftCertificateRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2023-01-04T01:00Z").
-                setLastUpdateDateString("2023-01-04T01:00Z"));
+                setCreateDate("2023-01-04T01:00Z").
+                setLastUpdateDate("2023-01-04T01:00Z"));
 
         expected.add(new GiftCertificate().setId(2L).setName("GiftCertificate2").
                 setTags(List.of()).
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2022-01-04T01:00Z").
-                setLastUpdateDateString("2022-01-04T01:00Z"));
+                setCreateDate("2022-01-04T01:00Z").
+                setLastUpdateDate("2022-01-04T01:00Z"));
 
         List<GiftCertificate> actual = giftCertificateRepository.getAllGiftCertificates();
         //then
@@ -82,8 +79,8 @@ class GiftCertificateRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2023-01-04T01:00Z").
-                setLastUpdateDateString("2023-01-04T01:00Z"));
+                setCreateDate("2023-01-04T01:00Z").
+                setLastUpdateDate("2023-01-04T01:00Z"));
         List<GiftCertificate> actual = giftCertificateRepository.getCertificateById(1);
         //then
         assertEquals(expected, actual);

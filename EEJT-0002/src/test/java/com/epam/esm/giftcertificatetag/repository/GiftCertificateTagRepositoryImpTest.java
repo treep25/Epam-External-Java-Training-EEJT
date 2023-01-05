@@ -40,8 +40,8 @@ class GiftCertificateTagRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2023-01-04T01:00Z").
-                setLastUpdateDateString("2023-01-04T01:00Z"));
+                setCreateDate("2023-01-04T01:00Z").
+                setLastUpdateDate("2023-01-04T01:00Z"));
 
         //when
         List<GiftCertificate> actual = giftCertificateTagRepository.getGiftCertificateTagsByTagName(tagNameObj);
@@ -69,16 +69,16 @@ class GiftCertificateTagRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2022-01-04T01:00Z").
-                setLastUpdateDateString("2022-01-04T01:00Z"));
+                setCreateDate("2022-01-04T01:00Z").
+                setLastUpdateDate("2022-01-04T01:00Z"));
 
         expected.add(new GiftCertificate().setId(1L).setName("GiftCertificate1").
                 setTags(List.of(new Tag().setId(1L).setName("SomeName1"))).
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2023-01-04T01:00Z").
-                setLastUpdateDateString("2023-01-04T01:00Z"));
+                setCreateDate("2023-01-04T01:00Z").
+                setLastUpdateDate("2023-01-04T01:00Z"));
 
 
         //when
@@ -97,16 +97,16 @@ class GiftCertificateTagRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2023-01-04T01:00Z").
-                setLastUpdateDateString("2023-01-04T01:00Z"));
+                setCreateDate("2023-01-04T01:00Z").
+                setLastUpdateDate("2023-01-04T01:00Z"));
 
         expected.add(new GiftCertificate().setId(2L).setName("Gift2").
                 setTags(List.of(new Tag().setId(2L).setName("SomeName2"))).
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2022-01-04T01:00Z").
-                setLastUpdateDateString("2022-01-04T01:00Z"));
+                setCreateDate("2022-01-04T01:00Z").
+                setLastUpdateDate("2022-01-04T01:00Z"));
 
         //when
         List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDate("DESC");
@@ -124,16 +124,16 @@ class GiftCertificateTagRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2022-01-04T01:00Z").
-                setLastUpdateDateString("2022-01-04T01:00Z"));
+                setCreateDate("2022-01-04T01:00Z").
+                setLastUpdateDate("2022-01-04T01:00Z"));
 
         expected.add(new GiftCertificate().setId(1L).setName("GiftCertificate1").
                 setTags(List.of(new Tag().setId(1L).setName("SomeName1"))).
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2023-01-04T01:00Z").
-                setLastUpdateDateString("2023-01-04T01:00Z"));
+                setCreateDate("2023-01-04T01:00Z").
+                setLastUpdateDate("2023-01-04T01:00Z"));
 
         //when
         List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("ASC", "DESC");
@@ -151,16 +151,16 @@ class GiftCertificateTagRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2023-01-04T01:00Z").
-                setLastUpdateDateString("2023-01-04T01:00Z"));
+                setCreateDate("2023-01-04T01:00Z").
+                setLastUpdateDate("2023-01-04T01:00Z"));
 
         expected.add(new GiftCertificate().setId(2L).setName("Gift2").
                 setTags(List.of(new Tag().setId(2L).setName("SomeName2"))).
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2022-01-04T01:00Z").
-                setLastUpdateDateString("2022-01-04T01:00Z"));
+                setCreateDate("2022-01-04T01:00Z").
+                setLastUpdateDate("2022-01-04T01:00Z"));
 
         //when
         List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("DESC", "ASC");
@@ -178,16 +178,16 @@ class GiftCertificateTagRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2023-01-04T01:00Z").
-                setLastUpdateDateString("2023-01-04T01:00Z"));
+                setCreateDate("2023-01-04T01:00Z").
+                setLastUpdateDate("2023-01-04T01:00Z"));
 
         expected.add(new GiftCertificate().setId(2L).setName("Gift2").
                 setTags(List.of(new Tag().setId(2L).setName("SomeName2"))).
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2022-01-04T01:00Z").
-                setLastUpdateDateString("2022-01-04T01:00Z"));
+                setCreateDate("2022-01-04T01:00Z").
+                setLastUpdateDate("2022-01-04T01:00Z"));
 
         //when
         List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("DESc", "DESC");
@@ -205,16 +205,16 @@ class GiftCertificateTagRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2022-01-04T01:00Z").
-                setLastUpdateDateString("2022-01-04T01:00Z"));
+                setCreateDate("2022-01-04T01:00Z").
+                setLastUpdateDate("2022-01-04T01:00Z"));
 
         expected.add(new GiftCertificate().setId(1L).setName("GiftCertificate1").
                 setTags(List.of(new Tag().setId(1L).setName("SomeName1"))).
                 setDescription("description").
                 setPrice(12).
                 setDuration(123).
-                setCreateDateString("2023-01-04T01:00Z").
-                setLastUpdateDateString("2023-01-04T01:00Z"));
+                setCreateDate("2023-01-04T01:00Z").
+                setLastUpdateDate("2023-01-04T01:00Z"));
 
         //when
         List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("ASC", "asc");
