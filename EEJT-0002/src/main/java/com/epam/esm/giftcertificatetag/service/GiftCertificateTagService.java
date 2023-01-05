@@ -20,6 +20,7 @@ public class GiftCertificateTagService {
 
     public List<GiftCertificate> getGiftCertificatesByTagName(String tagName) {
         List<GiftCertificate> listGiftCertificateTags = giftCertificateTagRepository.getGiftCertificateTagsByTagName(tagName);
+
         if (!listGiftCertificateTags.isEmpty()) {
             return listGiftCertificateTags;
         }
@@ -28,6 +29,7 @@ public class GiftCertificateTagService {
 
     public List<GiftCertificate> getGiftCertificatesAndTagsByNameOrByPartOfName(String partOfName) {
         List<GiftCertificate> giftCertificatesAndTagsByName = giftCertificateTagRepository.getGiftCertificatesAndTagsByNameOrByPartOfName(partOfName);
+
         if (!giftCertificatesAndTagsByName.isEmpty()) {
             return giftCertificatesAndTagsByName;
         }
@@ -36,6 +38,7 @@ public class GiftCertificateTagService {
 
     public List<GiftCertificate> sortingAscDescByDate(String method) {
         List<GiftCertificate> sortingTagsAndCertificates = giftCertificateTagRepository.sortingAscDescByDate(method);
+
         if (!sortingTagsAndCertificates.isEmpty()) {
             return sortingTagsAndCertificates;
         }
@@ -44,6 +47,7 @@ public class GiftCertificateTagService {
 
     public List<GiftCertificate> sortingAscDescByDateAndByName(String method1, String method2) {
         List<GiftCertificate> sortingTagsAndCertificates = giftCertificateTagRepository.sortingAscDescByDateAndByName(method1, method2);
+
         if (!sortingTagsAndCertificates.isEmpty()) {
             return sortingTagsAndCertificates;
         }

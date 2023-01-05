@@ -1,6 +1,7 @@
 package com.epam.esm.tag.service;
 
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
+import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.tag.model.Tag;
 import com.epam.esm.tag.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,20 +19,17 @@ public class TagService {
         this.tagRepository = tagRepository;
     }
 
-    public int createTag(Tag tag) {
+    public boolean createTag(Tag tag) {
         if (!isTagByNameExists(tag.getName())) {
             return tagRepository.createTag(tag);
         } else {
-            throw new IllegalArgumentException("This tag has already existed");
+            throw new ServerException("This tag has already existed");
         }
     }
 
     public List<Tag> getAllTags() {
-        List<Tag> allTags = tagRepository.getAllTags();
-        if (!allTags.isEmpty()) {
-            return allTags;
-        }
-        throw new ItemNotFoundException("There are no tags");
+
+        return tagRepository.getAllTags();
     }
 
     public List<Tag> getTagById(long id) {
@@ -42,10 +40,9 @@ public class TagService {
         throw new ItemNotFoundException("There are no tags with id= " + id);
     }
 
-    public int deleteTag(long id) {
-        int result = tagRepository.deleteTag(id);
-        if (result == 1) {
-            return result;
+    public boolean deleteTag(long id) {
+        if (tagRepository.deleteTag(id)) {
+            return true;
         }
         throw new ItemNotFoundException("There is no tag with id= " + id);
     }
@@ -54,12 +51,13 @@ public class TagService {
         return tagRepository.isTagWithNameExists(name);
     }
 
-    public void isTagsExistOrElseCreate(List<Tag> tags) {
+    public boolean isTagsExistOrElseCreate(List<Tag> tags) {
         for (Tag tag : tags) {
             if (!isTagByNameExists(tag.getName())) {
                 createTag(tag);
             }
         }
+        return true;
     }
 
     public long getTagIdByTag(Tag tag) {

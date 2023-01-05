@@ -1,5 +1,7 @@
 package com.epam.esm.tag.model;
 
+import java.util.Objects;
+
 public class Tag {
     private Long id;
     private String name;
@@ -23,21 +25,22 @@ public class Tag {
     }
 
     @Override
+    public String toString() {
+        return "Tag{" +
+                "name='" + name + '\'' +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Tag)) return false;
-
         Tag tag = (Tag) o;
-
-        if (!getId().equals(tag.getId())) return false;
-        return getName().equals(tag.getName());
+        return Objects.equals(getId(), tag.getId()) && Objects.equals(getName(), tag.getName());
     }
 
     @Override
     public int hashCode() {
-        int result = getId().hashCode();
-        result = 31 * result + getName().hashCode();
-        return result;
+        return Objects.hash(getId(), getName());
     }
-
 }

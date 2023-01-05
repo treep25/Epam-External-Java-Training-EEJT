@@ -1,14 +1,17 @@
 package com.epam.esm.giftcertficate.controller;
 
+import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.service.GiftCertificateService;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.utils.validation.DataValidation;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.xml.crypto.Data;
 import java.util.Map;
 import java.util.Optional;
 
@@ -22,7 +25,7 @@ public class GiftCertificateController {
         this.giftCertificateService = giftCertificateService;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<?> createCertificate(@RequestBody GiftCertificate giftCertificate) {
 
         if (DataValidation.isValidCertificate(giftCertificate)) {
@@ -30,10 +33,10 @@ public class GiftCertificateController {
 
             return new ResponseEntity<>(Map.of("status", HttpStatus.CREATED), HttpStatus.CREATED);
         }
-        throw new IllegalArgumentException("Something went wrong during the request, check your fields");
+        throw new ServerException("Something went wrong during the request, check your fields");
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> getAll() {
         return ResponseEntity.ok(Map.of("gift certificates", giftCertificateService.getAllCertificates()));
     }
@@ -44,29 +47,28 @@ public class GiftCertificateController {
 
             return ResponseEntity.ok(Map.of("gift certificate", giftCertificateService.getCertificateById(id)));
         }
-        throw new IllegalArgumentException("incorrect id=" + id);
+        throw new ServerException("incorrect id=" + id);
     }
 
-    @PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PatchMapping("/{id}")
     public ResponseEntity<?> updateCertificate(@RequestBody GiftCertificate giftCertificate, @PathVariable long id) {
         if (DataValidation.moreThenZero(id)) {
             Optional<Map<String, String>> updatesMap = DataValidation.isGiftCertificateValidForUpdating(giftCertificate);
-            if (updatesMap.isPresent()) {
-
-                return ResponseEntity.ok(Map.of("gift certificate", giftCertificateService.updateGiftCertificate(id, giftCertificate.getTags(), updatesMap)));
+            if (!updatesMap.get().isEmpty()) {
+                return ResponseEntity.ok(giftCertificateService.updateGiftCertificate(id, giftCertificate.getTags(), updatesMap));
             }
-            throw new IllegalArgumentException("Something went wrong during the request, check your fields");
+            throw new ServerException("There are no fields to update");
         }
-        throw new IllegalArgumentException("incorrect id=" + id);
+        throw new ServerException("Incorrect id=" + id);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCertificate(@PathVariable long id) {
         if (DataValidation.moreThenZero(id)) {
             giftCertificateService.deleteGiftCertificate(id);
 
             return new ResponseEntity<>(Map.of("status", HttpStatus.NO_CONTENT), HttpStatus.NO_CONTENT);
         }
-        throw new IllegalArgumentException("incorrect id=" + id);
+        throw new ServerException("incorrect id=" + id);
     }
 }

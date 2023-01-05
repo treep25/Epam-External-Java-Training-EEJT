@@ -19,13 +19,13 @@ public class TagRepositoryImpl implements TagRepository {
     }
 
     @Override
-    public int createTag(Tag tag) {
-        return jdbcTemplate.update(SqlQuery.Tag.CREATE_TAG, tag.getName());
+    public boolean createTag(Tag tag) {
+        return jdbcTemplate.update(SqlQuery.Tag.CREATE_TAG, tag.getName()) == 1;
     }
 
     @Override
-    public int deleteTag(long id) {
-        return jdbcTemplate.update(SqlQuery.Tag.DELETE_TAG, id);
+    public boolean deleteTag(long id) {
+        return jdbcTemplate.update(SqlQuery.Tag.DELETE_TAG, id) == 1;
     }
 
     @Override

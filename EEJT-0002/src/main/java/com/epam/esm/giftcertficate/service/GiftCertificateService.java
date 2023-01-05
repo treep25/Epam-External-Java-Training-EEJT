@@ -1,19 +1,24 @@
 package com.epam.esm.giftcertficate.service;
 
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
+import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.giftcertficate.repository.GiftCertificateRepository;
 import com.epam.esm.tag.model.Tag;
 import com.epam.esm.tag.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @Service
+@EnableTransactionManagement
 public class GiftCertificateService {
 
     private final GiftCertificateRepository giftCertificateRepository;
@@ -27,27 +32,27 @@ public class GiftCertificateService {
 
 
     public List<GiftCertificate> getAllCertificates() {
-        List<GiftCertificate> giftCertificateList = giftCertificateRepository.getAllGiftCertificates();
-        if (!giftCertificateList.isEmpty()) {
-            return giftCertificateList;
-        }
-        throw new ItemNotFoundException("There are no gift certificates");
+
+        return giftCertificateRepository.getAllGiftCertificates();
     }
 
     @Transactional
-    public void createCertificate(GiftCertificate giftCertificate) {
+    public boolean createCertificate(GiftCertificate giftCertificate) {
         if (!giftCertificateRepository.isGiftCertificateExist(giftCertificate)) {
 
-            giftCertificateRepository.createCertificate(giftCertificate);
+            boolean result = giftCertificateRepository.createCertificate(giftCertificate);
 
             if (giftCertificate.getTags() != null) {
                 tagService.isTagsExistOrElseCreate(giftCertificate.getTags());
 
                 List<Long> listTagsId = tagService.getTagsIdByTags(giftCertificate.getTags());
-                giftCertificateRepository.createGiftCertificateTagList(listTagsId, getGiftCertificateId(giftCertificate));
+                giftCertificateRepository.createGiftCertificateTagRelationship(listTagsId, getGiftCertificateId(giftCertificate));
             }
+
+            return result;
+
         } else {
-            throw new IllegalArgumentException("Such certificate has already existed");
+            throw new ServerException("Such certificate has already existed");
         }
 
     }
@@ -60,28 +65,32 @@ public class GiftCertificateService {
         throw new ItemNotFoundException("There are no gift certificate with id= " + id);
     }
 
-    public void deleteGiftCertificate(long id) {
-        if (giftCertificateRepository.deleteCertificate(id) != 1) {
-            throw new ItemNotFoundException("There is no gift certificate with id= " + id);
+    public boolean deleteGiftCertificate(long id) {
+
+        if (giftCertificateRepository.deleteCertificate(id)) {
+            return true;
         }
+        throw new ItemNotFoundException("There is no gift certificate with id= " + id);
     }
 
     @Transactional
     public List<GiftCertificate> updateGiftCertificate(long id, List<Tag> tags, Optional<Map<String, String>> updatesMap) {
-        if (giftCertificateRepository.updateGiftCertificate(id, updatesMap) == 1) {
+        if (giftCertificateRepository.updateGiftCertificate(id, updatesMap)) {
             if (tags != null) {
+
                 List<Tag> tagThatExistInThisGiftCertificate = tagService.getAllTagsByCertificateId(id);
+
                 if (!tagThatExistInThisGiftCertificate.isEmpty()) {
-                    for (Tag tag : tagThatExistInThisGiftCertificate) {
-                        tags.removeIf(x -> x.getName().equals(tag.getName()));
-                    }
+                    giftCertificateRepository.deleteGiftCertificateTagRelationship(tagService.getTagsIdByTags(tagThatExistInThisGiftCertificate), id);
                 }
-                tagService.isTagsExistOrElseCreate(tags);
-                giftCertificateRepository.createGiftCertificateTagList(tagService.getTagsIdByTags(tags), id);
+                if (!tags.isEmpty()) {
+                    tagService.isTagsExistOrElseCreate(tags);
+                    giftCertificateRepository.createGiftCertificateTagRelationship(tagService.getTagsIdByTags(tags), id);
+                }
             }
             return giftCertificateRepository.getCertificateById(id);
         } else {
-            throw new ItemNotFoundException("there is no gift certificate to update with id= " + id);
+            throw new ItemNotFoundException("There is no gift certificate to update with id= " + id);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.epam.esm.giftcertificatetag.controller;
 
+import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertificatetag.service.GiftCertificateTagService;
 import com.epam.esm.utils.validation.DataValidation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,31 +23,31 @@ public class GiftCertificateTagController {
     }
 
 
-    @GetMapping(value = "{name}")
+    @GetMapping("{name}")
     public ResponseEntity<?> getByTagName(@PathVariable String name) {
         if (DataValidation.isStringValid(name)) {
             return ResponseEntity.ok(giftCertificateTagService.getGiftCertificatesByTagName(name));
         }
-        throw new IllegalArgumentException("tag name is not valid");
+        throw new ServerException("tag name is not valid");
     }
 
-    @GetMapping(value = "gift-certificate/{partOfName}")
+    @GetMapping("gift-certificate/{partOfName}")
     public ResponseEntity<?> getByPartOfName(@PathVariable String partOfName) {
         if (DataValidation.isStringValid(partOfName)) {
             return ResponseEntity.ok(giftCertificateTagService.getGiftCertificatesAndTagsByNameOrByPartOfName(partOfName));
         }
-        throw new IllegalArgumentException("Gift certificate name is not valid");
+        throw new ServerException("Gift certificate name is not valid");
     }
 
-    @GetMapping(value = "sort-date/{method}")
+    @GetMapping("sort-date/{method}")
     public ResponseEntity<?> sortingAscDescByDate(@PathVariable String method) {
         if (DataValidation.isStringValid(method)) {
             if (DataValidation.isSortingTypeContain(method)) {
                 return ResponseEntity.ok(giftCertificateTagService.sortingAscDescByDate(method));
             }
-            throw new IllegalArgumentException("type should be only DESC/ASC without register");
+            throw new ServerException("type should be only DESC/ASC without register");
         }
-        throw new IllegalArgumentException("Incorrect data");
+        throw new ServerException("Incorrect data");
     }
 
     @GetMapping(value = "sort-date-name/{method1}/{method2}")
@@ -55,8 +56,8 @@ public class GiftCertificateTagController {
             if (DataValidation.isSortingTypeContain(method1) && DataValidation.isStringValid(method1)) {
                 return ResponseEntity.ok(giftCertificateTagService.sortingAscDescByDateAndByName(method1, method2));
             }
-            throw new IllegalArgumentException("type should be only DESC/ASC without register");
+            throw new ServerException("type should be only DESC/ASC without register");
         }
-        throw new IllegalArgumentException("Incorrect data ");
+        throw new ServerException("Incorrect data");
     }
 }

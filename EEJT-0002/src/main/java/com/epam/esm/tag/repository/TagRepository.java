@@ -5,9 +5,9 @@ import com.epam.esm.tag.model.Tag;
 import java.util.List;
 
 public interface TagRepository {
-    int createTag(Tag tag);
+    boolean createTag(Tag tag);
 
-    int deleteTag(long id);
+    boolean deleteTag(long id);
 
     List<Tag> getAllTags();
 

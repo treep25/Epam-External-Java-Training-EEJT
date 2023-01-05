@@ -9,17 +9,19 @@ import java.util.Optional;
 public interface GiftCertificateRepository {
     List<GiftCertificate> getAllGiftCertificates();
 
-    void createCertificate(GiftCertificate giftCertificate);
+    boolean createCertificate(GiftCertificate giftCertificate);
 
     List<GiftCertificate> getCertificateById(long id);
 
-    int deleteCertificate(long id);
+    boolean deleteCertificate(long id);
 
-    int updateGiftCertificate(long id, Optional<Map<String, String>> updatesMap);
+    boolean updateGiftCertificate(long id, Optional<Map<String, String>> updatesMap);
 
     long getIdByGiftCertificate(GiftCertificate giftCertificate);
 
     boolean isGiftCertificateExist(GiftCertificate giftCertificate);
 
-    void createGiftCertificateTagList(List<Long> tagsId, long giftCertificateId);
+    boolean createGiftCertificateTagRelationship(List<Long> tagsId, long giftCertificateId);
+
+    boolean deleteGiftCertificateTagRelationship(List<Long> tagsId, long giftCertificateId);
 }

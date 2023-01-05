@@ -13,6 +13,7 @@ public class SqlQuery {
         public static final String GET_ID_BY_GIFT_CERTIFICATE = "SELECT id FROM gift_certificate WHERE name = ? AND description = ? AND price = ? AND duration = ?";
         public static final String IS_GIFT_CERTIFICATE_EXIST = "SELECT EXISTS(SELECT * FROM gift_certificate WHERE name=? AND description = ? AND price = ? AND duration = ?)";
         public static final String CREATE_GIFT_CERTIFICATE_TAG = "INSERT INTO gift_certificate_tag (gift_certificate_id,tag_id) VALUES (?,?)";
+        public static final String DELETE_GIFT_CERTIFICATE_TAG = "DELETE  FROM gift_certificate_tag WHERE gift_certificate_id = ? AND tag_id = ?";
     }
 
     public static class TagGiftCertificate {
@@ -42,6 +43,7 @@ public class SqlQuery {
         public static final String GET_GIFT_CERTIFICATE_AND_TAGS_BY_NAME_OR_BY_PART_OF_NAME = "SELECT  gc.id, gc.name, description, price,duration, create_date, last_update_date FROM  gift_certificate gc WHERE gc.name LIKE ?";
         public static final String GET_ALL_TAGS_BY_GIFT_CERTIFICATE_ID_ORDER_BY_TAG_NAME = "SELECT  t.id,t.name FROM gift_certificate_tag gct  JOIN tag t  WHERE gct.gift_certificate_id = ? AND t.id = gct.tag_id ORDER BY  t.name = ? DESC";
         public static final String GET_ALL_TAGS_BY_GIFT_CERTIFICATE_ID = "SELECT  t.id,t.name FROM gift_certificate_tag gct  JOIN tag t  WHERE gct.gift_certificate_id = ? AND t.id = gct.tag_id";
+
 
     }
 

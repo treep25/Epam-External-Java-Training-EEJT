@@ -6,8 +6,6 @@ import com.epam.esm.utils.query.SqlQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
 
 import java.time.Instant;
 import java.util.*;
@@ -16,12 +14,10 @@ import java.util.*;
 public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final TransactionTemplate transactionTemplate;
 
     @Autowired
-    public GiftCertificateRepositoryImp(JdbcTemplate jdbcTemplate, TransactionTemplate transactionTemplate) {
+    public GiftCertificateRepositoryImp(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
-        this.transactionTemplate = transactionTemplate;
     }
 
     private List<Tag> getAllTagsByCertificateId(long certificateId) {
@@ -43,14 +39,13 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
     }
 
     @Override
-    public void createCertificate(GiftCertificate giftCertificate) {
-        transactionTemplate.execute((TransactionCallback<Object>) transactionStatus ->
-                jdbcTemplate.update(SqlQuery.GiftCertificate.CREATE_CERTIFICATE, giftCertificate.getName(),
-                        giftCertificate.getDescription(),
-                        giftCertificate.getPrice(),
-                        giftCertificate.getDuration(),
-                        Instant.now(),
-                        Instant.now()));
+    public boolean createCertificate(GiftCertificate giftCertificate) {
+        return jdbcTemplate.update(SqlQuery.GiftCertificate.CREATE_CERTIFICATE, giftCertificate.getName(),
+                giftCertificate.getDescription(),
+                giftCertificate.getPrice(),
+                giftCertificate.getDuration(),
+                Instant.now(),
+                Instant.now()) == 1;
     }
 
     @Override
@@ -69,12 +64,12 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
     }
 
     @Override
-    public int deleteCertificate(long id) {
-        return jdbcTemplate.update(SqlQuery.GiftCertificate.DELETE_CERTIFICATE, id);
+    public boolean deleteCertificate(long id) {
+        return jdbcTemplate.update(SqlQuery.GiftCertificate.DELETE_CERTIFICATE, id) == 1;
     }
 
     @Override
-    public int updateGiftCertificate(long id, Optional<Map<String, String>> updatesMap) {
+    public boolean updateGiftCertificate(long id, Optional<Map<String, String>> updatesMap) {
         List<Object> updatesParam = new ArrayList<>();
 
         StringBuilder generatedQuery = new StringBuilder("UPDATE gift_certificate SET ");
@@ -87,7 +82,7 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
 
         updatesParam.addAll(List.of(Instant.now(), id));
 
-        return jdbcTemplate.update(generatedQuery.toString(), updatesParam.toArray());
+        return jdbcTemplate.update(generatedQuery.toString(), updatesParam.toArray()) == 1;
     }
 
     @Override
@@ -104,14 +99,26 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
     }
 
     private void createGiftCertificateTag(long tagId, long giftCertificateId) {
-        transactionTemplate.execute((TransactionCallback<Object>) transactionStatus ->
-                jdbcTemplate.update(SqlQuery.GiftCertificate.CREATE_GIFT_CERTIFICATE_TAG, giftCertificateId, tagId));
+        jdbcTemplate.update(SqlQuery.GiftCertificate.CREATE_GIFT_CERTIFICATE_TAG, giftCertificateId, tagId);
+    }
+
+    private void deleteGiftCertificateTag(long tagId, long giftCertificateId) {
+        jdbcTemplate.update(SqlQuery.GiftCertificate.DELETE_GIFT_CERTIFICATE_TAG, giftCertificateId, tagId);
     }
 
     @Override
-    public void createGiftCertificateTagList(List<Long> tagsId, long giftCertificateId) {
+    public boolean createGiftCertificateTagRelationship(List<Long> tagsId, long giftCertificateId) {
         for (long tagId : tagsId) {
             createGiftCertificateTag(tagId, giftCertificateId);
         }
+        return true;
+    }
+
+    @Override
+    public boolean deleteGiftCertificateTagRelationship(List<Long> tagsId, long giftCertificateId) {
+        for (long tagId : tagsId) {
+            deleteGiftCertificateTag(tagId, giftCertificateId);
+        }
+        return true;
     }
 }

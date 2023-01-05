@@ -1,5 +1,6 @@
 package com.epam.esm.tag.controller;
 
+import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.tag.service.TagService;
 import com.epam.esm.tag.model.Tag;
 import com.epam.esm.utils.validation.DataValidation;
@@ -22,35 +23,35 @@ public class TagController {
         this.tagService = tagService;
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping
     public ResponseEntity<?> createTag(@RequestBody Tag tag) {
         if (DataValidation.isValidTag(tag)) {
-            if (tagService.createTag(tag) == 1) {
+            if (tagService.createTag(tag)) {
                 return new ResponseEntity<>(Map.of("status", HttpStatus.CREATED), HttpStatus.CREATED);
             }
         }
-        throw new IllegalArgumentException("Something went wrong during the request, check your fields");
+        throw new ServerException("Something went wrong during the request, check your fields");
     }
 
-    @GetMapping()
+    @GetMapping
     public ResponseEntity<?> getAllTags() {
         return new ResponseEntity<>(Map.of("tags", tagService.getAllTags()), HttpStatus.OK);
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable long id) {
         if (DataValidation.moreThenZero(id)) {
             return new ResponseEntity<>(Map.of("tag", tagService.getTagById(id)), HttpStatus.OK);
         }
-        throw new IllegalArgumentException("incorrect tag id=" + id);
+        throw new ServerException("incorrect tag id=" + id);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable long id) {
         if (DataValidation.moreThenZero(id)) {
             tagService.deleteTag(id);
             return ResponseEntity.ok(Map.of("status", HttpStatus.OK));
         }
-        throw new IllegalArgumentException("incorrect tag id=" + id);
+        throw new ServerException("incorrect tag id=" + id);
     }
 }
