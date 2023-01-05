@@ -1,7 +1,6 @@
 package com.epam.esm.giftcertficate.model;
 
 import com.epam.esm.tag.model.Tag;
-import io.swagger.annotations.ApiModel;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -95,12 +94,12 @@ public class GiftCertificate {
         return this;
     }
 
-    public GiftCertificate setCreateDateString(String createDate) {
+    public GiftCertificate setCreateDate(String createDate) {
         this.createDate = createDate;
         return this;
     }
 
-    public GiftCertificate setLastUpdateDateString(String lastUpdateDate) {
+    public GiftCertificate setLastUpdateDate(String lastUpdateDate) {
 
         this.lastUpdateDate = lastUpdateDate;
         return this;
