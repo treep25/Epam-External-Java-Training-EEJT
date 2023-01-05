@@ -52,8 +52,8 @@ public class GiftCertificateTagController {
 
     @GetMapping(value = "sort-date-name/{method1}/{method2}")
     public ResponseEntity<?> sortingByDateByName(@PathVariable String method1, @PathVariable String method2) {
-        if (DataValidation.isStringValid(method1) && DataValidation.isStringValid(method1)) {
-            if (DataValidation.isSortingTypeContain(method1) && DataValidation.isStringValid(method1)) {
+        if (DataValidation.isStringValid(method1) && DataValidation.isStringValid(method2)) {
+            if (DataValidation.isSortingTypeContain(method1) && DataValidation.isSortingTypeContain(method2)) {
                 return ResponseEntity.ok(giftCertificateTagService.sortingAscDescByDateAndByName(method1, method2));
             }
             throw new ServerException("type should be only DESC/ASC without register");
