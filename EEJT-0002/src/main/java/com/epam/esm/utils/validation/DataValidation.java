@@ -10,8 +10,9 @@ import java.util.*;
 public class DataValidation {
     public static boolean isValidCertificate(GiftCertificate giftCertificate) {
         return giftCertificate != null && isStringValid(giftCertificate.getName()) &&
-                giftCertificate.getDuration() >= 0 &&
+                giftCertificate.getDuration() != null && giftCertificate.getDuration() >= 0 &&
                 isStringValid(giftCertificate.getDescription()) &&
+                giftCertificate.getPrice() != null &&
                 giftCertificate.getPrice() >= 0 && isCertificateConsistsTagsOptionalValid(giftCertificate.getTags());
     }
 
