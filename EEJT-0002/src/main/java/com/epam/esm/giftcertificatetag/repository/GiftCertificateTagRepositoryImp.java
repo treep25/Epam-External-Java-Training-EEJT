@@ -52,14 +52,14 @@ public class GiftCertificateTagRepositoryImp implements GiftCertificateTagReposi
 
     public List<GiftCertificate> sortingAscDescByDate(String method) {
         return jdbcTemplate.query(SqlQuery.TagGiftCertificate.getTypeOfSortingForDate(method),
-                (resultSet, i) -> new GiftCertificate().setId(resultSet.getLong("id")).
-                        setName(resultSet.getString("name")).
-                        setTags(getAllTagsByCertificate(resultSet.getLong("id"))).
-                        setDescription(resultSet.getString("description")).
-                        setPrice(resultSet.getInt("price")).
-                        setDuration(resultSet.getInt("duration")).
-                        setCreateDate(resultSet.getDate("create_date")).
-                        setLastUpdateDate(resultSet.getDate("last_update_date")));
+                (resultSet, i) -> new GiftCertificate().setId(resultSet.getLong(ID)).
+                        setName(resultSet.getString(NAME)).
+                        setTags(getAllTagsByCertificate(resultSet.getLong(ID))).
+                        setDescription(resultSet.getString(DESCRIPTION)).
+                        setPrice(resultSet.getInt(PRICE)).
+                        setDuration(resultSet.getInt(DURATION)).
+                        setCreateDate(resultSet.getDate(CREATE_DATE)).
+                        setLastUpdateDate(resultSet.getDate(LAST_UPDATE_DATE)));
     }
 
     public List<GiftCertificate> sortingAscDescByDateAndByName(String method1, String method2) {
