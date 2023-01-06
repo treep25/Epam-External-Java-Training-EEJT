@@ -24,7 +24,7 @@ public class GiftCertificateTagController {
 
 
     @GetMapping("{name}")
-    public ResponseEntity<?> getByTagName(@PathVariable String name) {
+    public ResponseEntity<?> getByTagName(@PathVariable("name") String name) {
         if (DataValidation.isStringValid(name)) {
             return ResponseEntity.ok(giftCertificateTagService.getGiftCertificatesByTagName(name));
         }
@@ -32,31 +32,31 @@ public class GiftCertificateTagController {
     }
 
     @GetMapping("gift-certificate/{partOfName}")
-    public ResponseEntity<?> getByPartOfName(@PathVariable String partOfName) {
+    public ResponseEntity<?> getByPartOfName(@PathVariable("partOfName") String partOfName) {
         if (DataValidation.isStringValid(partOfName)) {
             return ResponseEntity.ok(giftCertificateTagService.getGiftCertificatesAndTagsByNameOrByPartOfName(partOfName));
         }
         throw new ServerException("Gift certificate name is not valid");
     }
 
-    @GetMapping("sort-date/{method}")
-    public ResponseEntity<?> sortingAscDescByDate(@PathVariable String method) {
-        if (DataValidation.isStringValid(method)) {
-            if (DataValidation.isSortingTypeContain(method)) {
-                return ResponseEntity.ok(giftCertificateTagService.sortingAscDescByDate(method));
+    @GetMapping("sort-date/{sortingType}")
+    public ResponseEntity<?> sortingAscDescByDate(@PathVariable("sortingType") String sortingType) {
+        if (DataValidation.isStringValid(sortingType)) {
+            if (DataValidation.isSortingTypeContain(sortingType)) {
+                return ResponseEntity.ok(giftCertificateTagService.sortingAscDescByDate(sortingType));
             }
-            throw new ServerException("type should be only DESC/ASC without register");
+            throw new ServerException("type should be only DESC or ASC without register");
         }
         throw new ServerException("Incorrect data");
     }
 
-    @GetMapping(value = "sort-date-name/{method1}/{method2}")
-    public ResponseEntity<?> sortingByDateByName(@PathVariable String method1, @PathVariable String method2) {
-        if (DataValidation.isStringValid(method1) && DataValidation.isStringValid(method2)) {
-            if (DataValidation.isSortingTypeContain(method1) && DataValidation.isSortingTypeContain(method2)) {
-                return ResponseEntity.ok(giftCertificateTagService.sortingAscDescByDateAndByName(method1, method2));
+    @GetMapping(value = "sort-date-name/{sortingType1}/{sortingType2}")
+    public ResponseEntity<?> sortingByDateByName(@PathVariable("sortingType1") String sortingType1, @PathVariable("sortingType2") String sortingType2) {
+        if (DataValidation.isStringValid(sortingType1) && DataValidation.isStringValid(sortingType2)) {
+            if (DataValidation.isSortingTypeContain(sortingType1) && DataValidation.isSortingTypeContain(sortingType2)) {
+                return ResponseEntity.ok(giftCertificateTagService.sortingAscDescByDateAndByName(sortingType1, sortingType2));
             }
-            throw new ServerException("type should be only DESC/ASC without register");
+            throw new ServerException("type should be only DESC or ASC without register");
         }
         throw new ServerException("Incorrect data");
     }

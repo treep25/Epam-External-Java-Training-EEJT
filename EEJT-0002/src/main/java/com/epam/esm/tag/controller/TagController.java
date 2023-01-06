@@ -39,7 +39,7 @@ public class TagController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable long id) {
+    public ResponseEntity<?> getById(@PathVariable("id") long id) {
         if (DataValidation.moreThenZero(id)) {
             return new ResponseEntity<>(Map.of("tag", tagService.getTagById(id)), HttpStatus.OK);
         }
@@ -47,7 +47,7 @@ public class TagController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") long id) {
         if (DataValidation.moreThenZero(id)) {
             tagService.deleteTag(id);
             return ResponseEntity.ok(Map.of("status", HttpStatus.OK));

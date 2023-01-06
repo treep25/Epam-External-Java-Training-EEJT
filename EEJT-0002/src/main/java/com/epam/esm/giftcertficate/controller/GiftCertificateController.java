@@ -41,7 +41,7 @@ public class GiftCertificateController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<?> getById(@PathVariable long id) {
+    public ResponseEntity<?> getById(@PathVariable("id") long id) {
         if (DataValidation.moreThenZero(id)) {
 
             return ResponseEntity.ok(Map.of("gift certificate", giftCertificateService.getCertificateById(id)));
@@ -50,7 +50,7 @@ public class GiftCertificateController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<?> updateCertificate(@RequestBody GiftCertificate giftCertificate, @PathVariable long id) {
+    public ResponseEntity<?> updateCertificate(@RequestBody GiftCertificate giftCertificate, @PathVariable("id") long id) {
         if (DataValidation.moreThenZero(id)) {
             Optional<Map<String, String>> updatesMap = DataValidation.isGiftCertificateValidForUpdating(giftCertificate);
             if (!updatesMap.get().isEmpty()) {
@@ -62,7 +62,7 @@ public class GiftCertificateController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteCertificate(@PathVariable long id) {
+    public ResponseEntity<?> deleteCertificate(@PathVariable("id") long id) {
         if (DataValidation.moreThenZero(id)) {
             giftCertificateService.deleteGiftCertificate(id);
 
