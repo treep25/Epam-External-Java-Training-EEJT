@@ -34,7 +34,7 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ApplicationException.class)
     protected ResponseEntity<?> handleApplicationException(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex,
-                Map.of("HTTP Status", "" + HttpStatus.INTERNAL_SERVER_ERROR, "response body", Map.of("message", "Went wrong")),
+                Map.of("HTTP Status", "" + HttpStatus.INTERNAL_SERVER_ERROR, "response body", Map.of("message", "Oops, something went wrong")),
                 new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }
