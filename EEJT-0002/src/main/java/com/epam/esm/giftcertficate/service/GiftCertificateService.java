@@ -66,7 +66,6 @@ public class GiftCertificateService {
     }
 
     public boolean deleteGiftCertificate(long id) {
-
         if (giftCertificateRepository.deleteCertificate(id)) {
             return true;
         }
@@ -75,6 +74,9 @@ public class GiftCertificateService {
 
     @Transactional
     public List<GiftCertificate> updateGiftCertificate(long id, List<Tag> tags, Optional<Map<String, String>> updatesMap) {
+
+        updatesMap.get().remove("tags");
+
         if (giftCertificateRepository.updateGiftCertificate(id, updatesMap)) {
             if (tags != null) {
 

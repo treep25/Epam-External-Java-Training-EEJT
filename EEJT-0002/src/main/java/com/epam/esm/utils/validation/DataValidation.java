@@ -71,6 +71,10 @@ public class DataValidation {
 
                 map.put("duration", String.valueOf(giftCertificate.getDuration()));
             }
+            if (giftCertificate.getTags() != null && isCertificateConsistsTagsOptionalValid(giftCertificate.getTags())) {
+
+                map.put("tags", "some tags");
+            }
             return Optional.of(map);
         }
         throw new ServerException("Something went wrong, check this fields " + answer);
