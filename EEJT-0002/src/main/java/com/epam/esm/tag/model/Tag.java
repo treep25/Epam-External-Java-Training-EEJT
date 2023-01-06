@@ -1,5 +1,8 @@
 package com.epam.esm.tag.model;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.Objects;
 
 public class Tag {
@@ -34,13 +37,16 @@ public class Tag {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (!(o instanceof Tag)) return false;
+
         Tag tag = (Tag) o;
-        return Objects.equals(getId(), tag.getId()) && Objects.equals(getName(), tag.getName());
+
+        return new EqualsBuilder().append(getId(), tag.getId()).append(getName(), tag.getName()).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName());
+        return new HashCodeBuilder(17, 37).append(getId()).append(getName()).toHashCode();
     }
 }

@@ -1,6 +1,8 @@
 package com.epam.esm.giftcertficate.model;
 
 import com.epam.esm.tag.model.Tag;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -115,14 +117,17 @@ public class GiftCertificate {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (!(o instanceof GiftCertificate)) return false;
+
         GiftCertificate that = (GiftCertificate) o;
-        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getTags(), that.getTags()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getPrice(), that.getPrice()) && Objects.equals(getDuration(), that.getDuration()) && Objects.equals(getCreateDate(), that.getCreateDate()) && Objects.equals(getLastUpdateDate(), that.getLastUpdateDate());
+
+        return new EqualsBuilder().append(getId(), that.getId()).append(getName(), that.getName()).append(getTags(), that.getTags()).append(getDescription(), that.getDescription()).append(getPrice(), that.getPrice()).append(getDuration(), that.getDuration()).append(getCreateDate(), that.getCreateDate()).append(getLastUpdateDate(), that.getLastUpdateDate()).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getName(), getTags(), getDescription(), getPrice(), getDuration(), getCreateDate(), getLastUpdateDate());
+        return new HashCodeBuilder(17, 37).append(getId()).append(getName()).append(getTags()).append(getDescription()).append(getPrice()).append(getDuration()).append(getCreateDate()).append(getLastUpdateDate()).toHashCode();
     }
 
     @Override
