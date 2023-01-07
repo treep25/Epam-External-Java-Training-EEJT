@@ -84,7 +84,7 @@ public class DataValidation {
         return obj != null && !StringUtils.isBlank(obj) && !StringUtils.isEmpty(obj) && !StringUtils.isNumeric(obj);
     }
 
-    public static boolean isSortingTypeContain(String method) {
+    public static boolean isSortingTypeContains(String method) {
         return List.of("ASC", "DESC").contains(method.toUpperCase(Locale.ROOT));
     }
 }

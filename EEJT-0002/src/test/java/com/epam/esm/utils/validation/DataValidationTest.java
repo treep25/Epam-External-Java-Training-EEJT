@@ -118,7 +118,7 @@ class DataValidationTest {
     void isSortingTypeContain_ReturnTrueWhenDescOrAsc() {
         List<String> testObjs = List.of("DESC", "ASC", "desc", "asc", "dEsc", "AsC");
         for (String testObj : testObjs) {
-            assertTrue(DataValidation.isSortingTypeContain(testObj));
+            assertTrue(DataValidation.isSortingTypeContains(testObj));
         }
     }
 
@@ -126,7 +126,7 @@ class DataValidationTest {
     void isSortingTypeContain_ReturnFalse() {
         List<String> testObjs = List.of("qweqwe", "qwe", "123", "ASCCC", "DESCEE", "e");
         for (String testObj : testObjs) {
-            assertFalse(DataValidation.isSortingTypeContain(testObj));
+            assertFalse(DataValidation.isSortingTypeContains(testObj));
         }
     }
 }

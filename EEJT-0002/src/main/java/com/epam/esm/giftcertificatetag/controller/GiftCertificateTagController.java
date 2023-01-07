@@ -40,10 +40,10 @@ public class GiftCertificateTagController {
     }
 
     @GetMapping("sort-date/{sortDirection}")
-    public ResponseEntity<?> getGiftCertificatesSortedByDate(@PathVariable("sortDirection") String sortingType) {
-        if (DataValidation.isStringValid(sortingType)) {
-            if (DataValidation.isSortingTypeContain(sortingType)) {
-                return ResponseEntity.ok(giftCertificateTagService.getGiftCertificatesSortedByDate(sortingType));
+    public ResponseEntity<?> getGiftCertificatesSortedByDate(@PathVariable("sortDirection") String sortDirection) {
+        if (DataValidation.isStringValid(sortDirection)) {
+            if (DataValidation.isSortingTypeContains(sortDirection)) {
+                return ResponseEntity.ok(giftCertificateTagService.getGiftCertificatesSortedByDate(sortDirection));
             }
             throw new ServerException("type should be only DESC or ASC without register");
         }
@@ -54,7 +54,7 @@ public class GiftCertificateTagController {
     public ResponseEntity<?> getGiftCertificatesSortedByDateAndByName(@PathVariable("firstSortDirection") String firstSortDirection, @PathVariable("secondSortDirection") String secondSortDirection) {
         if (DataValidation.isStringValid(firstSortDirection) && DataValidation.isStringValid(secondSortDirection)) {
 
-            if (DataValidation.isSortingTypeContain(firstSortDirection) && DataValidation.isSortingTypeContain(secondSortDirection)) {
+            if (DataValidation.isSortingTypeContains(firstSortDirection) && DataValidation.isSortingTypeContains(secondSortDirection)) {
                 return ResponseEntity.ok(giftCertificateTagService.getGiftCertificatesSortedByDateAndByName(firstSortDirection, secondSortDirection));
             }
             throw new ServerException("type should be only DESC or ASC without register");
