@@ -54,7 +54,7 @@ public class GiftCertificateController {
         if (DataValidation.moreThenZero(id)) {
             Optional<Map<String, String>> updatesMap = DataValidation.isGiftCertificateValidForUpdating(giftCertificate);
             if (!updatesMap.get().isEmpty()) {
-                return ResponseEntity.ok(giftCertificateService.updateGiftCertificate(id, giftCertificate.getTags(), updatesMap));
+                return ResponseEntity.ok(giftCertificateService.updateGiftCertificate(id, giftCertificate.getTags(), updatesMap.get()));
             }
             throw new ServerException("There are no fields to update");
         }
