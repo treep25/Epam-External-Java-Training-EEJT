@@ -99,7 +99,7 @@ class GiftCertificateRepositoryImpTest {
         int priceUpdated = 124444;
 
         boolean actual = giftCertificateRepository.updateGiftCertificate(1L,
-                Optional.of(Map.of("description", descriptionUpdated, "price", String.valueOf(priceUpdated))));
+                Map.of("description", descriptionUpdated, "price", String.valueOf(priceUpdated)));
         //then
         assertTrue(actual);
     }
