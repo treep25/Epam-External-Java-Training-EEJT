@@ -14,15 +14,16 @@ import java.util.*;
 public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final String ID = "id";
-    private final String NAME = "name";
-    private final String DESCRIPTION = "description";
-    private final String PRICE = "price";
-    private final String DURATION = "duration";
-    private final String CREATE_DATE = "create_date";
-    private final String LAST_UPDATE_DATE = "last_update_date";
-    private final Instant currentDateTime = Instant.now();
-    private final int successfullyDone = 1;
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final String DESCRIPTION = "description";
+    private static final String PRICE = "price";
+    private static final String DURATION = "duration";
+    private static final String CREATE_DATE = "create_date";
+    private static final String LAST_UPDATE_DATE = "last_update_date";
+    private static final String PART_OF_QUERY_FOR_UPDATING = "UPDATE gift_certificate SET ";
+    private Instant currentDateTime;
+    private static final int DB_OPERATION_SUCCESSFUL_RESULT = 1;
 
     @Autowired
     public GiftCertificateRepositoryImp(JdbcTemplate jdbcTemplate) {
@@ -30,8 +31,9 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
     }
 
     private List<Tag> getAllTagsByCertificateId(long certificateId) {
-        return jdbcTemplate.query(SqlQuery.GiftCertificate.GET_ALL_TAGS_BY_CERTIFICATE_ID, new Long[]{certificateId}, (resultSet, i) ->
-                new Tag().setId(resultSet.getLong("id")).setName(resultSet.getString("name")));
+        return jdbcTemplate.query(SqlQuery.GiftCertificate.GET_ALL_TAGS_BY_CERTIFICATE_ID, new Long[]{certificateId},
+                (resultSet, i) ->
+                        new Tag().setId(resultSet.getLong(ID)).setName(resultSet.getString(NAME)));
     }
 
     @Override
@@ -49,61 +51,68 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
 
     @Override
     public boolean createCertificate(GiftCertificate giftCertificate) {
-        return jdbcTemplate.update(SqlQuery.GiftCertificate.CREATE_CERTIFICATE, giftCertificate.getName(),
+        return jdbcTemplate.update(SqlQuery.GiftCertificate.CREATE_CERTIFICATE,
+                giftCertificate.getName(),
                 giftCertificate.getDescription(),
                 giftCertificate.getPrice(),
                 giftCertificate.getDuration(),
-                currentDateTime,
-                currentDateTime) == successfullyDone;
+                currentDateTime.now(),
+                currentDateTime.now()) == DB_OPERATION_SUCCESSFUL_RESULT;
     }
 
     @Override
     public List<GiftCertificate> getCertificateById(long id) {
-        return jdbcTemplate.query(SqlQuery.GiftCertificate.GET_CERTIFICATE_BY_ID, new Object[]{id}, (resultSet, i) ->
-                new GiftCertificate().
-                        setId(resultSet.getLong(ID)).
-                        setName(resultSet.getString(NAME)).
-                        setTags(getAllTagsByCertificateId(resultSet.getLong(ID))).
-                        setDescription(resultSet.getString("description")).
-                        setPrice(resultSet.getInt(PRICE)).
-                        setDuration(resultSet.getInt(DURATION)).
-                        setCreateDate(resultSet.getDate(CREATE_DATE)).
-                        setLastUpdateDate(resultSet.getDate(LAST_UPDATE_DATE)));
+        return jdbcTemplate.query(SqlQuery.GiftCertificate.GET_CERTIFICATE_BY_ID, new Object[]{id},
+                (resultSet, i) ->
+                        new GiftCertificate().
+                                setId(resultSet.getLong(ID)).
+                                setName(resultSet.getString(NAME)).
+                                setTags(getAllTagsByCertificateId(resultSet.getLong(ID))).
+                                setDescription(resultSet.getString(DESCRIPTION)).
+                                setPrice(resultSet.getInt(PRICE)).
+                                setDuration(resultSet.getInt(DURATION)).
+                                setCreateDate(resultSet.getDate(CREATE_DATE)).
+                                setLastUpdateDate(resultSet.getDate(LAST_UPDATE_DATE)));
     }
 
     @Override
     public boolean deleteCertificate(long id) {
-        return jdbcTemplate.update(SqlQuery.GiftCertificate.DELETE_CERTIFICATE, id) == successfullyDone;
+        return jdbcTemplate.update(SqlQuery.GiftCertificate.DELETE_CERTIFICATE, id) == DB_OPERATION_SUCCESSFUL_RESULT;
     }
 
     @Override
-    public boolean updateGiftCertificate(long id, Optional<Map<String, String>> updatesMap) {
+    public boolean updateGiftCertificate(long id, Map<String, String> updatesMap) {
         List<Object> updatesParam = new ArrayList<>();
 
-        StringBuilder generatedQuery = new StringBuilder("UPDATE gift_certificate SET ");
-        updatesMap.get().forEach((key, value) -> {
+        StringBuilder generatedQuery = new StringBuilder(PART_OF_QUERY_FOR_UPDATING);
+        updatesMap.forEach((key, value) -> {
 
             generatedQuery.append(key).append("= ? ,");
             updatesParam.add(value);
         });
-        generatedQuery.append("last_update_date = ? WHERE id = ?");
+        generatedQuery.append(LAST_UPDATE_DATE + " = ? WHERE " + ID + " = ?");
 
-        updatesParam.addAll(List.of(currentDateTime, id));
+        updatesParam.addAll(List.of(currentDateTime.now(), id));
 
-        return jdbcTemplate.update(generatedQuery.toString(), updatesParam.toArray()) == successfullyDone;
+        return jdbcTemplate.update(generatedQuery.toString(), updatesParam.toArray()) == DB_OPERATION_SUCCESSFUL_RESULT;
     }
 
     @Override
     public long getIdByGiftCertificate(GiftCertificate giftCertificate) {
         return jdbcTemplate.queryForObject(SqlQuery.GiftCertificate.GET_ID_BY_GIFT_CERTIFICATE,
-                new Object[]{giftCertificate.getName(), giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration()}
-                , Long.class);
+                new Object[]{giftCertificate.getName(),
+                        giftCertificate.getDescription(),
+                        giftCertificate.getPrice(),
+                        giftCertificate.getDuration()}, Long.class);
     }
 
     @Override
     public boolean isGiftCertificateExist(GiftCertificate giftCertificate) {
         return jdbcTemplate.queryForObject(SqlQuery.GiftCertificate.IS_GIFT_CERTIFICATE_EXIST, Boolean.class,
-                giftCertificate.getName(), giftCertificate.getDescription(), giftCertificate.getPrice(), giftCertificate.getDuration());
+                giftCertificate.getName(),
+                giftCertificate.getDescription(),
+                giftCertificate.getPrice(),
+                giftCertificate.getDuration());
     }
 
     private void createGiftCertificateTag(long tagId, long giftCertificateId) {

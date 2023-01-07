@@ -12,10 +12,9 @@ import java.util.List;
 public class TagRepositoryImpl implements TagRepository {
 
     private final JdbcTemplate jdbcTemplate;
-    private final String ID = "id";
-    private final String NAME = "name";
-
-    private final int successfullyDone = 1;
+    private static final String ID = "id";
+    private static final String NAME = "name";
+    private static final int DB_OPERATION_SUCCESSFUL_RESULT = 1;
 
 
     @Autowired
@@ -25,12 +24,12 @@ public class TagRepositoryImpl implements TagRepository {
 
     @Override
     public boolean createTag(Tag tag) {
-        return jdbcTemplate.update(SqlQuery.Tag.CREATE_TAG, tag.getName()) == successfullyDone;
+        return jdbcTemplate.update(SqlQuery.Tag.CREATE_TAG, tag.getName()) == DB_OPERATION_SUCCESSFUL_RESULT;
     }
 
     @Override
     public boolean deleteTag(long id) {
-        return jdbcTemplate.update(SqlQuery.Tag.DELETE_TAG, id) == successfullyDone;
+        return jdbcTemplate.update(SqlQuery.Tag.DELETE_TAG, id) == DB_OPERATION_SUCCESSFUL_RESULT;
     }
 
     @Override

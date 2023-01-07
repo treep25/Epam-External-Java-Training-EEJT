@@ -15,7 +15,7 @@ public interface GiftCertificateRepository {
 
     boolean deleteCertificate(long id);
 
-    boolean updateGiftCertificate(long id, Optional<Map<String, String>> updatesMap);
+    boolean updateGiftCertificate(long id, Map<String, String> updatesMap);
 
     long getIdByGiftCertificate(GiftCertificate giftCertificate);
 
