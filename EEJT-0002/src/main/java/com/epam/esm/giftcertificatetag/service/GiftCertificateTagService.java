@@ -36,8 +36,8 @@ public class GiftCertificateTagService {
         throw new ItemNotFoundException("There are no gift certificates with name or starting with  =" + partOfName);
     }
 
-    public List<GiftCertificate> sortingAscDescByDate(String method) {
-        List<GiftCertificate> sortingTagsAndCertificates = giftCertificateTagRepository.sortingAscDescByDate(method);
+    public List<GiftCertificate> getGiftCertificatesSortedByDate(String sortDirection) {
+        List<GiftCertificate> sortingTagsAndCertificates = giftCertificateTagRepository.getGiftCertificatesSortedByDate(sortDirection);
 
         if (!sortingTagsAndCertificates.isEmpty()) {
             return sortingTagsAndCertificates;
@@ -45,8 +45,8 @@ public class GiftCertificateTagService {
         throw new ItemNotFoundException("There are no tags and certificates");
     }
 
-    public List<GiftCertificate> sortingAscDescByDateAndByName(String method1, String method2) {
-        List<GiftCertificate> sortingTagsAndCertificates = giftCertificateTagRepository.sortingAscDescByDateAndByName(method1, method2);
+    public List<GiftCertificate> getGiftCertificatesSortedByDateAndByName(String firstSortDirection, String secondSortDirection) {
+        List<GiftCertificate> sortingTagsAndCertificates = giftCertificateTagRepository.getGiftCertificatesSortedByDateAndByName(firstSortDirection, secondSortDirection);
 
         if (!sortingTagsAndCertificates.isEmpty()) {
             return sortingTagsAndCertificates;

@@ -32,29 +32,30 @@ public class GiftCertificateTagController {
     }
 
     @GetMapping("gift-certificate/{partOfName}")
-    public ResponseEntity<?> getByPartOfName(@PathVariable("partOfName") String partOfName) {
+    public ResponseEntity<?> getGiftCertificatesAndTagsByNameOrByPartOfName(@PathVariable("partOfName") String partOfName) {
         if (DataValidation.isStringValid(partOfName)) {
             return ResponseEntity.ok(giftCertificateTagService.getGiftCertificatesAndTagsByNameOrByPartOfName(partOfName));
         }
         throw new ServerException("Gift certificate name is not valid");
     }
 
-    @GetMapping("sort-date/{sortingType}")
-    public ResponseEntity<?> sortingAscDescByDate(@PathVariable("sortingType") String sortingType) {
+    @GetMapping("sort-date/{sortDirection}")
+    public ResponseEntity<?> getGiftCertificatesSortedByDate(@PathVariable("sortDirection") String sortingType) {
         if (DataValidation.isStringValid(sortingType)) {
             if (DataValidation.isSortingTypeContain(sortingType)) {
-                return ResponseEntity.ok(giftCertificateTagService.sortingAscDescByDate(sortingType));
+                return ResponseEntity.ok(giftCertificateTagService.getGiftCertificatesSortedByDate(sortingType));
             }
             throw new ServerException("type should be only DESC or ASC without register");
         }
         throw new ServerException("Incorrect data");
     }
 
-    @GetMapping(value = "sort-date-name/{sortingType1}/{sortingType2}")
-    public ResponseEntity<?> sortingByDateByName(@PathVariable("sortingType1") String sortingType1, @PathVariable("sortingType2") String sortingType2) {
-        if (DataValidation.isStringValid(sortingType1) && DataValidation.isStringValid(sortingType2)) {
-            if (DataValidation.isSortingTypeContain(sortingType1) && DataValidation.isSortingTypeContain(sortingType2)) {
-                return ResponseEntity.ok(giftCertificateTagService.sortingAscDescByDateAndByName(sortingType1, sortingType2));
+    @GetMapping(value = "sort-date-name/{firstSortDirection}/{secondSortDirection}")
+    public ResponseEntity<?> getGiftCertificatesSortedByDateAndByName(@PathVariable("firstSortDirection") String firstSortDirection, @PathVariable("secondSortDirection") String secondSortDirection) {
+        if (DataValidation.isStringValid(firstSortDirection) && DataValidation.isStringValid(secondSortDirection)) {
+
+            if (DataValidation.isSortingTypeContain(firstSortDirection) && DataValidation.isSortingTypeContain(secondSortDirection)) {
+                return ResponseEntity.ok(giftCertificateTagService.getGiftCertificatesSortedByDateAndByName(firstSortDirection, secondSortDirection));
             }
             throw new ServerException("type should be only DESC or ASC without register");
         }

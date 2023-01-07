@@ -87,11 +87,11 @@ class GiftCertificateTagServiceTest {
         String sortingMethodPlug = "ASC";
 
         //when
-        when(giftCertificateTagRepositoryMock.sortingAscDescByDate(sortingMethodPlug)).thenReturn(listGiftCertificateTagsObjExpected);
+        when(giftCertificateTagRepositoryMock.getGiftCertificatesSortedByDate(sortingMethodPlug)).thenReturn(listGiftCertificateTagsObjExpected);
 
         //then
 
-        assertEquals(listGiftCertificateTagsObjExpected, giftCertificateTagServiceMock.sortingAscDescByDate(sortingMethodPlug));
+        assertEquals(listGiftCertificateTagsObjExpected, giftCertificateTagServiceMock.getGiftCertificatesSortedByDate(sortingMethodPlug));
     }
 
 
@@ -102,9 +102,9 @@ class GiftCertificateTagServiceTest {
         String sortingMethodPlug = "ASC";
 
         //when
-        when(giftCertificateTagRepositoryMock.sortingAscDescByDate(sortingMethodPlug)).thenReturn(listGiftCertificateTagsObj);
+        when(giftCertificateTagRepositoryMock.getGiftCertificatesSortedByDate(sortingMethodPlug)).thenReturn(listGiftCertificateTagsObj);
         ItemNotFoundException thrown = assertThrows(ItemNotFoundException.class,
-                () -> giftCertificateTagServiceMock.sortingAscDescByDate(sortingMethodPlug));
+                () -> giftCertificateTagServiceMock.getGiftCertificatesSortedByDate(sortingMethodPlug));
 
         //then
         assertEquals("There are no tags and certificates", thrown.getMessage());
@@ -117,11 +117,11 @@ class GiftCertificateTagServiceTest {
         String sortingMethodPlug = "DESC";
 
         //when
-        when(giftCertificateTagRepositoryMock.sortingAscDescByDateAndByName(sortingMethodPlug, sortingMethodPlug)).thenReturn(listGiftCertificateTagsObjExpected);
+        when(giftCertificateTagRepositoryMock.getGiftCertificatesSortedByDateAndByName(sortingMethodPlug, sortingMethodPlug)).thenReturn(listGiftCertificateTagsObjExpected);
 
         //then
 
-        assertEquals(listGiftCertificateTagsObjExpected, giftCertificateTagServiceMock.sortingAscDescByDateAndByName(sortingMethodPlug, sortingMethodPlug));
+        assertEquals(listGiftCertificateTagsObjExpected, giftCertificateTagServiceMock.getGiftCertificatesSortedByDateAndByName(sortingMethodPlug, sortingMethodPlug));
 
     }
 
@@ -132,9 +132,9 @@ class GiftCertificateTagServiceTest {
         String sortingMethodPlug = "DESC";
 
         //when
-        when(giftCertificateTagRepositoryMock.sortingAscDescByDateAndByName(sortingMethodPlug, sortingMethodPlug)).thenReturn(listGiftCertificateTagsObj);
+        when(giftCertificateTagRepositoryMock.getGiftCertificatesSortedByDateAndByName(sortingMethodPlug, sortingMethodPlug)).thenReturn(listGiftCertificateTagsObj);
         ItemNotFoundException thrown = assertThrows(ItemNotFoundException.class,
-                () -> giftCertificateTagServiceMock.sortingAscDescByDateAndByName(sortingMethodPlug, sortingMethodPlug));
+                () -> giftCertificateTagServiceMock.getGiftCertificatesSortedByDateAndByName(sortingMethodPlug, sortingMethodPlug));
 
         //then
         assertEquals("There are no tags and certificates", thrown.getMessage());

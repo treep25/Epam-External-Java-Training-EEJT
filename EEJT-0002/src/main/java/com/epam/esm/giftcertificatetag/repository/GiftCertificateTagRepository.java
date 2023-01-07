@@ -9,7 +9,7 @@ public interface GiftCertificateTagRepository {
 
     List<GiftCertificate> getGiftCertificatesAndTagsByNameOrByPartOfName(String partOfName);
 
-    List<GiftCertificate> sortingAscDescByDate(String method);
+    List<GiftCertificate> getGiftCertificatesSortedByDate(String sortDirection);
 
-    List<GiftCertificate> sortingAscDescByDateAndByName(String method1, String method2);
+    List<GiftCertificate> getGiftCertificatesSortedByDateAndByName(String firstSortDirection, String secondSortDirection);
 }

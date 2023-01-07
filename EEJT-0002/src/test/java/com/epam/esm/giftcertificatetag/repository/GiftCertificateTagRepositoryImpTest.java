@@ -82,7 +82,7 @@ class GiftCertificateTagRepositoryImpTest {
 
 
         //when
-        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDate("ASC");
+        List<GiftCertificate> actual = giftCertificateTagRepository.getGiftCertificatesSortedByDate("ASC");
         //then
         assertEquals(expected, actual);
     }
@@ -109,7 +109,7 @@ class GiftCertificateTagRepositoryImpTest {
                 setLastUpdateDate("2022-01-04T01:00Z"));
 
         //when
-        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDate("DESC");
+        List<GiftCertificate> actual = giftCertificateTagRepository.getGiftCertificatesSortedByDate("DESC");
         //then
         assertEquals(expected, actual);
     }
@@ -136,7 +136,7 @@ class GiftCertificateTagRepositoryImpTest {
                 setLastUpdateDate("2023-01-04T01:00Z"));
 
         //when
-        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("ASC", "DESC");
+        List<GiftCertificate> actual = giftCertificateTagRepository.getGiftCertificatesSortedByDateAndByName("ASC", "DESC");
         //then
         assertEquals(expected, actual);
     }
@@ -163,7 +163,7 @@ class GiftCertificateTagRepositoryImpTest {
                 setLastUpdateDate("2022-01-04T01:00Z"));
 
         //when
-        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("DESC", "ASC");
+        List<GiftCertificate> actual = giftCertificateTagRepository.getGiftCertificatesSortedByDateAndByName("DESC", "ASC");
         //then
         assertEquals(expected, actual);
     }
@@ -190,7 +190,7 @@ class GiftCertificateTagRepositoryImpTest {
                 setLastUpdateDate("2022-01-04T01:00Z"));
 
         //when
-        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("DESc", "DESC");
+        List<GiftCertificate> actual = giftCertificateTagRepository.getGiftCertificatesSortedByDateAndByName("DESc", "DESC");
         //then
         assertEquals(expected, actual);
     }
@@ -217,7 +217,7 @@ class GiftCertificateTagRepositoryImpTest {
                 setLastUpdateDate("2023-01-04T01:00Z"));
 
         //when
-        List<GiftCertificate> actual = giftCertificateTagRepository.sortingAscDescByDateAndByName("ASC", "asc");
+        List<GiftCertificate> actual = giftCertificateTagRepository.getGiftCertificatesSortedByDateAndByName("ASC", "asc");
         //then
         assertEquals(expected, actual);
     }

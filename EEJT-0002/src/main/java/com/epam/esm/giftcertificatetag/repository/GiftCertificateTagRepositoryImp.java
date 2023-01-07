@@ -50,8 +50,8 @@ public class GiftCertificateTagRepositoryImp implements GiftCertificateTagReposi
                         setLastUpdateDate(resultSet.getDate(LAST_UPDATE_DATE)));
     }
 
-    public List<GiftCertificate> sortingAscDescByDate(String method) {
-        return jdbcTemplate.query(SqlQuery.TagGiftCertificate.getTypeOfSortingForDate(method),
+    public List<GiftCertificate> getGiftCertificatesSortedByDate(String sortDirection) {
+        return jdbcTemplate.query(SqlQuery.TagGiftCertificate.getTypeOfSortingForDate(sortDirection),
                 (resultSet, i) -> new GiftCertificate().setId(resultSet.getLong(ID)).
                         setName(resultSet.getString(NAME)).
                         setTags(getAllTagsByCertificate(resultSet.getLong(ID))).
@@ -62,8 +62,8 @@ public class GiftCertificateTagRepositoryImp implements GiftCertificateTagReposi
                         setLastUpdateDate(resultSet.getDate(LAST_UPDATE_DATE)));
     }
 
-    public List<GiftCertificate> sortingAscDescByDateAndByName(String method1, String method2) {
-        return jdbcTemplate.query(SqlQuery.TagGiftCertificate.getTypeOfSortingForDateAndName(method1, method2),
+    public List<GiftCertificate> getGiftCertificatesSortedByDateAndByName(String firstSortDirection, String secondSortDirection) {
+        return jdbcTemplate.query(SqlQuery.TagGiftCertificate.getTypeOfSortingForDateAndName(firstSortDirection, secondSortDirection),
                 (resultSet, i) -> new GiftCertificate().setId(resultSet.getLong(ID)).
                         setName(resultSet.getString(NAME)).
                         setTags(getAllTagsByCertificate(resultSet.getLong(ID))).
