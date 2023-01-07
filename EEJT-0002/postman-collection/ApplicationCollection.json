@@ -1,0 +1,292 @@
+{
+  "info": {
+    "_postman_id": "3f707ba6-1dd7-450e-9c34-d436e6a71027",
+    "name": "ApplicationCollection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23817306"
+  },
+  "item": [
+    {
+      "name": "certificates/create",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n            \"name\": \"some name\",\r\n            \"description\": \"some description\",\r\n            \"price\": 1,\r\n            \"duration\": 1,\r\n            \"tags\": [\r\n                {\r\n                    \"name\":\"some tag name1\" \r\n                },\r\n                {\r\n                    \"name\": \"some tag name2\"\r\n                }\r\n            ]\r\n        }"
+        },
+        "url": {
+          "raw": "http://localhost:8081/certificates",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "certificates"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "certificates/getAll",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/certificates",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "certificates"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "certificates/getById",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/certificates/98",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "certificates",
+            "98"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "certificates/updateGiftCertificate",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n        \"description\":\"new description1\",\r\n        \"price\":12313,\r\n        \"tags\": [\r\n            {\r\n                \"name\":\"a1\"\r\n            }\r\n\r\n        ]\r\n\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/certificates/105",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "certificates",
+            "105"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "/certificate/delete",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/certificates/99",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "certificates",
+            "99"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tags/create",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n \"name\":\"someTag\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8081/tags",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "tags"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tags/getAll",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/tags",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "tags"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tags/getById",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/tags/80",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "tags",
+            "80"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tags/delete",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/tags/80",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "tags",
+            "80"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tag-with-certificates/getAllStartWith",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/tag-with-certificates/gift-certificate/qw",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "tag-with-certificates",
+            "gift-certificate",
+            "qw"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tag-with-certificates/GetAllSortingByDate",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/tag-with-certificates/sort-date/ASC",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "tag-with-certificates",
+            "sort-date",
+            "ASC"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tag-with-certificates/getAllSortingByNameDate",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/tag-with-certificates/sort-date-name/asc/desc",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "tag-with-certificates",
+            "sort-date-name",
+            "asc",
+            "desc"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "tag-with-certificates/getAllByTagName",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8081/tag-with-certificates/qwe",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8081",
+          "path": [
+            "tag-with-certificates",
+            "qwe"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
