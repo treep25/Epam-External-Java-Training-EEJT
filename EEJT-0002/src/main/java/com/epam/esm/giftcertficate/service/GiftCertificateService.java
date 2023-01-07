@@ -23,6 +23,7 @@ public class GiftCertificateService {
 
     private final GiftCertificateRepository giftCertificateRepository;
     private final TagService tagService;
+    private static final String TAGS = "tags";
 
     @Autowired
     public GiftCertificateService(GiftCertificateRepository giftCertificateRepository, TagService tagService) {
@@ -73,9 +74,9 @@ public class GiftCertificateService {
     }
 
     @Transactional
-    public List<GiftCertificate> updateGiftCertificate(long id, List<Tag> tags, Optional<Map<String, String>> updatesMap) {
+    public List<GiftCertificate> updateGiftCertificate(long id, List<Tag> tags, Map<String, String> updatesMap) {
 
-        updatesMap.get().remove("tags");
+        updatesMap.remove(TAGS);
 
         if (giftCertificateRepository.updateGiftCertificate(id, updatesMap)) {
             if (tags != null) {
