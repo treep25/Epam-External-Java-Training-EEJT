@@ -9,7 +9,7 @@ import java.util.*;
 
 public class DataValidation {
     public static boolean isValidCertificate(GiftCertificate giftCertificate) {
-        return giftCertificate != null && isStringValid(giftCertificate.getName()) &&
+        return isStringValid(giftCertificate.getName()) &&
                 giftCertificate.getDuration() != null && giftCertificate.getDuration() >= 0 &&
                 isStringValid(giftCertificate.getDescription()) &&
                 giftCertificate.getPrice() != null &&
@@ -81,10 +81,10 @@ public class DataValidation {
     }
 
     public static boolean isStringValid(String obj) {
-        return obj != null && !StringUtils.isBlank(obj) && !StringUtils.isEmpty(obj) && !StringUtils.isNumeric(obj);
+        return StringUtils.isNotBlank(obj) && !StringUtils.isNumeric(obj);
     }
 
     public static boolean isSortingTypeContains(String method) {
-        return List.of("ASC", "DESC").contains(method.toUpperCase(Locale.ROOT));
+        return List.of(SortingTypes.ASC.name(), SortingTypes.DESC.name()).contains(method.toUpperCase(Locale.ROOT));
     }
 }
