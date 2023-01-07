@@ -122,12 +122,25 @@ public class GiftCertificate {
 
         GiftCertificate that = (GiftCertificate) o;
 
-        return new EqualsBuilder().append(getId(), that.getId()).append(getName(), that.getName()).append(getTags(), that.getTags()).append(getDescription(), that.getDescription()).append(getPrice(), that.getPrice()).append(getDuration(), that.getDuration()).append(getCreateDate(), that.getCreateDate()).append(getLastUpdateDate(), that.getLastUpdateDate()).isEquals();
+        return new EqualsBuilder().append(getId(),
+                that.getId()).append(getName(),
+                that.getName()).append(getTags(),
+                that.getTags()).append(getDescription(),
+                that.getDescription()).append(getPrice(),
+                that.getPrice()).append(getDuration(),
+                that.getDuration()).append(getCreateDate(),
+                that.getCreateDate()).append(getLastUpdateDate(),
+                that.getLastUpdateDate()).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(getId()).append(getName()).append(getTags()).append(getDescription()).append(getPrice()).append(getDuration()).append(getCreateDate()).append(getLastUpdateDate()).toHashCode();
+        return new HashCodeBuilder(17, 37)
+                .append(getId()).append(getName())
+                .append(getTags()).append(getDescription())
+                .append(getPrice()).append(getDuration())
+                .append(getCreateDate())
+                .append(getLastUpdateDate()).toHashCode();
     }
 
     @Override
