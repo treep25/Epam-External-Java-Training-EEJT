@@ -22,7 +22,6 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
     private static final String CREATE_DATE = "create_date";
     private static final String LAST_UPDATE_DATE = "last_update_date";
     private static final String PART_OF_QUERY_FOR_UPDATING = "UPDATE gift_certificate SET ";
-    private Instant currentDateTime;
     private static final int DB_OPERATION_SUCCESSFUL_RESULT = 1;
 
     @Autowired
@@ -51,13 +50,14 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
 
     @Override
     public boolean createCertificate(GiftCertificate giftCertificate) {
+        Instant currentTime = Instant.now();
         return jdbcTemplate.update(SqlQuery.GiftCertificate.CREATE_CERTIFICATE,
                 giftCertificate.getName(),
                 giftCertificate.getDescription(),
                 giftCertificate.getPrice(),
                 giftCertificate.getDuration(),
-                currentDateTime.now(),
-                currentDateTime.now()) == DB_OPERATION_SUCCESSFUL_RESULT;
+                currentTime,
+                currentTime) == DB_OPERATION_SUCCESSFUL_RESULT;
     }
 
     @Override
@@ -83,6 +83,7 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
     @Override
     public boolean updateGiftCertificate(long id, Map<String, String> updatesMap) {
         List<Object> updatesParam = new ArrayList<>();
+        Instant currentTime = Instant.now();
 
         StringBuilder generatedQuery = new StringBuilder(PART_OF_QUERY_FOR_UPDATING);
         updatesMap.forEach((key, value) -> {
@@ -92,7 +93,7 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
         });
         generatedQuery.append(LAST_UPDATE_DATE + " = ? WHERE " + ID + " = ?");
 
-        updatesParam.addAll(List.of(currentDateTime.now(), id));
+        updatesParam.addAll(List.of(currentTime, id));
 
         return jdbcTemplate.update(generatedQuery.toString(), updatesParam.toArray()) == DB_OPERATION_SUCCESSFUL_RESULT;
     }
