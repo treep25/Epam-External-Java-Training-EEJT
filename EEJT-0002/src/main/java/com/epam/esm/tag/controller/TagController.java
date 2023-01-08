@@ -50,7 +50,7 @@ public class TagController {
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
         if (DataValidation.moreThenZero(id)) {
             tagService.deleteTag(id);
-            return ResponseEntity.ok(Map.of("status", HttpStatus.OK));
+            return new ResponseEntity<>(Map.of("status", HttpStatus.NO_CONTENT), HttpStatus.NO_CONTENT);
         }
         throw new ServerException("incorrect tag id=" + id);
     }
