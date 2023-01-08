@@ -22,25 +22,29 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String MESSAGE = "message";
     private static final String MESSAGE_FOR_APPLICATION_EXCEPTION = "Oops, something went wrong";
 
+    private Map<String, ?> buildResponseMap(HttpStatus status, String message) {
+        return Map.of(HTTP_STATUS, "" + status, RESPONSE_BODY, Map.of(MESSAGE, message));
+    }
+
     @ExceptionHandler(ItemNotFoundException.class)
     protected ResponseEntity<?> handleItemNotFoundException(ItemNotFoundException ex, WebRequest request) {
 
         return handleExceptionInternal(ex,
-                Map.of(HTTP_STATUS, "" + HttpStatus.NOT_FOUND, RESPONSE_BODY, Map.of(MESSAGE, ex.getMessage())),
+                buildResponseMap(HttpStatus.NOT_FOUND, ex.getMessage()),
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
     @ExceptionHandler(ServerException.class)
     protected ResponseEntity<?> handleServerExceptionException(ServerException ex, WebRequest request) {
         return handleExceptionInternal(ex,
-                Map.of(HTTP_STATUS, "" + HttpStatus.INTERNAL_SERVER_ERROR, RESPONSE_BODY, Map.of(MESSAGE, ex.getMessage())),
+                buildResponseMap(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()),
                 new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 
     @ExceptionHandler(ApplicationException.class)
     protected ResponseEntity<?> handleApplicationException(RuntimeException ex, WebRequest request) {
         return handleExceptionInternal(ex,
-                Map.of(HTTP_STATUS, "" + HttpStatus.INTERNAL_SERVER_ERROR, RESPONSE_BODY, Map.of(MESSAGE, MESSAGE_FOR_APPLICATION_EXCEPTION)),
+                buildResponseMap(HttpStatus.INTERNAL_SERVER_ERROR, MESSAGE_FOR_APPLICATION_EXCEPTION),
                 new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
 }
