@@ -1,0 +1,573 @@
+swagger: '2.0'
+info:
+  description: Documentation REST API
+  version: '1.0'
+  title: REST API Basics
+host: localhost:8081
+basePath: /
+tags:
+  - name: gift-certificate-tag-controller
+    description: Gift Certificate Tag Controller
+  - name: tag-controller
+    description: Tag Controller
+  - name: gift-certificate-controller
+    description: Gift Certificate Controller
+paths:
+  /certificates:
+    get:
+      tags:
+        - gift-certificate-controller
+      summary: Get all gift certificates
+      description: Returns the list of products, may be empty
+      operationId: getAllUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GiftCertificate'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - gift-certificate-controller
+      summary: Create gift certificate
+      description: Return status
+      operationId: createCertificateUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: giftCertificate
+          description: giftCertificate
+          required: true
+          schema:
+            $ref: '#/definitions/GiftCertificateInput'
+      responses:
+        '200':
+          description: Ok
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/ResponseEntityCreated'
+        '500':
+          description: Server Error
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+  /certificates/{id}:
+    get:
+      tags:
+        - gift-certificate-controller
+      summary: get gift certificate by id
+      operationId: getByIdUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GiftCertificateInput'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseEntityNotFound'
+        '500':
+          description: Server Error
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+    delete:
+      tags:
+        - gift-certificate-controller
+      summary: delete gift certificate by id
+      operationId: deleteCertificateUsingDELETE
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseEntityNotFound'
+        '500':
+          description: Server Error
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+
+    patch:
+      tags:
+        - gift-certificate-controller
+      summary: updateCertificate
+      operationId: updateCertificateUsingPATCH
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: giftCertificate
+          description: giftCertificate
+          required: true
+          schema:
+            $ref: '#/definitions/GiftCertificateInput'
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GiftCertificateInput'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseEntityNotFound'
+        '500':
+          description: Server Error
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+
+  /tag-with-certificates/gift-certificate/{partOfName}:
+    get:
+      tags:
+        - gift-certificate-tag-controller
+      summary: getByPartOfName
+      operationId: getByPartOfNameUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: partOfName
+          in: path
+          description: partOfName
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GiftCertificate'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseEntityNotFound'
+        '500':
+          description: Server Error
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+  /tag-with-certificates/sort-date-name/{method1}/{method2}:
+    get:
+      tags:
+        - gift-certificate-tag-controller
+      summary: sortingByDateByName
+      operationId: sortingByDateByNameUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: method1
+          in: path
+          description: method1
+          required: true
+          type: string
+        - name: method2
+          in: path
+          description: method2
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GiftCertificate'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseEntityNotFound'
+        '500':
+          description: Server Error
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+  /tag-with-certificates/sort-date/{method}:
+    get:
+      tags:
+        - gift-certificate-tag-controller
+      summary: sortingAscDescByDate
+      operationId: sortingAscDescByDateUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: method
+          in: path
+          description: method
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GiftCertificate'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseEntityNotFound'
+        '500':
+          description: Server Error
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+  /tag-with-certificates/{name}:
+    get:
+      tags:
+        - gift-certificate-tag-controller
+      summary: getByTagName
+      operationId: getByTagNameUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: name
+          in: path
+          description: name
+          required: true
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/GiftCertificate'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseEntityNotFound'
+        '500':
+          description: Server Error
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+  /tags:
+    get:
+      tags:
+        - tag-controller
+      summary: getAllTags
+      operationId: getAllTagsUsingGET
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Tag'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseEntityNotFound'
+        '500':
+          description: Server Error
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+
+    post:
+      tags:
+        - tag-controller
+      summary: createTag
+      operationId: createTagUsingPOST
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: tag
+          description: tag
+          required: true
+          schema:
+            $ref: '#/definitions/TagInput'
+      responses:
+        '201':
+          description: Created
+          schema:
+            $ref: '#/definitions/ResponseEntityCreated'
+        '500':
+          description: Server Error
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+  /tags/{id}:
+    get:
+      tags:
+        - tag-controller
+      summary: getById
+      operationId: getByIdUsingGET_1
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/Tag'
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseEntityNotFound'
+        '500':
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+          description: Server Error
+    delete:
+      tags:
+        - tag-controller
+      summary: delete
+      operationId: deleteUsingDELETE
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          description: id
+          required: true
+          type: integer
+          format: int64
+      responses:
+        '204':
+          description: No Content
+        '404':
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ResponseEntityNotFound'
+        '500':
+          schema:
+            $ref: '#/definitions/ResponseEntityServerError'
+          description: Server Error
+
+
+definitions:
+  ResponseEntityCreated:
+    type: object
+    properties:
+      HTTP Status:
+        type: string
+        enum:
+          - 201 CREATED
+      response body:
+        type: array
+        items:
+          $ref: '#/definitions/messageResponseCreated'
+
+  messageResponseCreated:
+    type: object
+    properties:
+      message:
+        type: string
+        example: "CREATED"
+
+  ResponseEntityNotFound:
+    type: object
+    properties:
+      HTTP Status:
+        type: string
+        enum:
+          - 404 NOT_FOUND
+      response body:
+        type: array
+        items:
+          $ref: '#/definitions/messageResponseNotFound'
+
+  messageResponseNotFound:
+    type: object
+    properties:
+      message:
+        type: string
+        example: "NOT_FOUND"
+
+  ResponseEntityOk:
+    type: object
+    properties:
+      HTTP Status:
+        type: string
+        enum:
+          - 200 Ok
+      response body:
+        type: array
+        items:
+          $ref: '#/definitions/messageResponseOk'
+
+
+  messageResponseOk:
+    type: object
+    properties:
+      message:
+        type: string
+        example: "OK"
+
+  ResponseEntityServerError:
+    type: object
+    properties:
+      HTTP Status:
+        type: string
+        enum:
+          - 500 INTERNAL_SERVER_ERROR
+      response body:
+        type: array
+        items:
+          $ref: '#/definitions/messageResponseServerError'
+
+  messageResponseServerError:
+    type: object
+    properties:
+      message:
+        type: string
+        example: "INTERNAL_SERVER_ERROR"
+
+  GiftCertificate:
+    type: object
+    required:
+      - name
+      - description
+      - price
+      - duration
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1
+        description: Id
+      name:
+        type: string
+        example: 'Gift Certificate #1'
+        description: Name
+      description:
+        type: string
+        example: This is description
+        description: Description
+      price:
+        type: integer
+        format: int32
+        example: 1000
+        description: Price
+      duration:
+        type: integer
+        format: int32
+        example: 14
+        description: Duration
+      tags:
+        type: array
+        description: Gift Certificate`s tags
+        items:
+          $ref: '#/definitions/Tag'
+      createDate:
+        type: string
+        example: 2025-01-04T01:00Z
+        description: Date of creating Gift Certificate
+      lastUpdateDate:
+        type: string
+        example: 2026-03-04T01:00Z
+        description: Date of last updating Gift Certificate
+    description: Gift Certificate model
+  Tag:
+    type: object
+    required:
+      - name
+    properties:
+      id:
+        type: integer
+        format: int64
+        example: 1
+        description: Id
+      name:
+        type: string
+        example: 'Tag #1'
+        description: Name
+    description: Tag model
+
+  TagInput:
+    type: object
+    required:
+      - name
+    properties:
+      name:
+        type: string
+        example: 'Tag #1'
+        description: Name
+    description: Tag model
+
+  GiftCertificateInput:
+
+    type: object
+    required:
+      - name
+      - description
+      - price
+      - duration
+      - tag
+    properties:
+      name:
+        type: string
+        example: 'Gift Certificate #1'
+        description: Name
+      description:
+        type: string
+        example: This is description
+        description: Description
+      price:
+        type: integer
+        format: int32
+        example: 1000
+        description: Price
+      duration:
+        type: integer
+        format: int32
+        example: 14
+        description: Duration
+      tags:
+        type: array
+        description: Gift Certificate`s tags
+        items:
+          $ref: '#/definitions/TagInput'
+
