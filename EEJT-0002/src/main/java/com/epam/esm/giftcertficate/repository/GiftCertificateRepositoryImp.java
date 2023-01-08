@@ -50,14 +50,16 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
 
     @Override
     public boolean createCertificate(GiftCertificate giftCertificate) {
-        Instant currentTime = Instant.now();
+        Instant createTime = Instant.now();
+        Instant updateTime = Instant.now();
+        
         return jdbcTemplate.update(SqlQuery.GiftCertificate.CREATE_CERTIFICATE,
                 giftCertificate.getName(),
                 giftCertificate.getDescription(),
                 giftCertificate.getPrice(),
                 giftCertificate.getDuration(),
-                currentTime,
-                currentTime) == DB_OPERATION_SUCCESSFUL_RESULT;
+                createTime,
+                updateTime) == DB_OPERATION_SUCCESSFUL_RESULT;
     }
 
     @Override
@@ -83,7 +85,7 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
     @Override
     public boolean updateGiftCertificate(long id, Map<String, String> updatesMap) {
         List<Object> updatesParam = new ArrayList<>();
-        Instant currentTime = Instant.now();
+        Instant updateTime = Instant.now();
 
         StringBuilder generatedQuery = new StringBuilder(PART_OF_QUERY_FOR_UPDATING);
         updatesMap.forEach((key, value) -> {
@@ -93,7 +95,7 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
         });
         generatedQuery.append(LAST_UPDATE_DATE + " = ? WHERE " + ID + " = ?");
 
-        updatesParam.addAll(List.of(currentTime, id));
+        updatesParam.addAll(List.of(updateTime, id));
 
         return jdbcTemplate.update(generatedQuery.toString(), updatesParam.toArray()) == DB_OPERATION_SUCCESSFUL_RESULT;
     }
