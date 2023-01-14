@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
+
 @RequestMapping(value = "/certificates", produces = MediaType.APPLICATION_JSON_VALUE)
 public class GiftCertificateController {
     private final GiftCertificateService giftCertificateService;

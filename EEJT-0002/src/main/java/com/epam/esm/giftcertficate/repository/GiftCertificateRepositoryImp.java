@@ -110,12 +110,8 @@ public class GiftCertificateRepositoryImp implements GiftCertificateRepository {
     }
 
     @Override
-    public boolean isGiftCertificateExist(GiftCertificate giftCertificate) {
-        return jdbcTemplate.queryForObject(SqlQuery.GiftCertificate.IS_GIFT_CERTIFICATE_EXIST, Boolean.class,
-                giftCertificate.getName(),
-                giftCertificate.getDescription(),
-                giftCertificate.getPrice(),
-                giftCertificate.getDuration());
+    public boolean isGiftCertificateExist(String name) {
+        return jdbcTemplate.queryForObject(SqlQuery.GiftCertificate.IS_GIFT_CERTIFICATE_EXIST, Boolean.class, name);
     }
 
     private void createGiftCertificateTag(long tagId, long giftCertificateId) {

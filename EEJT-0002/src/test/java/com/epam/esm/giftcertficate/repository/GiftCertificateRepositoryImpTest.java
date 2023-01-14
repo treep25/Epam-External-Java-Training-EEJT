@@ -125,7 +125,7 @@ class GiftCertificateRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123);
-        boolean actual = giftCertificateRepository.isGiftCertificateExist(giftCertificate);
+        boolean actual = giftCertificateRepository.isGiftCertificateExist(giftCertificate.getName());
 
         //then
         assertTrue(actual);
@@ -138,7 +138,7 @@ class GiftCertificateRepositoryImpTest {
                 setDescription("description").
                 setPrice(12).
                 setDuration(123);
-        boolean actual = giftCertificateRepository.isGiftCertificateExist(giftCertificate);
+        boolean actual = giftCertificateRepository.isGiftCertificateExist(giftCertificate.getName());
 
         //then
         assertFalse(actual);

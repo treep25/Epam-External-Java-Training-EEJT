@@ -24,6 +24,7 @@ public class GiftCertificateService {
     private final GiftCertificateRepository giftCertificateRepository;
     private final TagService tagService;
     private static final String TAGS = "tags";
+    private static final String NAME = "name";
 
     @Autowired
     public GiftCertificateService(GiftCertificateRepository giftCertificateRepository, TagService tagService) {
@@ -39,7 +40,7 @@ public class GiftCertificateService {
 
     @Transactional
     public boolean createCertificate(GiftCertificate giftCertificate) {
-        if (!giftCertificateRepository.isGiftCertificateExist(giftCertificate)) {
+        if (!giftCertificateRepository.isGiftCertificateExist(giftCertificate.getName())) {
 
             boolean result = giftCertificateRepository.createCertificate(giftCertificate);
 
@@ -78,22 +79,27 @@ public class GiftCertificateService {
 
         updatesMap.remove(TAGS);
 
-        if (giftCertificateRepository.updateGiftCertificate(id, updatesMap)) {
-            if (tags != null) {
+        if ((!giftCertificateRepository.isGiftCertificateExist(updatesMap.get(NAME)))) {
+            if (giftCertificateRepository.updateGiftCertificate(id, updatesMap)) {
 
-                List<Tag> tagThatExistInThisGiftCertificate = tagService.getAllTagsByCertificateId(id);
+                if (tags != null) {
 
-                if (!tagThatExistInThisGiftCertificate.isEmpty()) {
-                    giftCertificateRepository.deleteGiftCertificateTagRelationship(tagService.getTagsIdByTags(tagThatExistInThisGiftCertificate), id);
+                    List<Tag> tagThatExistInThisGiftCertificate = tagService.getAllTagsByCertificateId(id);
+
+                    if (!tagThatExistInThisGiftCertificate.isEmpty()) {
+                        giftCertificateRepository.deleteGiftCertificateTagRelationship(tagService.getTagsIdByTags(tagThatExistInThisGiftCertificate), id);
+                    }
+                    if (!tags.isEmpty()) {
+                        tagService.isTagsExistOrElseCreate(tags);
+                        giftCertificateRepository.createGiftCertificateTagRelationship(tagService.getTagsIdByTags(tags), id);
+                    }
                 }
-                if (!tags.isEmpty()) {
-                    tagService.isTagsExistOrElseCreate(tags);
-                    giftCertificateRepository.createGiftCertificateTagRelationship(tagService.getTagsIdByTags(tags), id);
-                }
+                return giftCertificateRepository.getCertificateById(id);
+            } else {
+                throw new ItemNotFoundException("There is no gift certificate to update with id= " + id);
             }
-            return giftCertificateRepository.getCertificateById(id);
         } else {
-            throw new ItemNotFoundException("There is no gift certificate to update with id= " + id);
+            throw new ServerException("The certificate with name " + updatesMap.get(NAME) + " has already existed");
         }
     }
 

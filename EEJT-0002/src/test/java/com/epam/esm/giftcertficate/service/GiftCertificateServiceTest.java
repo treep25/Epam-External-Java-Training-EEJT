@@ -33,11 +33,11 @@ class GiftCertificateServiceTest {
     @Test
     public void createCertificateTest_Return1IfCreated() {
         //given
-        GiftCertificate giftCertificateTestObj = new GiftCertificate().setTags(List.of(new Tag().setName("1Tag")));
+        GiftCertificate giftCertificateTestObj = new GiftCertificate().setName("123").setTags(List.of(new Tag().setName("1Tag")));
         List<Long> tagsIdList = List.of(1L);
         long certificateId = 1L;
 
-        when(giftCertificateRepositoryMock.isGiftCertificateExist(giftCertificateTestObj)).thenReturn(false);
+        when(giftCertificateRepositoryMock.isGiftCertificateExist(giftCertificateTestObj.getName())).thenReturn(false);
         when(giftCertificateRepositoryMock.createCertificate(giftCertificateTestObj)).thenReturn(true);
 
         when(tagServiceMock.isTagsExistOrElseCreate(giftCertificateTestObj.getTags())).thenReturn(true);
@@ -56,11 +56,11 @@ class GiftCertificateServiceTest {
     @Test
     public void createCertificateTest_Return0IfDidNotCreate() {
         //given
-        GiftCertificate giftCertificateTestObj = new GiftCertificate().setTags(List.of(new Tag().setName("1Tag")));
+        GiftCertificate giftCertificateTestObj = new GiftCertificate().setName("123").setTags(List.of(new Tag().setName("1Tag")));
         boolean expectedResult = true;
 
         //when
-        when(giftCertificateRepositoryMock.isGiftCertificateExist(giftCertificateTestObj)).thenReturn(expectedResult);
+        when(giftCertificateRepositoryMock.isGiftCertificateExist(giftCertificateTestObj.getName())).thenReturn(expectedResult);
         ServerException thrown = assertThrows(ServerException.class,
                 () -> giftCertificateServiceMock.createCertificate(giftCertificateTestObj));
 
@@ -71,9 +71,9 @@ class GiftCertificateServiceTest {
     @Test
     public void createCertificateTest_Return1IfCreated_WithOutTags() {
         //given
-        GiftCertificate giftCertificateTestObj = new GiftCertificate();
+        GiftCertificate giftCertificateTestObj = new GiftCertificate().setName("123");
 
-        when(giftCertificateRepositoryMock.isGiftCertificateExist(giftCertificateTestObj)).thenReturn(false);
+        when(giftCertificateRepositoryMock.isGiftCertificateExist(giftCertificateTestObj.getName())).thenReturn(false);
         when(giftCertificateRepositoryMock.createCertificate(giftCertificateTestObj)).thenReturn(true);
 
         //then

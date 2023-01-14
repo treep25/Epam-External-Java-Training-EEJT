@@ -19,7 +19,7 @@ public interface GiftCertificateRepository {
 
     long getIdByGiftCertificate(GiftCertificate giftCertificate);
 
-    boolean isGiftCertificateExist(GiftCertificate giftCertificate);
+    boolean isGiftCertificateExist(String name);
 
     boolean createGiftCertificateTagRelationship(List<Long> tagsId, long giftCertificateId);
 
