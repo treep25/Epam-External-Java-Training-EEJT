@@ -7,6 +7,8 @@ import com.epam.esm.tag.model.Tag;
 import com.epam.esm.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,9 +33,9 @@ public class TagService {
         return !tagRepository.isTagExistsByName(name);
     }
 
-    public List<Tag> getAllTags() {
-
-        return tagRepository.findAll();
+    public Page<Tag> getAllTags(int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return tagRepository.findAll(pageRequest);
     }
 
     public Tag getTagById(long id) {
@@ -50,29 +52,12 @@ public class TagService {
         throw new ItemNotFoundException("There is no tag with (id = " + id + ")");
     }
 
-    public boolean isTagsExistOrElseCreate(List<Tag> tags) {
-        for (Tag tag : tags) {
-            if (isTagNotExistsByName(tag.getName())) {
-                createTag(tag);
-            }
-        }
-        return true;
-    }
-
     public long getTagIdByTag(Tag tag) {
         return tagRepository.getIdByTagName(tag.getName());
     }
 
-    public List<Long> getTagsIdByTags(List<Tag> tags) {
-        List<Long> listTagsId = new ArrayList<>();
-        for (Tag tag : tags) {
-            listTagsId.add(getTagIdByTag(tag));
-        }
-        return listTagsId;
-    }
-
-    public List<Tag> getAllTagsByGiftCertificateId(long id) {
-        return tagRepository.getAllTagsByGiftCertificateId(id);
+    public Tag getTheMostWidelyUsedTagOfUserOrder() {
+        return tagRepository.getTheMostWidelyUsedTag();
     }
 
     public Set<Tag> verifyIsTagsExistWhenCreatingOrUpdatingGiftCertificate(Set<Tag> tags) {
