@@ -87,4 +87,14 @@ public class DataValidation {
     public static boolean isSortingTypeContains(String method) {
         return List.of(SortingTypes.ASC.name(), SortingTypes.DESC.name()).contains(method.toUpperCase(Locale.ROOT));
     }
+
+    public static boolean validatePageAndSizePagination(int page, int size) {
+        if (page >= 0) {
+            if (size >= 1) {
+                return true;
+            }
+            throw new ServerException("page size must not be less than one size = " + size);
+        }
+        throw new ServerException("page index must not be less than zero page = " + page);
+    }
 }
