@@ -2,6 +2,7 @@ package com.epam.esm.tag.repository;
 
 
 import com.epam.esm.tag.model.Tag;
+import com.epam.esm.utils.query.SqlQuery;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -17,7 +18,6 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     @Query("SELECT t.id FROM Tag t WHERE t.name = :name")
     long getIdByTagName(@Param("name") String tagName);
 
-    @Query(value = "SELECT t.id,t.name FROM gift_certificate_tag gct  JOIN tag t  WHERE gct.gift_certificate_id = ?1 AND t.id = gct.tag_id"
-            , nativeQuery = true)
-    List<Tag> getAllTagsByGiftCertificateId(long id);
+    @Query(value = SqlQuery.Tag.GET_THE_MOST_WIDELY_USED_TAG_WITH_THE_HIGHEST_COST_OF_ALL_ORDERS, nativeQuery = true)
+    Tag getTheMostWidelyUsedTag();
 }
