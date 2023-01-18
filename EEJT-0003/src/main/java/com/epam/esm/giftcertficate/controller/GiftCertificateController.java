@@ -3,6 +3,7 @@ package com.epam.esm.giftcertficate.controller;
 
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
+import com.epam.esm.giftcertficate.model.GiftCertificateHateoas;
 import com.epam.esm.giftcertficate.service.GiftCertificateService;
 import com.epam.esm.tag.controller.TagController;
 
@@ -10,6 +11,11 @@ import com.epam.esm.tag.model.Tag;
 import com.epam.esm.utils.validation.DataValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,53 +35,36 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class GiftCertificateController {
     private final GiftCertificateService giftCertificateService;
 
+    private final PagedResourcesAssembler<GiftCertificate> representationModelAssembler;
+
+    private final GiftCertificateHateoas giftCertificateHateoas = new GiftCertificateHateoas();
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody GiftCertificate giftCertificate) {
         if (DataValidation.isValidCertificate(giftCertificate)) {
 
             GiftCertificate savedGiftCertificate = giftCertificateService.createGiftCertificate(giftCertificate);
-            savedGiftCertificate
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .readById(savedGiftCertificate.getId()))
-                            .withRel(() -> "get gift-certificate"))
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .read())
-                            .withRel(() -> "get all gift-certificates"))
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .delete(savedGiftCertificate.getId()))
-                            .withRel(() -> "delete gift-certificate"));
 
-            generateRelForTags(giftCertificate.getTags());
+            CollectionModel<GiftCertificate> collectionModelSavedGiftCertificate = giftCertificateHateoas
+                    .getHateoasGiftCertificateForCreating(savedGiftCertificate);
 
-            return ResponseEntity.ok(savedGiftCertificate);
+            return new ResponseEntity<>(Map.of("gift-certificate", collectionModelSavedGiftCertificate), HttpStatus.CREATED);
         }
         throw new ServerException("Something went wrong during the request, check your fields");
     }
 
 
     @GetMapping
-    public ResponseEntity<?> read() {
-        List<GiftCertificate> allGiftCertificates = giftCertificateService.getAll();
+    public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
+                                  @RequestParam(value = "size", defaultValue = "20") int size) {
 
-        allGiftCertificates.forEach(giftCertificate -> {
-            generateRelForTags(giftCertificate.getTags());
-            giftCertificate
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .readById(giftCertificate.getId()))
-                            .withRel(() -> "get gift-certificate"))
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .delete(giftCertificate.getId()))
-                            .withRel(() -> "delete gift-certificate"))
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .create(new GiftCertificate()))
-                            .withRel(() -> "create gift-certificate"))
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .updateCertificate(new GiftCertificate(), giftCertificate.getId()))
-                            .withRel(() -> "update gift-certificates"));
+        DataValidation.validatePageAndSizePagination(page, size);
 
+        Page<GiftCertificate> allGiftCertificates = giftCertificateService.getAll(page, size);
 
-        });
-        return ResponseEntity.ok(Map.of("all gift-certificates", allGiftCertificates));
+        PagedModel<GiftCertificate> allGiftCertificatesModel = giftCertificateHateoas.getHateoasGiftCertificateForGettingAll(allGiftCertificates, representationModelAssembler);
+
+        return ResponseEntity.ok(Map.of("gift-certificates", allGiftCertificatesModel));
     }
 
     @GetMapping("/{id}")
@@ -83,23 +72,11 @@ public class GiftCertificateController {
         if (DataValidation.moreThenZero(id)) {
 
             GiftCertificate currentGiftCertificate = giftCertificateService.getOneGiftCertificateById(id);
-            currentGiftCertificate
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .delete(currentGiftCertificate.getId()))
-                            .withRel(() -> "delete gift-certificate"))
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .create(new GiftCertificate()))
-                            .withRel(() -> "create gift-certificate"))
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .read())
-                            .withRel(() -> "get all gift-certificates"))
-                    .add(linkTo(methodOn(GiftCertificateController.class)
-                            .updateCertificate(new GiftCertificate(), id))
-                            .withRel(() -> "update gift-certificates"));
 
-            generateRelForTags(currentGiftCertificate.getTags());
+            CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoas
+                    .getHateoasGiftCertificateForGettingOne(currentGiftCertificate);
 
-            return ResponseEntity.ok(Map.of("gift certificate", currentGiftCertificate));
+            return ResponseEntity.ok(Map.of("gift-certificate", giftCertificateCollectionModel));
         }
         throw new ServerException("The Gift Certificate ID is not valid: id = " + id);
     }
@@ -112,23 +89,11 @@ public class GiftCertificateController {
 
             if (updatesMap.isPresent()) {
                 GiftCertificate updatedGiftCertificate = giftCertificateService.updateGiftCertificate(id, giftCertificate.getTags(), updatesMap.get());
-                updatedGiftCertificate.
-                        add(linkTo(methodOn(GiftCertificateController.class)
-                                .delete(updatedGiftCertificate.getId()))
-                                .withRel(() -> "delete gift-certificate"))
-                        .add(linkTo(methodOn(GiftCertificateController.class)
-                                .create(new GiftCertificate()))
-                                .withRel(() -> "create gift-certificate"))
-                        .add(linkTo(methodOn(GiftCertificateController.class)
-                                .read())
-                                .withRel(() -> "get all gift-certificates"))
-                        .add(linkTo(methodOn(GiftCertificateController.class)
-                                .readById(id))
-                                .withRel(() -> "get gift-certificates"));
 
-                generateRelForTags(updatedGiftCertificate.getTags());
+                CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoas
+                        .getHateoasGiftCertificateForUpdate(updatedGiftCertificate);
 
-                return ResponseEntity.ok(updatedGiftCertificate);
+                return ResponseEntity.ok(Map.of("gift-certificate", giftCertificateCollectionModel));
             }
             throw new ServerException("There are no fields to update");
         }
@@ -145,60 +110,125 @@ public class GiftCertificateController {
         throw new ServerException("The Gift Certificate ID is not valid: id = " + id);
     }
 
-    @GetMapping("search/tag-name/{name}")
-    public ResponseEntity<?> getByTagName(@PathVariable("name") String name) {
-        if (DataValidation.isStringValid(name)) {
-            return ResponseEntity.ok(giftCertificateService.getGiftCertificatesByTagName(name));
+    @PatchMapping("update-price/{id}")
+    public ResponseEntity<?> updatePrice(@PathVariable("id") long id, @RequestBody int price) {
+        if (DataValidation.moreThenZero(id)) {
+            if (DataValidation.moreThenZero(price)) {
+                GiftCertificate updatedGiftCertificate = giftCertificateService.updatePrice(id, price);
+
+                CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoas
+                        .getHateoasGiftCertificateForUpdatingPrice(updatedGiftCertificate);
+
+                return ResponseEntity.ok(Map.of("gift-certificate", giftCertificateCollectionModel));
+            }
+            throw new ServerException("The PRICE is not valid: price = " + price);
+        }
+        throw new ServerException("The ID is not valid: id = " + id);
+    }
+
+    @GetMapping("search/tag-name")
+    public ResponseEntity<?> getByTagName(@RequestParam("name") String tagName,
+                                          @RequestParam(value = "page", defaultValue = "0") int page,
+                                          @RequestParam(value = "size", defaultValue = "20") int size) {
+
+        if (DataValidation.isStringValid(tagName)) {
+
+            DataValidation.validatePageAndSizePagination(page, size);
+
+            Page<GiftCertificate> giftCertificatesByTagName = giftCertificateService.getGiftCertificatesByTagName(tagName, page, size);
+
+            PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoas
+                    .getHateoasGiftCertificateForGettingByTagName(giftCertificatesByTagName, representationModelAssembler);
+
+            return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));
         }
         throw new ServerException("tag name is not valid");
     }
 
-    @GetMapping("search/gift-certificate-name/{partOfName}")
-    public ResponseEntity<?> getGiftCertificatesAndTagsByNameOrByPartOfName(@PathVariable("partOfName") String partOfName) {
+    @GetMapping("search/gift-certificate-name")
+    public ResponseEntity<?> getGiftCertificatesAndTagsByNameOrByPartOfName(@RequestParam("name") String partOfName, @RequestParam("page") int page, @RequestParam("size") int size) {
         if (DataValidation.isStringValid(partOfName)) {
-            return ResponseEntity.ok(giftCertificateService.getGiftCertificatesByNameOrByPartOfName(partOfName));
+
+            DataValidation.validatePageAndSizePagination(page, size);
+
+            Page<GiftCertificate> giftCertificatesByName = giftCertificateService.getGiftCertificatesByNameOrByPartOfName(partOfName, page, size);
+
+            PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoas
+                    .getHateoasGiftCertificateForGettingGiftCertificatesByNameOrByPartOfName(giftCertificatesByName, representationModelAssembler);
+
+
+            return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));
         }
-        throw new ServerException("Gift certificate name is not valid");
+        throw new ServerException("gift-certificate name is not valid");
     }
 
-    @GetMapping("search/sort-date/{sortDirection}")
-    public ResponseEntity<?> getGiftCertificatesSortedByDate(@PathVariable("sortDirection") String sortDirection) {
+    @GetMapping("search/sort-date")
+    public ResponseEntity<?> getGiftCertificatesSortedByDate(@RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
+                                                             @RequestParam(value = "page", defaultValue = "0") int page,
+                                                             @RequestParam(value = "size", defaultValue = "20") int size) {
         if (DataValidation.isStringValid(sortDirection)) {
             if (DataValidation.isSortingTypeContains(sortDirection)) {
-                return ResponseEntity.ok(giftCertificateService.getGiftCertificatesSortedByDate(sortDirection));
+
+                DataValidation.validatePageAndSizePagination(page, size);
+
+                Page<GiftCertificate> giftCertificatesSortedByDate = giftCertificateService.getGiftCertificatesSortedByDate(sortDirection, page, size);
+
+                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoas
+                        .getHateoasGiftCertificateForGettingGiftCertificatesSortedByDate(giftCertificatesSortedByDate, representationModelAssembler);
+
+
+                return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));
             }
-            throw new ServerException("type should be only DESC or ASC without register");
+            throw new ServerException("type should be only DESC or ASC");
         }
         throw new ServerException("Incorrect data");
     }
 
-    @GetMapping("search/sort-date-name/{firstSortDirection}/{secondSortDirection}")
-    public ResponseEntity<?> getGiftCertificatesSortedByDateAndByName(@PathVariable("firstSortDirection") String firstSortDirection, @PathVariable("secondSortDirection") String secondSortDirection) {
+    @GetMapping("search/tag-name/cost")
+    public ResponseEntity<?> getGiftCertificatesByTagsAndPrice(@RequestParam("tag1") String firstTagName,
+                                                               @RequestParam("tag2") String secondTagName,
+                                                               @RequestParam("price") int price,
+                                                               @RequestParam(value = "page", defaultValue = "0") int page,
+                                                               @RequestParam(value = "size", defaultValue = "20") int size) {
+        if (DataValidation.isStringValid(firstTagName) && DataValidation.isStringValid(secondTagName)) {
+            if (DataValidation.moreThenZero(price)) {
+
+                DataValidation.validatePageAndSizePagination(page, size);
+
+                Page<GiftCertificate> giftCertificatesByTagsAndPrice = giftCertificateService
+                        .getGiftCertificatesByTagsAndPrice(firstTagName, secondTagName, price, page, size);
+
+                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoas
+                        .getHateoasGiftCertificateForGettingGiftCertificatesByTagsAndPrice(giftCertificatesByTagsAndPrice, representationModelAssembler);
+
+
+                return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));
+            }
+            throw new ServerException("price is not valid (price = " + price + ")");
+        }
+        throw new ServerException("tag name is not valid");
+    }
+
+    @GetMapping("search/sort-name-date")
+    public ResponseEntity<?> getGiftCertificatesSortedByDateAndByName(@RequestParam(value = "firstSortDirection", defaultValue = "ASC") String firstSortDirection,
+                                                                      @RequestParam(value = "secondSortDirection", defaultValue = "ASC") String secondSortDirection,
+                                                                      @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                      @RequestParam(value = "size", defaultValue = "20") int size) {
         if (DataValidation.isStringValid(firstSortDirection) && DataValidation.isStringValid(secondSortDirection)) {
-
             if (DataValidation.isSortingTypeContains(firstSortDirection) && DataValidation.isSortingTypeContains(secondSortDirection)) {
-                return ResponseEntity.ok(giftCertificateService.getGiftCertificatesSortedByDateAndByName(firstSortDirection, secondSortDirection));
-            }
-            throw new ServerException("type should be only DESC or ASC without register");
-        }
-        throw new ServerException("Incorrect data");
-    }
 
-    private void generateRelForTags(Set<Tag> tags) {
-        if (tags != null) {
-            tags.forEach(tag ->
-                    tag.add(linkTo(methodOn(TagController.class)
-                                    .delete(tag.getId()))
-                                    .withRel(() -> "delete tag"))
-                            .add(linkTo(methodOn(TagController.class)
-                                    .create(new Tag()))
-                                    .withRel(() -> "create tag"))
-                            .add(linkTo(methodOn(TagController.class)
-                                    .readById(tag.getId()))
-                                    .withRel(() -> "get tag"))
-                            .add(linkTo(methodOn(TagController.class)
-                                    .read())
-                                    .withRel(() -> "get tags")));
+                DataValidation.validatePageAndSizePagination(page, size);
+
+                Page<GiftCertificate> giftCertificatesSortedByDateAndByName = giftCertificateService
+                        .getGiftCertificatesSortedByDateAndByName(firstSortDirection, secondSortDirection, page, size);
+
+                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoas
+                        .getHateoasGiftCertificateForGettingGiftCertificatesSortedByDateAndByName(giftCertificatesSortedByDateAndByName, representationModelAssembler);
+
+                return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));
+            }
+            throw new ServerException("type should be only DESC or ASC");
         }
+        throw new ServerException("incorrect data");
     }
 }
