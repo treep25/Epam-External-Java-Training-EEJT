@@ -14,7 +14,7 @@ import java.util.Set;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-public class GiftCertificateHateoas {
+public class GiftCertificateHateoasResponse {
 
     public CollectionModel<GiftCertificate> getHateoasGiftCertificateForCreating(GiftCertificate giftCertificate) {
         getTagsLinks(giftCertificate.getTags());
@@ -141,7 +141,6 @@ public class GiftCertificateHateoas {
         return giftCertificateCollectionModel;
     }
 
-    //TODO
     public CollectionModel<GiftCertificate> getHateoasGiftCertificateForUpdatingPrice(GiftCertificate giftCertificate) {
         getTagsLinks(giftCertificate.getTags());
 
@@ -319,7 +318,7 @@ public class GiftCertificateHateoas {
                                     .readById(tag.getId()))
                                     .withRel(() -> "get tag"))
                             .add(linkTo(methodOn(GiftCertificateController.class)
-                                    .getByTagName(tag.getName(), 0, 20))
+                                    .getGiftCertificatesByTagName(tag.getName(), 0, 20))
                                     .withRel(() -> "get gift-certificates by tag name"));
                 }
             });
