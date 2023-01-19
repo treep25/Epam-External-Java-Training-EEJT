@@ -29,9 +29,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
 
     @Transactional
-    public Order createOrder(long id, long giftCertificateId) {
+    public Order createOrder(long userId, long giftCertificateId) {
         GiftCertificate giftCertificateOrder = giftCertificateService.getOneGiftCertificateById(giftCertificateId);
-        User userById = userService.getById(id);
+        User userById = userService.getById(userId);
 
         Order order = new Order();
         order.setGiftCertificate(giftCertificateOrder);
