@@ -39,7 +39,6 @@ public class TagService {
     }
 
     public Tag getTagById(long id) {
-
         return tagRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("There are no tags with (ID = " + id + ")"));
     }
 
