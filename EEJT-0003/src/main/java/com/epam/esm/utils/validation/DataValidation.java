@@ -3,10 +3,12 @@ package com.epam.esm.utils.validation;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.model.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
+@Slf4j
 public class DataValidation {
     public static boolean isValidCertificate(GiftCertificate giftCertificate) {
         return isStringValid(giftCertificate.getName()) &&
@@ -77,6 +79,7 @@ public class DataValidation {
             }
             return Optional.of(map);
         }
+        log.error("Error during mapping gift-certificate Something went wrong, check this fields " + answer);
         throw new ServerException("Something went wrong, check this fields " + answer);
     }
 
@@ -93,8 +96,10 @@ public class DataValidation {
             if (size >= 1) {
                 return true;
             }
+            log.error("Page size must not be less than one size = " + size);
             throw new ServerException("page size must not be less than one size = " + size);
         }
+        log.error("Page index must not be less than zero page = " + page);
         throw new ServerException("page index must not be less than zero page = " + page);
     }
 }
