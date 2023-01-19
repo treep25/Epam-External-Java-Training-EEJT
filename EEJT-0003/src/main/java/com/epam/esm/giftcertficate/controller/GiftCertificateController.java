@@ -3,13 +3,11 @@ package com.epam.esm.giftcertficate.controller;
 
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
-import com.epam.esm.giftcertficate.model.GiftCertificateHateoas;
+import com.epam.esm.giftcertficate.model.GiftCertificateHateoasResponse;
 import com.epam.esm.giftcertficate.service.GiftCertificateService;
-import com.epam.esm.tag.controller.TagController;
-
-import com.epam.esm.tag.model.Tag;
 import com.epam.esm.utils.validation.DataValidation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -20,15 +18,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-
+@Slf4j()
 @RestController
 @RequestMapping(value = "/certificates", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -37,7 +30,7 @@ public class GiftCertificateController {
 
     private final PagedResourcesAssembler<GiftCertificate> representationModelAssembler;
 
-    private final GiftCertificateHateoas giftCertificateHateoas = new GiftCertificateHateoas();
+    private final GiftCertificateHateoasResponse giftCertificateHateoasResponse = new GiftCertificateHateoasResponse();
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody GiftCertificate giftCertificate) {
@@ -45,11 +38,16 @@ public class GiftCertificateController {
 
             GiftCertificate savedGiftCertificate = giftCertificateService.createGiftCertificate(giftCertificate);
 
-            CollectionModel<GiftCertificate> collectionModelSavedGiftCertificate = giftCertificateHateoas
+            log.debug("receive gift-certificate");
+
+            CollectionModel<GiftCertificate> collectionModelSavedGiftCertificate = giftCertificateHateoasResponse
                     .getHateoasGiftCertificateForCreating(savedGiftCertificate);
+
+            log.debug("return Hateoas model of current gift-certificate");
 
             return new ResponseEntity<>(Map.of("gift-certificate", collectionModelSavedGiftCertificate), HttpStatus.CREATED);
         }
+        log.error("Gift-certificate received from request is not correct (something went wrong during the request, check your fields)");
         throw new ServerException("Something went wrong during the request, check your fields");
     }
 
@@ -62,7 +60,7 @@ public class GiftCertificateController {
 
         Page<GiftCertificate> allGiftCertificates = giftCertificateService.getAll(page, size);
 
-        PagedModel<GiftCertificate> allGiftCertificatesModel = giftCertificateHateoas.getHateoasGiftCertificateForGettingAll(allGiftCertificates, representationModelAssembler);
+        PagedModel<GiftCertificate> allGiftCertificatesModel = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingAll(allGiftCertificates, representationModelAssembler);
 
         return ResponseEntity.ok(Map.of("gift-certificates", allGiftCertificatesModel));
     }
@@ -73,7 +71,7 @@ public class GiftCertificateController {
 
             GiftCertificate currentGiftCertificate = giftCertificateService.getOneGiftCertificateById(id);
 
-            CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoas
+            CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasResponse
                     .getHateoasGiftCertificateForGettingOne(currentGiftCertificate);
 
             return ResponseEntity.ok(Map.of("gift-certificate", giftCertificateCollectionModel));
@@ -90,7 +88,7 @@ public class GiftCertificateController {
             if (updatesMap.isPresent()) {
                 GiftCertificate updatedGiftCertificate = giftCertificateService.updateGiftCertificate(id, giftCertificate.getTags(), updatesMap.get());
 
-                CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoas
+                CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasResponse
                         .getHateoasGiftCertificateForUpdate(updatedGiftCertificate);
 
                 return ResponseEntity.ok(Map.of("gift-certificate", giftCertificateCollectionModel));
@@ -116,7 +114,7 @@ public class GiftCertificateController {
             if (DataValidation.moreThenZero(price)) {
                 GiftCertificate updatedGiftCertificate = giftCertificateService.updatePrice(id, price);
 
-                CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoas
+                CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasResponse
                         .getHateoasGiftCertificateForUpdatingPrice(updatedGiftCertificate);
 
                 return ResponseEntity.ok(Map.of("gift-certificate", giftCertificateCollectionModel));
@@ -127,9 +125,9 @@ public class GiftCertificateController {
     }
 
     @GetMapping("search/tag-name")
-    public ResponseEntity<?> getByTagName(@RequestParam("name") String tagName,
-                                          @RequestParam(value = "page", defaultValue = "0") int page,
-                                          @RequestParam(value = "size", defaultValue = "20") int size) {
+    public ResponseEntity<?> getGiftCertificatesByTagName(@RequestParam("name") String tagName,
+                                                          @RequestParam(value = "page", defaultValue = "0") int page,
+                                                          @RequestParam(value = "size", defaultValue = "20") int size) {
 
         if (DataValidation.isStringValid(tagName)) {
 
@@ -137,7 +135,7 @@ public class GiftCertificateController {
 
             Page<GiftCertificate> giftCertificatesByTagName = giftCertificateService.getGiftCertificatesByTagName(tagName, page, size);
 
-            PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoas
+            PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
                     .getHateoasGiftCertificateForGettingByTagName(giftCertificatesByTagName, representationModelAssembler);
 
             return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));
@@ -153,7 +151,7 @@ public class GiftCertificateController {
 
             Page<GiftCertificate> giftCertificatesByName = giftCertificateService.getGiftCertificatesByNameOrByPartOfName(partOfName, page, size);
 
-            PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoas
+            PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
                     .getHateoasGiftCertificateForGettingGiftCertificatesByNameOrByPartOfName(giftCertificatesByName, representationModelAssembler);
 
 
@@ -173,7 +171,7 @@ public class GiftCertificateController {
 
                 Page<GiftCertificate> giftCertificatesSortedByDate = giftCertificateService.getGiftCertificatesSortedByDate(sortDirection, page, size);
 
-                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoas
+                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
                         .getHateoasGiftCertificateForGettingGiftCertificatesSortedByDate(giftCertificatesSortedByDate, representationModelAssembler);
 
 
@@ -198,7 +196,7 @@ public class GiftCertificateController {
                 Page<GiftCertificate> giftCertificatesByTagsAndPrice = giftCertificateService
                         .getGiftCertificatesByTagsAndPrice(firstTagName, secondTagName, price, page, size);
 
-                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoas
+                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
                         .getHateoasGiftCertificateForGettingGiftCertificatesByTagsAndPrice(giftCertificatesByTagsAndPrice, representationModelAssembler);
 
 
@@ -222,7 +220,7 @@ public class GiftCertificateController {
                 Page<GiftCertificate> giftCertificatesSortedByDateAndByName = giftCertificateService
                         .getGiftCertificatesSortedByDateAndByName(firstSortDirection, secondSortDirection, page, size);
 
-                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoas
+                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
                         .getHateoasGiftCertificateForGettingGiftCertificatesSortedByDateAndByName(giftCertificatesSortedByDateAndByName, representationModelAssembler);
 
                 return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));

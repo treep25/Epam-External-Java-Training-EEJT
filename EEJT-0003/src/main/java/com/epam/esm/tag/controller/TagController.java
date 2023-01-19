@@ -2,10 +2,12 @@ package com.epam.esm.tag.controller;
 
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.tag.model.Tag;
+import com.epam.esm.tag.model.TagHateoasResponse;
 import com.epam.esm.tag.service.TagService;
 import com.epam.esm.utils.validation.DataValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
@@ -14,11 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping(value = "/tags", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -28,26 +26,16 @@ public class TagController {
     private final TagService tagService;
     private final PagedResourcesAssembler<Tag> representationModelAssembler;
 
+    private final TagHateoasResponse tagHateoasResponse = new TagHateoasResponse();
+
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Tag tag) {
         if (DataValidation.isValidTag(tag)) {
 
             Tag savedTag = tagService.createTag(tag);
 
-            CollectionModel<Tag> collectionModelSavedTag = CollectionModel.of(List.of(savedTag
-                            .add(linkTo(methodOn(TagController.class)
-                                    .delete(savedTag.getId()))
-                                    .withRel(() -> "delete tag"))
-                            .add(linkTo(methodOn(TagController.class)
-                                    .readById(savedTag.getId()))
-                                    .withRel(() -> "get tag"))))
-
-                    .add(linkTo(methodOn(TagController.class)
-                            .read(0, 20))
-                            .withRel(() -> "get all tags"))
-                    .add(linkTo(methodOn(TagController.class)
-                            .getTheMostWidelyUsedTag())
-                            .withRel(() -> "get the most widely used tag of user`s orders"));
+            CollectionModel<Tag> collectionModelSavedTag = tagHateoasResponse
+                    .getHateoasTagForCreating(savedTag);
 
             return new ResponseEntity<>(Map.of("saved tag", collectionModelSavedTag), HttpStatus.CREATED);
         }
@@ -60,44 +48,21 @@ public class TagController {
 
         DataValidation.validatePageAndSizePagination(page, size);
 
-        PagedModel<Tag> allTags = representationModelAssembler
-                .toModel(tagService.getAllTags(page, size), tag -> tag
-                        .add(linkTo(methodOn(TagController.class)
-                                .delete(tag.getId()))
-                                .withRel(() -> "delete tag"))
-                        .add(linkTo(methodOn(TagController.class)
-                                .readById(tag.getId()))
-                                .withRel(() -> "get tag")));
+        Page<Tag> allTags = tagService.getAllTags(page, size);
 
-        allTags.add(linkTo(methodOn(TagController.class)
-                        .create(new Tag()))
-                        .withRel(() -> "create tag"))
-                .add(linkTo(methodOn(TagController.class)
-                        .getTheMostWidelyUsedTag())
-                        .withRel(() -> "get the most widely used tag of user`s orders"));
+        PagedModel<Tag> tagsPagedModel = tagHateoasResponse
+                .getHateoasTagForReading(allTags, representationModelAssembler);
 
-        return ResponseEntity.ok(Map.of("all tags", allTags));
+        return ResponseEntity.ok(Map.of("all tags", tagsPagedModel));
     }
 
-    //TODO "rel": "get gift-certificates by tag name",
-    //                "href": "http://localhost:8080/certificates/search/tag-name?name=&page=0&size=20"
     @GetMapping("/{id}")
     public ResponseEntity<?> readById(@PathVariable("id") long id) {
         if (DataValidation.moreThenZero(id)) {
 
             Tag currentTag = tagService.getTagById(id);
 
-            CollectionModel<Tag> collectionModelCurrentTag = CollectionModel.of(List.of(currentTag
-                            .add(linkTo(methodOn(TagController.class)
-                                    .delete(currentTag.getId()))
-                                    .withRel(() -> "delete tag"))))
-
-                    .add(linkTo(methodOn(TagController.class)
-                            .read(0, 20))
-                            .withRel(() -> "get all tags"))
-                    .add(linkTo(methodOn(TagController.class)
-                            .getTheMostWidelyUsedTag())
-                            .withRel(() -> "get the most widely used tag of user`s orders"));
+            CollectionModel<Tag> collectionModelCurrentTag = tagHateoasResponse.getHateoasTagForReadingById(currentTag);
 
             return ResponseEntity.ok(Map.of("tag", collectionModelCurrentTag));
         }
@@ -108,14 +73,8 @@ public class TagController {
     public ResponseEntity<?> getTheMostWidelyUsedTag() {
         Tag theMostWidelyUsedTag = tagService.getTheMostWidelyUsedTagOfUserOrder();
 
-        CollectionModel<Tag> collectionModelTheMostWidelyUsed = CollectionModel.of(List.of(theMostWidelyUsedTag
-                        .add(linkTo(methodOn(TagController.class)
-                                .delete(theMostWidelyUsedTag.getId()))
-                                .withRel(() -> "delete tag"))))
-
-                .add(linkTo(methodOn(TagController.class)
-                        .read(0, 20))
-                        .withRel(() -> "get all tags"));
+        CollectionModel<Tag> collectionModelTheMostWidelyUsed = tagHateoasResponse
+                .getHateoasTagForGettingTheMostWidelyUsedTag(theMostWidelyUsedTag);
 
         return ResponseEntity.ok(Map.of("the most widely used tag", collectionModelTheMostWidelyUsed));
     }
