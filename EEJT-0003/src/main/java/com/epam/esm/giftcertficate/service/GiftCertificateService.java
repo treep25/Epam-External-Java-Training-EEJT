@@ -10,7 +10,7 @@ import com.epam.esm.tag.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.hateoas.PagedModel;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +53,7 @@ public class GiftCertificateService {
     }
 
     @Transactional
+    @Modifying
     public GiftCertificate updateGiftCertificate(long id, Set<Tag> tags, Map<String, String> updatesMap) {
 
         updatesMap.remove(TAGS);
@@ -77,6 +78,7 @@ public class GiftCertificateService {
         }
     }
 
+    @Modifying
     public GiftCertificate updatePrice(long id, int price) {
         GiftCertificate giftCertificate = giftCertificateRepository.findById(id).orElseThrow(
                 () -> new ServerException("There are no gift certificate with (id = " + id + ")"));
@@ -95,7 +97,7 @@ public class GiftCertificateService {
 
     public Page<GiftCertificate> getGiftCertificatesByTagName(String tagName, int page, int size) {
         List<GiftCertificate> allGiftCertificateByTagName = giftCertificateRepository
-                .getAllGiftCertificateByTagName(tagName, getPaginationBegin(page, size), getPaginationEnd(page, size));
+                .getAllGiftCertificatesByTagName(tagName, getPaginationBegin(page, size), getPaginationEnd(page, size));
 
         return new PageImpl<>(allGiftCertificateByTagName);
     }
