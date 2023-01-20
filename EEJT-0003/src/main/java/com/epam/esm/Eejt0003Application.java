@@ -13,5 +13,4 @@ public class Eejt0003Application {
     public static void main(String[] args) {
         SpringApplication.run(Eejt0003Application.class, args);
     }
-
 }
