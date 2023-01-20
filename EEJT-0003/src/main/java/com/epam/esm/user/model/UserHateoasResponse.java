@@ -5,6 +5,7 @@ import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.orders.controller.OrderController;
 import com.epam.esm.tag.controller.TagController;
 import com.epam.esm.user.controller.UserController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
@@ -15,9 +16,11 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Slf4j
 public class UserHateoasResponse {
 
     public PagedModel<User> getHateoasUserForReading(Page<User> pagedUsers, PagedResourcesAssembler<User> representationModelAssembler) {
+        log.info("Building HATEOAS paged-model entity");
 
         PagedModel<User> users = representationModelAssembler
                 .toModel(pagedUsers, user -> {
@@ -78,6 +81,8 @@ public class UserHateoasResponse {
     }
 
     public CollectionModel<User> getHateoasUserForReadingById(User user) {
+        log.info("Building HATEOAS collection-model entity");
+
         user.getOrders().forEach(order -> {
             order.add(linkTo(methodOn(OrderController.class)
                             .getById(order.getId()))

@@ -5,6 +5,7 @@ import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.orders.controller.OrderController;
 import com.epam.esm.tag.controller.TagController;
 import com.epam.esm.tag.model.Tag;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
@@ -15,10 +16,12 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Slf4j
 public class OrderHateoasResponse {
 
-
     public PagedModel<Order> getHateoasOrderForReading(Page<Order> pagedOrders, PagedResourcesAssembler<Order> representationModelAssembler) {
+        log.info("Building HATEOAS paged-model entity");
+
         PagedModel<Order> orders = representationModelAssembler
                 .toModel(pagedOrders, order -> {
                     order.add(linkTo(methodOn(OrderController.class)
@@ -84,6 +87,8 @@ public class OrderHateoasResponse {
     }
 
     public CollectionModel<Order> getHateoasOrderForCreating(Order order) {
+        log.info("Building HATEOAS collection-model entity");
+
         CollectionModel<Order> savedOrder = CollectionModel.of(List.of(order));
 
         if (order.getGiftCertificate().getLinks().isEmpty()) {
@@ -143,6 +148,8 @@ public class OrderHateoasResponse {
     }
 
     public CollectionModel<Order> getHateoasOrderForReadingById(Order order) {
+        log.info("Building HATEOAS collection-model entity");
+
         CollectionModel<Order> orderById = CollectionModel.of(List.of(order));
 
         if (order.getGiftCertificate().getLinks().isEmpty()) {

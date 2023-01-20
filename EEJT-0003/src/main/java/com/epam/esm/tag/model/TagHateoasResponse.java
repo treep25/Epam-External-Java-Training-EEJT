@@ -2,6 +2,7 @@ package com.epam.esm.tag.model;
 
 import com.epam.esm.giftcertficate.controller.GiftCertificateController;
 import com.epam.esm.tag.controller.TagController;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
@@ -12,9 +13,12 @@ import java.util.List;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Slf4j
 public class TagHateoasResponse {
 
     public CollectionModel<Tag> getHateoasTagForCreating(Tag tag) {
+        log.info("Building HATEOAS collection-model entity");
+
         return CollectionModel.of(List.of(tag
                         .add(linkTo(methodOn(TagController.class)
                                 .delete(tag.getId()))
@@ -35,6 +39,8 @@ public class TagHateoasResponse {
     }
 
     public PagedModel<Tag> getHateoasTagForReading(Page<Tag> allTags, PagedResourcesAssembler<Tag> representationModelAssembler) {
+        log.info("Building HATEOAS paged-model entity");
+
         PagedModel<Tag> allTagsPagedModel = representationModelAssembler
                 .toModel(allTags, tag -> tag
                         .add(linkTo(methodOn(TagController.class)
@@ -58,6 +64,8 @@ public class TagHateoasResponse {
     }
 
     public CollectionModel<Tag> getHateoasTagForReadingById(Tag tag) {
+        log.info("Building HATEOAS collection-model entity");
+
         return CollectionModel.of(List.of(tag
                         .add(linkTo(methodOn(TagController.class)
                                 .delete(tag.getId()))
@@ -80,6 +88,8 @@ public class TagHateoasResponse {
     }
 
     public CollectionModel<Tag> getHateoasTagForGettingTheMostWidelyUsedTag(Tag tag) {
+        log.info("Building HATEOAS collection-model entity");
+
         return CollectionModel.of(List.of(tag
                         .add(linkTo(methodOn(TagController.class)
                                 .delete(tag.getId()))

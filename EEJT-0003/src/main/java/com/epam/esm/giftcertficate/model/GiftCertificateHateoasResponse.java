@@ -3,6 +3,8 @@ package com.epam.esm.giftcertficate.model;
 import com.epam.esm.giftcertficate.controller.GiftCertificateController;
 import com.epam.esm.tag.controller.TagController;
 import com.epam.esm.tag.model.Tag;
+import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.XSlf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
@@ -14,9 +16,11 @@ import java.util.Set;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Slf4j
 public class GiftCertificateHateoasResponse {
-
     public CollectionModel<GiftCertificate> getHateoasGiftCertificateForCreating(GiftCertificate giftCertificate) {
+        log.info("Building HATEOAS collection-model entity");
+
         getTagsLinks(giftCertificate.getTags());
 
         CollectionModel<GiftCertificate> giftCertificateCollectionModel = CollectionModel.of(List.of(
@@ -41,6 +45,8 @@ public class GiftCertificateHateoasResponse {
 
     public PagedModel<GiftCertificate> getHateoasGiftCertificateForGettingAll(Page<GiftCertificate> giftCertificates,
                                                                               PagedResourcesAssembler<GiftCertificate> representationModelAssembler) {
+        log.info("Building HATEOAS paged-model entity");
+
         PagedModel<GiftCertificate> allGiftCertificatesModel = representationModelAssembler
                 .toModel(giftCertificates, giftCertificate -> {
                     getTagsLinks(giftCertificate.getTags());
@@ -68,6 +74,8 @@ public class GiftCertificateHateoasResponse {
     }
 
     public CollectionModel<GiftCertificate> getHateoasGiftCertificateForGettingOne(GiftCertificate giftCertificate) {
+        log.info("Building HATEOAS collection-model entity");
+
         getTagsLinks(giftCertificate.getTags());
 
         CollectionModel<GiftCertificate> currentGiftCertificateModel = CollectionModel.of(List.of(
@@ -107,6 +115,8 @@ public class GiftCertificateHateoasResponse {
     }
 
     public CollectionModel<GiftCertificate> getHateoasGiftCertificateForUpdate(GiftCertificate giftCertificate) {
+        log.info("Building HATEOAS collection-model entity");
+
         getTagsLinks(giftCertificate.getTags());
 
         CollectionModel<GiftCertificate> giftCertificateCollectionModel = CollectionModel.of(List.of(
@@ -142,6 +152,8 @@ public class GiftCertificateHateoasResponse {
     }
 
     public CollectionModel<GiftCertificate> getHateoasGiftCertificateForUpdatingPrice(GiftCertificate giftCertificate) {
+        log.info("Building HATEOAS collection-model entity");
+
         getTagsLinks(giftCertificate.getTags());
 
         CollectionModel<GiftCertificate> giftCertificateCollectionModel = CollectionModel.of(List.of(
@@ -178,6 +190,7 @@ public class GiftCertificateHateoasResponse {
 
     public PagedModel<GiftCertificate> getHateoasGiftCertificateForGettingByTagName(Page<GiftCertificate> giftCertificates,
                                                                                     PagedResourcesAssembler<GiftCertificate> representationModelAssembler) {
+        log.info("Building HATEOAS paged-model entity");
 
         PagedModel<GiftCertificate> pagedModelGiftCertificates = representationModelAssembler
                 .toModel(giftCertificates, giftCertificate -> {
@@ -214,6 +227,7 @@ public class GiftCertificateHateoasResponse {
 
     public PagedModel<GiftCertificate> getHateoasGiftCertificateForGettingGiftCertificatesByNameOrByPartOfName(Page<GiftCertificate> giftCertificates,
                                                                                                                PagedResourcesAssembler<GiftCertificate> representationModelAssembler) {
+        log.info("Building HATEOAS paged-model entity");
 
         PagedModel<GiftCertificate> pagedModelGiftCertificates = representationModelAssembler
                 .toModel(giftCertificates, giftCertificate -> {
@@ -231,6 +245,7 @@ public class GiftCertificateHateoasResponse {
 
     public PagedModel<GiftCertificate> getHateoasGiftCertificateForGettingGiftCertificatesSortedByDate(Page<GiftCertificate> giftCertificates,
                                                                                                        PagedResourcesAssembler<GiftCertificate> representationModelAssembler) {
+        log.info("Building HATEOAS paged-model entity");
 
         PagedModel<GiftCertificate> allGiftCertificatesModel = representationModelAssembler
                 .toModel(giftCertificates, giftCertificate -> {
@@ -257,6 +272,7 @@ public class GiftCertificateHateoasResponse {
 
     public PagedModel<GiftCertificate> getHateoasGiftCertificateForGettingGiftCertificatesByTagsAndPrice(Page<GiftCertificate> giftCertificates,
                                                                                                          PagedResourcesAssembler<GiftCertificate> representationModelAssembler) {
+        log.info("Building HATEOAS paged-model entity");
 
         PagedModel<GiftCertificate> allGiftCertificatesModel = representationModelAssembler
                 .toModel(giftCertificates, giftCertificate -> {
@@ -283,6 +299,7 @@ public class GiftCertificateHateoasResponse {
 
     public PagedModel<GiftCertificate> getHateoasGiftCertificateForGettingGiftCertificatesSortedByDateAndByName(Page<GiftCertificate> giftCertificates,
                                                                                                                 PagedResourcesAssembler<GiftCertificate> representationModelAssembler) {
+        log.info("Building HATEOAS paged-model entity");
 
         PagedModel<GiftCertificate> allGiftCertificatesModel = representationModelAssembler
                 .toModel(giftCertificates, giftCertificate -> {
