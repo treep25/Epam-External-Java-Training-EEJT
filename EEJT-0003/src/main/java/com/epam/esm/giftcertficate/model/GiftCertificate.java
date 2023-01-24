@@ -2,7 +2,10 @@ package com.epam.esm.giftcertficate.model;
 
 import com.epam.esm.tag.model.Tag;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -13,6 +16,9 @@ import java.util.Set;
 
 @Entity
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class GiftCertificate extends RepresentationModel<GiftCertificate> {
     @Id
@@ -29,8 +35,4 @@ public class GiftCertificate extends RepresentationModel<GiftCertificate> {
     private Date createDate;
     @LastModifiedDate
     private Date lastUpdateDate;
-
-    public GiftCertificate() {
-
-    }
 }

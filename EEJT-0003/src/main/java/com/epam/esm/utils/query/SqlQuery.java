@@ -15,25 +15,25 @@ public class SqlQuery {
 
         public static final String GET_ID_BY_TAG_NAME = "SELECT t.id FROM Tag t WHERE t.name = :name";
         public static final String IS_TAG_EXISTS_BY_NAME = "select case when count(t)> 0 then true else false end from Tag t where t.name = :name";
-        public static final String GET_THE_MOST_WIDELY_USED_TAG_WITH_THE_HIGHEST_COST_OF_ALL_ORDERS = "SELECT *\n" +
-                "FROM (SELECT t.id, t.name\n" +
-                "      FROM orders o\n" +
-                "               INNER JOIN user_orders uo on uo.orders_id = o.id AND uo.user_id = (SELECT user.id\n" +
-                "                                                                                  FROM (SELECT res.id, res.sumOfAllUsersOrders\n" +
-                "                                                                                        FROM (SELECT u.id, SUM(o.cost) as sumOfAllUsersOrders\n" +
-                "                                                                                              FROM orders o,\n" +
-                "                                                                                                   user u,\n" +
-                "                                                                                                   user_orders uo\n" +
-                "                                                                                              WHERE o.id = uo.orders_id\n" +
-                "                                                                                                AND u.id = uo.user_id\n" +
-                "                                                                                              GROUP BY u.id\n" +
-                "                                                                                              ORDER BY sumOfAllUsersOrders DESC) res\n" +
-                "                                                                                        having sumOfAllUsersOrders = MAX(sumOfAllUsersOrders)) user)\n" +
-                "               INNER JOIN gift_certificate_tags gct on o.gift_certificate_id = gct.gift_certificate_id\n" +
-                "               INNER JOIN tag t on t.id = gct.tags_id) t\n" +
-                "GROUP BY t.name\n" +
-                "ORDER BY COUNT(t.name) DESC\n" +
-                "LIMIT 1;";
+        public static final String GET_THE_MOST_WIDELY_USED_TAG_WITH_THE_HIGHEST_COST_OF_ALL_ORDERS = """
+                select t.id, t.name
+                                             from orders o
+                                                      join users_orders uo on uo.orders_id = o.id and uo.user_id = (select user.id
+                                                                                                                    from (select res.id, res.sumOfAllUsersOrders
+                                                                                                                          from (select u.id, sum(o.cost) as sumOfAllUsersOrders
+                                                                                                                                from (orders o,
+                                                                                                                                     users u,
+                                                                                                                                     users_orders uo)
+                                                                                                                                where( o.id = uo.orders_id
+                                                                                                                                  and u.id = uo.user_id)
+                                                                                                                                group by u.id
+                                                                                                                                order by sumOfAllUsersOrders desc) res
+                                                                                                                          having sumOfAllUsersOrders = max(sumOfAllUsersOrders)) user)
+                                                      join (gift_certificate_tags gct) on o.gift_certificate_id = gct.gift_certificate_id
+                                                      join (tag t) on t.id = gct.tags_id
+                                             group by t.name
+                                             order by count(t.name) desc
+                                             limit 1""";
 
     }
 }

@@ -2,8 +2,10 @@ package com.epam.esm.orders.model;
 
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyToOne;
 import org.hibernate.annotations.LazyToOneOption;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,6 +17,9 @@ import java.util.Date;
 @Entity
 @Data
 @EntityListeners(AuditingEntityListener.class)
+@AllArgsConstructor
+@Builder
+@NoArgsConstructor
 @Table(name = "orders")
 public class Order extends RepresentationModel<Order> {
     @Id

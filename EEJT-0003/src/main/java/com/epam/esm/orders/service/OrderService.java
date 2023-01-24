@@ -1,6 +1,7 @@
 package com.epam.esm.orders.service;
 
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
+import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.giftcertficate.service.GiftCertificateService;
 import com.epam.esm.orders.model.Order;
@@ -73,6 +74,6 @@ public class OrderService {
         log.debug("Service returns representation of orders");
 
         return orderRepository.findById(id).orElseThrow(
-                () -> new ItemNotFoundException("There are no orders with (id = " + id + ")"));
+                () -> new ItemNotFoundException("there are no orders with (id = " + id + ")"));
     }
 }
