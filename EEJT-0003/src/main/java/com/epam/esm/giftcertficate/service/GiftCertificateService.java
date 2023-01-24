@@ -116,7 +116,7 @@ public class GiftCertificateService {
         log.info("Service receives gift-certificate`s params for updating price");
 
         GiftCertificate giftCertificate = giftCertificateRepository.findById(id).orElseThrow(
-                () -> new ServerException("there are no gift certificate with (id = " + id + ")"));
+                () -> new ItemNotFoundException("there are po gift certificate with (id = " + id + ")"));
         giftCertificate.setPrice(price);
 
         log.debug("Service returns updated gift-certificate");
