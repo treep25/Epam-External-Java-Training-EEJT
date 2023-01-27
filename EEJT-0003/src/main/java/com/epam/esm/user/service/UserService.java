@@ -34,7 +34,10 @@ public class UserService {
         log.debug("Service returns representation of user");
 
         return userRepository.findById(id).orElseThrow(
-                () -> new ItemNotFoundException("there are no users with (id = " + id + ")"));
+                () -> {
+                    log.error("there are no users with (id = " + id + ")");
+                    return new ItemNotFoundException("there are no users with (id = " + id + ")");
+                });
     }
 
     public User updateUserOrder(User user) {

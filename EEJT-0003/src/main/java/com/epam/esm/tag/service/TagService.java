@@ -55,7 +55,10 @@ public class TagService {
         log.info("Service receives ID for getting");
         log.debug("Service returns representation of current tag");
 
-        return tagRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("there are no tags with (ID = " + id + ")"));
+        return tagRepository.findById(id).orElseThrow(() -> {
+            log.error("there are no tags with (ID = " + id + ")");
+            return new ItemNotFoundException("there are no tags with (ID = " + id + ")");
+        });
     }
 
     public boolean deleteTag(long id) {

@@ -74,6 +74,9 @@ public class OrderService {
         log.debug("Service returns representation of orders");
 
         return orderRepository.findById(id).orElseThrow(
-                () -> new ItemNotFoundException("there are no orders with (id = " + id + ")"));
+                () -> {
+                    log.error("there are no orders with (id = " + id + ")");
+                    return new ItemNotFoundException("there are no orders with (id = " + id + ")");
+                });
     }
 }

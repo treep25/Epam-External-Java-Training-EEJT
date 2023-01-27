@@ -70,7 +70,10 @@ public class GiftCertificateService {
         log.debug("Service returns one gift-certificate");
 
         return giftCertificateRepository.findById(id).orElseThrow(
-                () -> new ItemNotFoundException("there are no gift certificate with (id = " + id + ")"));
+                () -> {
+                    log.error("there are no gift certificate with (id = " + id + ")");
+                    return new ItemNotFoundException("there are no gift certificate with (id = " + id + ")");
+                });
     }
 
     @Transactional
@@ -116,7 +119,10 @@ public class GiftCertificateService {
         log.info("Service receives gift-certificate`s params for updating price");
 
         GiftCertificate giftCertificate = giftCertificateRepository.findById(id).orElseThrow(
-                () -> new ItemNotFoundException("there are po gift certificate with (id = " + id + ")"));
+                () -> {
+                    log.error("there are no gift certificate with (id = " + id + ")");
+                    return new ItemNotFoundException("there are no gift certificate with (id = " + id + ")");
+                });
         giftCertificate.setPrice(price);
 
         log.debug("Service returns updated gift-certificate");
@@ -149,7 +155,6 @@ public class GiftCertificateService {
 
     public Page<GiftCertificate> getGiftCertificatesByTagsAndPrice(String firstTagName, String secondTagName, int price, int page, int size) {
         log.info("Service receives params for getting");
-
         List<GiftCertificate> giftCertificatesByTagsAndPrice = giftCertificateRepository.
                 getGiftCertificatesByTagsAndPrice(firstTagName, secondTagName, price,
                         getPaginationBegin(page, size),
