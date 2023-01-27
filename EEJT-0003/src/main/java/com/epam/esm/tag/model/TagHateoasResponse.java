@@ -1,12 +1,16 @@
 package com.epam.esm.tag.model;
 
 import com.epam.esm.giftcertficate.controller.GiftCertificateController;
+import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.controller.TagController;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -14,7 +18,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class TagHateoasResponse {
+
+    private final PagedResourcesAssembler<Tag> representationModelAssembler;
 
     public CollectionModel<Tag> getHateoasTagForCreating(Tag tag) {
         log.info("Building HATEOAS collection-model entity");
@@ -38,7 +46,7 @@ public class TagHateoasResponse {
                         .withRel(() -> "get the most widely used tag of user`s orders"));
     }
 
-    public PagedModel<Tag> getHateoasTagForReading(Page<Tag> allTags, PagedResourcesAssembler<Tag> representationModelAssembler) {
+    public PagedModel<Tag> getHateoasTagForReading(Page<Tag> allTags) {
         log.info("Building HATEOAS paged-model entity");
 
         PagedModel<Tag> allTagsPagedModel = representationModelAssembler

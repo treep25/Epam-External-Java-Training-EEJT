@@ -4,12 +4,16 @@ import com.epam.esm.giftcertficate.controller.GiftCertificateController;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.orders.controller.OrderController;
 import com.epam.esm.tag.controller.TagController;
+import com.epam.esm.tag.model.Tag;
 import com.epam.esm.user.controller.UserController;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -17,9 +21,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserHateoasResponse {
 
-    public PagedModel<User> getHateoasUserForReading(Page<User> pagedUsers, PagedResourcesAssembler<User> representationModelAssembler) {
+    private final PagedResourcesAssembler<User> representationModelAssembler;
+
+    public PagedModel<User> getHateoasUserForReading(Page<User> pagedUsers) {
         log.info("Building HATEOAS paged-model entity");
 
         PagedModel<User> users = representationModelAssembler

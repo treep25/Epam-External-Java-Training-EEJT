@@ -5,11 +5,14 @@ import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.orders.controller.OrderController;
 import com.epam.esm.tag.controller.TagController;
 import com.epam.esm.tag.model.Tag;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
@@ -17,9 +20,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Slf4j
+@Component
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class OrderHateoasResponse {
 
-    public PagedModel<Order> getHateoasOrderForReading(Page<Order> pagedOrders, PagedResourcesAssembler<Order> representationModelAssembler) {
+    private final PagedResourcesAssembler<Order> representationModelAssembler;
+
+    public PagedModel<Order> getHateoasOrderForReading(Page<Order> pagedOrders) {
         log.info("Building HATEOAS paged-model entity");
 
         PagedModel<Order> orders = representationModelAssembler
