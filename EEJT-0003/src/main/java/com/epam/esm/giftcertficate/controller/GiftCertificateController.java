@@ -28,9 +28,7 @@ import java.util.Optional;
 public class GiftCertificateController {
     private final GiftCertificateService giftCertificateService;
 
-    private final PagedResourcesAssembler<GiftCertificate> representationModelAssembler;
-
-    private final GiftCertificateHateoasResponse giftCertificateHateoasResponse = new GiftCertificateHateoasResponse();
+    private final GiftCertificateHateoasResponse giftCertificateHateoasResponse;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody GiftCertificate giftCertificate) {
@@ -61,7 +59,7 @@ public class GiftCertificateController {
         Page<GiftCertificate> allGiftCertificates = giftCertificateService.getAll(page, size);
         log.debug("Receive all gift-certificates");
 
-        PagedModel<GiftCertificate> allGiftCertificatesModel = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingAll(allGiftCertificates, representationModelAssembler);
+        CollectionModel<GiftCertificate> allGiftCertificatesModel = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingAll(allGiftCertificates);
         log.debug("Return Hateoas model of all gift-certificates");
 
         return ResponseEntity.ok(Map.of("gift-certificates", allGiftCertificatesModel));
@@ -161,7 +159,7 @@ public class GiftCertificateController {
             log.debug("Receive gift-certificates");
 
             PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
-                    .getHateoasGiftCertificateForGettingByTagName(giftCertificatesByTagName, representationModelAssembler);
+                    .getHateoasGiftCertificateForGettingByTagName(giftCertificatesByTagName);
             log.debug("Return Hateoas model of gift-certificates");
 
             return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));
@@ -181,7 +179,7 @@ public class GiftCertificateController {
             log.debug("Receive gift-certificates");
 
             PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
-                    .getHateoasGiftCertificateForGettingGiftCertificatesByNameOrByPartOfName(giftCertificatesByName, representationModelAssembler);
+                    .getHateoasGiftCertificateForGettingGiftCertificatesByNameOrByPartOfName(giftCertificatesByName);
             log.debug("Return Hateoas model of gift-certificates");
 
             return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));
@@ -205,7 +203,7 @@ public class GiftCertificateController {
                 log.debug("Receive gift-certificates");
 
                 PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
-                        .getHateoasGiftCertificateForGettingGiftCertificatesSortedByDate(giftCertificatesSortedByDate, representationModelAssembler);
+                        .getHateoasGiftCertificateForGettingGiftCertificatesSortedByDate(giftCertificatesSortedByDate);
                 log.debug("Return Hateoas model of gift-certificates");
 
                 return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));
@@ -236,7 +234,7 @@ public class GiftCertificateController {
                 log.debug("Receive gift-certificates");
 
                 PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
-                        .getHateoasGiftCertificateForGettingGiftCertificatesByTagsAndPrice(giftCertificatesByTagsAndPrice, representationModelAssembler);
+                        .getHateoasGiftCertificateForGettingGiftCertificatesByTagsAndPrice(giftCertificatesByTagsAndPrice);
                 log.debug("Return Hateoas model of gift-certificates");
 
                 return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));
@@ -265,7 +263,7 @@ public class GiftCertificateController {
                 log.debug("Receive gift-certificates");
 
                 PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
-                        .getHateoasGiftCertificateForGettingGiftCertificatesSortedByDateAndByName(giftCertificatesSortedByDateAndByName, representationModelAssembler);
+                        .getHateoasGiftCertificateForGettingGiftCertificatesSortedByDateAndByName(giftCertificatesSortedByDateAndByName);
                 log.debug("Return Hateoas model of gift-certificates");
 
                 return ResponseEntity.ok(Map.of("gift-certificates", giftCertificatePagedModel));

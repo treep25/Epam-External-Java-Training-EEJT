@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,8 +27,7 @@ import java.util.Map;
 public class OrderController {
 
     private final OrderService orderService;
-    private final OrderHateoasResponse orderHateoasResponse = new OrderHateoasResponse();
-    private final PagedResourcesAssembler<Order> representationModelAssembler;
+    private final OrderHateoasResponse orderHateoasResponse;
 
     @PostMapping("/{userId}/{giftCertificateId}")
     public ResponseEntity<?> create(@PathVariable("userId") long userId,
@@ -44,7 +44,7 @@ public class OrderController {
                 CollectionModel<Order> collectionModelOrder = orderHateoasResponse.getHateoasOrderForCreating(savedOrder);
                 log.debug("Return Hateoas model of current order");
 
-                return ResponseEntity.ok(Map.of("order", collectionModelOrder));
+                return new ResponseEntity<>(Map.of("order", collectionModelOrder), HttpStatus.CREATED);
             }
             log.error("The gift-certificate ID is not valid: id = " + giftCertificateId);
             throw new ServerException("the gift-certificate ID is not valid: id = " + giftCertificateId);
@@ -82,7 +82,7 @@ public class OrderController {
         log.debug("Receive all orders");
 
         PagedModel<Order> pagedModelOrders = orderHateoasResponse
-                .getHateoasOrderForReading(allOrders, representationModelAssembler);
+                .getHateoasOrderForReading(allOrders);
         log.debug("Return Hateoas model of all orders");
 
         return ResponseEntity.ok(Map.of("orders", pagedModelOrders));

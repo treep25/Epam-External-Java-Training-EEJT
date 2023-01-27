@@ -26,8 +26,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final UserHateoasResponse userHateoasResponse = new UserHateoasResponse();
-    private final PagedResourcesAssembler<User> representationModelAssembler;
+    private final UserHateoasResponse userHateoasResponse;
 
     @GetMapping
     public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -40,7 +39,7 @@ public class UserController {
         log.debug("Receive all users");
 
         PagedModel<User> allUsersPagedModel = userHateoasResponse
-                .getHateoasUserForReading(allUsers, representationModelAssembler);
+                .getHateoasUserForReading(allUsers);
         log.debug("Return Hateoas model of users");
 
         return ResponseEntity.ok(Map.of("users", allUsersPagedModel));

@@ -26,9 +26,7 @@ import java.util.Map;
 public class TagController {
 
     private final TagService tagService;
-    private final PagedResourcesAssembler<Tag> representationModelAssembler;
-
-    private final TagHateoasResponse tagHateoasResponse = new TagHateoasResponse();
+    private final TagHateoasResponse tagHateoasResponse;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Tag tag) {
@@ -60,7 +58,7 @@ public class TagController {
         log.debug("Receive tags");
 
         PagedModel<Tag> tagsPagedModel = tagHateoasResponse
-                .getHateoasTagForReading(allTags, representationModelAssembler);
+                .getHateoasTagForReading(allTags);
         log.debug("Return Hateoas model of tags");
 
         return ResponseEntity.ok(Map.of("all tags", tagsPagedModel));
