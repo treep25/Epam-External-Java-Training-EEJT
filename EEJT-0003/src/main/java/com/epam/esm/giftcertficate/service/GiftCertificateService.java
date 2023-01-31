@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 @Slf4j
 @Service
@@ -88,8 +89,18 @@ public class GiftCertificateService {
         if (!giftCertificateRepository.isGiftCertificateExistByName(updatesMap.get(NAME))) {
 
             log.debug("Update");
-            GiftCertificate updatedGiftCertificate = updatingGiftCertificateUsingMapOfUpdates(updatesMap,
-                    getOneGiftCertificateById(id));
+
+            GiftCertificate updatedGiftCertificate = getOneGiftCertificateById(id);
+
+            setFieldsForUpdatingNotNull(updatesMap.get("name"), updatedGiftCertificate::setName);
+            setFieldsForUpdatingNotNull(updatesMap.get("description"), updatedGiftCertificate::setDescription);
+
+            if (updatesMap.get("price") != null) {
+                setFieldsForUpdatingNotNull(Integer.parseInt(updatesMap.get("price")), updatedGiftCertificate::setPrice);
+            }
+            if (updatesMap.get("duration") != null) {
+                setFieldsForUpdatingNotNull(Integer.parseInt(updatesMap.get("duration")), updatedGiftCertificate::setDurationDays);
+            }
 
             log.debug("Checking tags of gift-certificate");
             if (tags != null) {
@@ -107,9 +118,7 @@ public class GiftCertificateService {
             log.debug("Service returns updated gift-certificate");
             return giftCertificateRepository.save(updatedGiftCertificate);
         } else {
-            log.info("Transaction has been ended");
-            log.error("Rollback");
-            log.error("The certificate with (name= " + updatesMap.get(NAME) + ") has already existed");
+            log.error("Transaction has been ended" + "Rollback" + "The certificate with (name= " + updatesMap.get(NAME) + ") has already existed");
             throw new ServerException("the certificate with (name= " + updatesMap.get(NAME) + ") has already existed");
         }
     }
@@ -195,19 +204,10 @@ public class GiftCertificateService {
         return giftCertificateRepository.findAll(pageRequest);
     }
 
-    private GiftCertificate updatingGiftCertificateUsingMapOfUpdates(Map<String, String> updatesMap, GiftCertificate gifCertificateForUpdating) {
-        updatesMap.forEach((key, value) -> {
-            if (key.equals("name")) {
-                gifCertificateForUpdating.setName(value);
-            } else if (key.equals("description")) {
-                gifCertificateForUpdating.setDescription(value);
-            } else if (key.equals("price")) {
-                gifCertificateForUpdating.setPrice(Integer.parseInt(value));
-            } else if (key.equals("duration")) {
-                gifCertificateForUpdating.setDurationDays(Integer.parseInt(value));
-            }
-        });
-        return gifCertificateForUpdating;
+    private <T> void setFieldsForUpdatingNotNull(T value, Consumer<T> setter) {
+        if (value != null) {
+            setter.accept(value);
+        }
     }
 
     private int getPaginationBegin(int page, int size) {
