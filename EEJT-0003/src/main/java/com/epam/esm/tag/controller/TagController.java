@@ -2,14 +2,13 @@ package com.epam.esm.tag.controller;
 
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.tag.model.Tag;
-import com.epam.esm.tag.model.TagHateoasResponse;
+import com.epam.esm.tag.model.TagHateoasBuilder;
 import com.epam.esm.tag.service.TagService;
 import com.epam.esm.utils.validation.DataValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,7 @@ import java.util.Map;
 public class TagController {
 
     private final TagService tagService;
-    private final TagHateoasResponse tagHateoasResponse;
+    private final TagHateoasBuilder tagHateoasBuilder;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Tag tag) {
@@ -37,7 +36,7 @@ public class TagController {
             Tag savedTag = tagService.createTag(tag);
             log.debug("Receive tag");
 
-            CollectionModel<Tag> collectionModelSavedTag = tagHateoasResponse
+            CollectionModel<Tag> collectionModelSavedTag = tagHateoasBuilder
                     .getHateoasTagForCreating(savedTag);
             log.debug("Return Hateoas model of current tag");
 
@@ -57,7 +56,7 @@ public class TagController {
         Page<Tag> allTags = tagService.getAllTags(page, size);
         log.debug("Receive tags");
 
-        PagedModel<Tag> tagsPagedModel = tagHateoasResponse
+        PagedModel<Tag> tagsPagedModel = tagHateoasBuilder
                 .getHateoasTagForReading(allTags);
         log.debug("Return Hateoas model of tags");
 
@@ -73,7 +72,7 @@ public class TagController {
             Tag currentTag = tagService.getTagById(id);
             log.debug("Receive tag");
 
-            CollectionModel<Tag> collectionModelCurrentTag = tagHateoasResponse.getHateoasTagForReadingById(currentTag);
+            CollectionModel<Tag> collectionModelCurrentTag = tagHateoasBuilder.getHateoasTagForReadingById(currentTag);
             log.debug("Return Hateoas model of current tag");
 
             return ResponseEntity.ok(Map.of("tag", collectionModelCurrentTag));
@@ -87,7 +86,7 @@ public class TagController {
         Tag theMostWidelyUsedTag = tagService.getTheMostWidelyUsedTagOfUserOrder();
         log.debug("Receive tag");
 
-        CollectionModel<Tag> collectionModelTheMostWidelyUsed = tagHateoasResponse
+        CollectionModel<Tag> collectionModelTheMostWidelyUsed = tagHateoasBuilder
                 .getHateoasTagForGettingTheMostWidelyUsedTag(theMostWidelyUsedTag);
         log.debug("Return Hateoas model of current tag");
 

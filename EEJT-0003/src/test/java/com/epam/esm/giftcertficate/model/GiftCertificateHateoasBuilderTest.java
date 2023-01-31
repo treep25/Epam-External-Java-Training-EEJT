@@ -8,17 +8,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.verification.VerificationMode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
-import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
@@ -32,9 +28,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
-class GiftCertificateHateoasResponseTest {
+class GiftCertificateHateoasBuilderTest {
     @InjectMocks
-    private GiftCertificateHateoasResponse giftCertificateHateoasResponse;
+    private GiftCertificateHateoasBuilder giftCertificateHateoasBuilder;
 
     @Mock
     private PagedResourcesAssembler<GiftCertificate> representationModelAssembler;
@@ -90,7 +86,7 @@ class GiftCertificateHateoasResponseTest {
                         .withRel(() -> "get the most widely used tag"));
 
         //when
-        CollectionModel<GiftCertificate> actual = giftCertificateHateoasResponse.getHateoasGiftCertificateForCreating(giftCertificateObj);
+        CollectionModel<GiftCertificate> actual = giftCertificateHateoasBuilder.getHateoasGiftCertificateForCreating(giftCertificateObj);
 
         //then
         assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());
@@ -108,7 +104,7 @@ class GiftCertificateHateoasResponseTest {
         when(representationModelAssembler.toModel(eq(giftCertificates), ArgumentMatchers.<RepresentationModelAssembler<GiftCertificate, GiftCertificate>>any())).thenReturn(allGiftCertificatesModel);
 
         //when
-        PagedModel<GiftCertificate> actual = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingAll(giftCertificates);
+        PagedModel<GiftCertificate> actual = giftCertificateHateoasBuilder.getHateoasGiftCertificateForGettingAll(giftCertificates);
 
         //then
         assertEquals(actual, allGiftCertificatesModel);
@@ -169,7 +165,7 @@ class GiftCertificateHateoasResponseTest {
                         .withRel(() -> "get the most widely used tag"));
 
         //when
-        CollectionModel<GiftCertificate> actual = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingOne(giftCertificateObj);
+        CollectionModel<GiftCertificate> actual = giftCertificateHateoasBuilder.getHateoasGiftCertificateForGettingOne(giftCertificateObj);
 
         //then
         assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());
@@ -219,7 +215,7 @@ class GiftCertificateHateoasResponseTest {
                         .withRel(() -> "get the most widely used tag"));
 
         //when
-        CollectionModel<GiftCertificate> actual = giftCertificateHateoasResponse.getHateoasGiftCertificateForUpdate(giftCertificateObj);
+        CollectionModel<GiftCertificate> actual = giftCertificateHateoasBuilder.getHateoasGiftCertificateForUpdate(giftCertificateObj);
 
         //then
         assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());
@@ -269,7 +265,7 @@ class GiftCertificateHateoasResponseTest {
                         .withRel(() -> "get the most widely used tag"));
 
         //when
-        CollectionModel<GiftCertificate> actual = giftCertificateHateoasResponse.getHateoasGiftCertificateForUpdatingPrice(giftCertificateObj);
+        CollectionModel<GiftCertificate> actual = giftCertificateHateoasBuilder.getHateoasGiftCertificateForUpdatingPrice(giftCertificateObj);
 
         //then
         assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());
@@ -287,7 +283,7 @@ class GiftCertificateHateoasResponseTest {
         when(representationModelAssembler.toModel(eq(giftCertificates), ArgumentMatchers.<RepresentationModelAssembler<GiftCertificate, GiftCertificate>>any())).thenReturn(allGiftCertificatesModel);
 
         //when
-        PagedModel<GiftCertificate> actual = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingByTagName(giftCertificates);
+        PagedModel<GiftCertificate> actual = giftCertificateHateoasBuilder.getHateoasGiftCertificateForGettingByTagName(giftCertificates);
 
         //then
         assertEquals(actual, allGiftCertificatesModel);
@@ -315,7 +311,7 @@ class GiftCertificateHateoasResponseTest {
         when(representationModelAssembler.toModel(eq(giftCertificates), ArgumentMatchers.<RepresentationModelAssembler<GiftCertificate, GiftCertificate>>any())).thenReturn(allGiftCertificatesModel);
 
         //when
-        PagedModel<GiftCertificate> actual = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingGiftCertificatesByNameOrByPartOfName(giftCertificates);
+        PagedModel<GiftCertificate> actual = giftCertificateHateoasBuilder.getHateoasGiftCertificateForGettingGiftCertificatesByNameOrByPartOfName(giftCertificates);
 
         //then
         assertEquals(actual, allGiftCertificatesModel);
@@ -342,7 +338,7 @@ class GiftCertificateHateoasResponseTest {
         when(representationModelAssembler.toModel(eq(giftCertificates), ArgumentMatchers.<RepresentationModelAssembler<GiftCertificate, GiftCertificate>>any())).thenReturn(allGiftCertificatesModel);
 
         //when
-        PagedModel<GiftCertificate> actual = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingGiftCertificatesSortedByDate(giftCertificates);
+        PagedModel<GiftCertificate> actual = giftCertificateHateoasBuilder.getHateoasGiftCertificateForGettingGiftCertificatesSortedByDate(giftCertificates);
 
         //then
         assertEquals(actual, allGiftCertificatesModel);
@@ -367,7 +363,7 @@ class GiftCertificateHateoasResponseTest {
         when(representationModelAssembler.toModel(eq(giftCertificates), ArgumentMatchers.<RepresentationModelAssembler<GiftCertificate, GiftCertificate>>any())).thenReturn(allGiftCertificatesModel);
 
         //when
-        PagedModel<GiftCertificate> actual = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingGiftCertificatesByTagsAndPrice(giftCertificates);
+        PagedModel<GiftCertificate> actual = giftCertificateHateoasBuilder.getHateoasGiftCertificateForGettingGiftCertificatesByTagsAndPrice(giftCertificates);
 
         //then
         assertEquals(actual, allGiftCertificatesModel);
@@ -392,7 +388,7 @@ class GiftCertificateHateoasResponseTest {
         when(representationModelAssembler.toModel(eq(giftCertificates), ArgumentMatchers.<RepresentationModelAssembler<GiftCertificate, GiftCertificate>>any())).thenReturn(allGiftCertificatesModel);
 
         //when
-        PagedModel<GiftCertificate> actual = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingGiftCertificatesSortedByDateAndByName(giftCertificates);
+        PagedModel<GiftCertificate> actual = giftCertificateHateoasBuilder.getHateoasGiftCertificateForGettingGiftCertificatesSortedByDateAndByName(giftCertificates);
 
         //then
         assertEquals(actual, allGiftCertificatesModel);

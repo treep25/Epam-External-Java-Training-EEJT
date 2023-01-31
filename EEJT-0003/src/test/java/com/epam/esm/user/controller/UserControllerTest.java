@@ -1,9 +1,8 @@
 package com.epam.esm.user.controller;
 
 import com.epam.esm.exceptionhandler.handler.ResponseExceptionHandler;
-import com.epam.esm.tag.model.Tag;
 import com.epam.esm.user.model.User;
-import com.epam.esm.user.model.UserHateoasResponse;
+import com.epam.esm.user.model.UserHateoasBuilder;
 import com.epam.esm.user.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -40,7 +39,7 @@ class UserControllerTest {
     private JacksonTester<Map<String, CollectionModel<?>>> jsonOrderTester;
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
-    private UserHateoasResponse userHateoasResponse;
+    private UserHateoasBuilder userHateoasBuilder;
 
     @BeforeEach
     public void setup() {
@@ -62,7 +61,7 @@ class UserControllerTest {
         User user = User.builder().id(1L).name("NamePlug").build();
 
         when(userService.getById(1L)).thenReturn(user);
-        when(userHateoasResponse.getHateoasUserForReadingById(user)).thenReturn(CollectionModel.of(List.of(user)));
+        when(userHateoasBuilder.getHateoasUserForReadingById(user)).thenReturn(CollectionModel.of(List.of(user)));
         CollectionModel<User> expected = CollectionModel.of(List.of(user));
 
         // when

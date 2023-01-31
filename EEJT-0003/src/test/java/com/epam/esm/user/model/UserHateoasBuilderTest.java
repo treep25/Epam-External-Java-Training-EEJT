@@ -26,10 +26,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 @RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
-class UserHateoasResponseTest {
+class UserHateoasBuilderTest {
 
     @InjectMocks
-    private UserHateoasResponse userHateoasResponse;
+    private UserHateoasBuilder userHateoasBuilder;
     @Mock
     private PagedResourcesAssembler<User> representationModelAssembler;
 
@@ -48,7 +48,7 @@ class UserHateoasResponseTest {
         when(representationModelAssembler.toModel(eq(users), ArgumentMatchers.<RepresentationModelAssembler<User, User>>any())).thenReturn(allUserModel);
 
         //when
-        PagedModel<User> actual = userHateoasResponse.getHateoasUserForReading(users);
+        PagedModel<User> actual = userHateoasBuilder.getHateoasUserForReading(users);
 
         //then
         assertEquals(actual, allUserModel);
@@ -65,7 +65,7 @@ class UserHateoasResponseTest {
         CollectionModel<User> expected = CollectionModel.of(List.of(userObj));
 
         //when
-        CollectionModel<User> actual = userHateoasResponse.getHateoasUserForReadingById(userExpected);
+        CollectionModel<User> actual = userHateoasBuilder.getHateoasUserForReadingById(userExpected);
 
         //then
         assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());

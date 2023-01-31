@@ -31,10 +31,10 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
-class OrderHateoasResponseTest {
+class OrderHateoasBuilderTest {
 
     @InjectMocks
-    private OrderHateoasResponse orderHateoasResponse;
+    private OrderHateoasBuilder orderHateoasBuilder;
 
     @Mock
     private PagedResourcesAssembler<Order> representationModelAssembler;
@@ -54,7 +54,7 @@ class OrderHateoasResponseTest {
         when(representationModelAssembler.toModel(eq(orders), ArgumentMatchers.<RepresentationModelAssembler<Order, Order>>any())).thenReturn(allOrdersModel);
 
         //when
-        PagedModel<Order> actual = orderHateoasResponse.getHateoasOrderForReading(orders);
+        PagedModel<Order> actual = orderHateoasBuilder.getHateoasOrderForReading(orders);
 
         //then
         assertEquals(actual, allOrdersModel);
@@ -113,7 +113,7 @@ class OrderHateoasResponseTest {
                         .withRel(() -> "get the most widely used tag"));
 
         //when
-        CollectionModel<Order> actual = orderHateoasResponse.getHateoasOrderForCreating(orderObj);
+        CollectionModel<Order> actual = orderHateoasBuilder.getHateoasOrderForCreating(orderObj);
 
         //then
         Assertions.assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());
@@ -168,7 +168,7 @@ class OrderHateoasResponseTest {
                         .withRel(() -> "get the most widely used tag"));
 
         //when
-        CollectionModel<Order> actual = orderHateoasResponse.getHateoasOrderForReadingById(orderObj);
+        CollectionModel<Order> actual = orderHateoasBuilder.getHateoasOrderForReadingById(orderObj);
 
         //then
         Assertions.assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());

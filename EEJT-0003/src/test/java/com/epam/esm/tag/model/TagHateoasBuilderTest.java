@@ -1,17 +1,13 @@
 package com.epam.esm.tag.model;
 
 import com.epam.esm.giftcertficate.controller.GiftCertificateController;
-import com.epam.esm.giftcertficate.model.GiftCertificate;
-import com.epam.esm.giftcertficate.model.GiftCertificateHateoasResponse;
 import com.epam.esm.tag.controller.TagController;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -32,9 +28,9 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
-class TagHateoasResponseTest {
+class TagHateoasBuilderTest {
     @InjectMocks
-    private TagHateoasResponse tagHateoasResponse;
+    private TagHateoasBuilder tagHateoasBuilder;
     @Mock
     private PagedResourcesAssembler<Tag> representationModelAssembler;
 
@@ -70,7 +66,7 @@ class TagHateoasResponseTest {
 
 
         //when
-        CollectionModel<Tag> actual = tagHateoasResponse.getHateoasTagForCreating(tagExpected);
+        CollectionModel<Tag> actual = tagHateoasBuilder.getHateoasTagForCreating(tagExpected);
 
         //then
         assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());
@@ -88,7 +84,7 @@ class TagHateoasResponseTest {
         when(representationModelAssembler.toModel(eq(tags), ArgumentMatchers.<RepresentationModelAssembler<Tag, Tag>>any())).thenReturn(allTagModel);
 
         //when
-        PagedModel<Tag> actual = tagHateoasResponse.getHateoasTagForReading(tags);
+        PagedModel<Tag> actual = tagHateoasBuilder.getHateoasTagForReading(tags);
 
         //then
         assertEquals(actual, allTagModel);
@@ -123,7 +119,7 @@ class TagHateoasResponseTest {
                         .withRel(() -> "get the most widely used tag of user`s orders"));
 
         //when
-        CollectionModel<Tag> actual = tagHateoasResponse.getHateoasTagForReadingById(tagExpected);
+        CollectionModel<Tag> actual = tagHateoasBuilder.getHateoasTagForReadingById(tagExpected);
 
         //then
         assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());
@@ -155,7 +151,7 @@ class TagHateoasResponseTest {
 
 
         //when
-        CollectionModel<Tag> actual = tagHateoasResponse.getHateoasTagForGettingTheMostWidelyUsedTag(tagExpected);
+        CollectionModel<Tag> actual = tagHateoasBuilder.getHateoasTagForGettingTheMostWidelyUsedTag(tagExpected);
 
         //then
         assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());

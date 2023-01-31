@@ -2,7 +2,7 @@ package com.epam.esm.giftcertficate.controller;
 
 import com.epam.esm.exceptionhandler.handler.ResponseExceptionHandler;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
-import com.epam.esm.giftcertficate.model.GiftCertificateHateoasResponse;
+import com.epam.esm.giftcertficate.model.GiftCertificateHateoasBuilder;
 import com.epam.esm.giftcertficate.service.GiftCertificateService;
 import com.epam.esm.tag.model.Tag;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,16 +10,11 @@ import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.json.JacksonTester;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.*;
-import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -56,7 +51,7 @@ class GiftCertificateControllerTest {
     private JacksonTester<Map<String, CollectionModel<?>>> jsonGiftCertificateJacksonTester;
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
-    private GiftCertificateHateoasResponse hateoasResponse;
+    private GiftCertificateHateoasBuilder hateoasResponse;
 
     @BeforeEach
     public void setup() {
@@ -117,7 +112,29 @@ class GiftCertificateControllerTest {
     @Test
     @SneakyThrows
     void readTest_ReturnModel_WhenAllOK() {
-        
+//        // given
+//        GiftCertificate giftCertificate = GiftCertificate.builder().name("GfPlug").description("Plug").price(100).durationDays(10).tags(null).build();
+//
+//
+//        Page<GiftCertificate> giftCertificates = new PageImpl<>(List.of(giftCertificate));
+//        PagedModel<GiftCertificate> allGiftCertificatesModel = mock(PagedModel.class);
+//        when(giftCertificateService.getAll(0, 20)).thenReturn(giftCertificates);
+//
+//        when(hateoasResponse.getHateoasGiftCertificateForGettingAll(giftCertificates)).thenReturn(allGiftCertificatesModel);
+//
+//        CollectionModel<GiftCertificate> expected = CollectionModel.of(List.of(giftCertificate));
+//        when(allGiftCertificatesModel.getContent()).thenReturn(expected.getContent());
+//        // when
+//        MockHttpServletResponse response = mvc.perform(
+//                        get("/certificates")
+//                                .accept(MediaType.APPLICATION_JSON))
+//                .andReturn().getResponse();
+//
+//        // then
+//        assertEquals(HttpStatus.OK.value(), response.getStatus());
+//        assertEquals(jsonGiftCertificateJacksonTester.write(Map.of("gift-certificate", PagedModel.of(List.of(giftCertificate)).removeLinks())).getJson()
+//                , response.getContentAsString());
+
     }
 
     @SneakyThrows

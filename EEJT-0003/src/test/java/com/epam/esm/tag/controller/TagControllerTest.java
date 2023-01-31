@@ -1,13 +1,8 @@
 package com.epam.esm.tag.controller;
 
 import com.epam.esm.exceptionhandler.handler.ResponseExceptionHandler;
-import com.epam.esm.giftcertficate.model.GiftCertificate;
-import com.epam.esm.orders.controller.OrderController;
-import com.epam.esm.orders.model.Order;
-import com.epam.esm.orders.model.OrderHateoasResponse;
-import com.epam.esm.orders.service.OrderService;
 import com.epam.esm.tag.model.Tag;
-import com.epam.esm.tag.model.TagHateoasResponse;
+import com.epam.esm.tag.model.TagHateoasBuilder;
 import com.epam.esm.tag.service.TagService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -46,7 +41,7 @@ class TagControllerTest {
     private JacksonTester<Map<String, CollectionModel<?>>> jsonOrderTester;
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
-    private TagHateoasResponse hateoasResponse;
+    private TagHateoasBuilder hateoasResponse;
 
     @BeforeEach
     public void setup() {

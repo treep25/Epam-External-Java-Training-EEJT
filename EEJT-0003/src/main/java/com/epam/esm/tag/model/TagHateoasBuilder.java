@@ -1,7 +1,6 @@
 package com.epam.esm.tag.model;
 
 import com.epam.esm.giftcertficate.controller.GiftCertificateController;
-import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.controller.TagController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Slf4j
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class TagHateoasResponse {
+public class TagHateoasBuilder {
 
     private final PagedResourcesAssembler<Tag> representationModelAssembler;
 

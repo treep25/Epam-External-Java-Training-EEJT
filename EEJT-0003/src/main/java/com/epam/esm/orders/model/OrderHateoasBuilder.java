@@ -22,7 +22,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Slf4j
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class OrderHateoasResponse {
+public class OrderHateoasBuilder {
 
     private final PagedResourcesAssembler<Order> representationModelAssembler;
 

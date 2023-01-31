@@ -1,12 +1,9 @@
 package com.epam.esm.orders.controller;
 
 import com.epam.esm.exceptionhandler.handler.ResponseExceptionHandler;
-import com.epam.esm.giftcertficate.controller.GiftCertificateController;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
-import com.epam.esm.giftcertficate.model.GiftCertificateHateoasResponse;
-import com.epam.esm.giftcertficate.service.GiftCertificateService;
 import com.epam.esm.orders.model.Order;
-import com.epam.esm.orders.model.OrderHateoasResponse;
+import com.epam.esm.orders.model.OrderHateoasBuilder;
 import com.epam.esm.orders.service.OrderService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
@@ -18,7 +15,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -44,7 +40,7 @@ class OrderControllerTest {
     private JacksonTester<Map<String, CollectionModel<?>>> jsonOrderTester;
     private final ObjectMapper objectMapper = new ObjectMapper();
     @Mock
-    private OrderHateoasResponse hateoasResponse;
+    private OrderHateoasBuilder hateoasResponse;
 
     @BeforeEach
     public void setup() {

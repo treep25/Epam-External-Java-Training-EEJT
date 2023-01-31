@@ -1,16 +1,14 @@
 package com.epam.esm.user.controller;
 
 import com.epam.esm.exceptionhandler.exception.ServerException;
-import com.epam.esm.tag.model.Tag;
 import com.epam.esm.user.model.User;
-import com.epam.esm.user.model.UserHateoasResponse;
+import com.epam.esm.user.model.UserHateoasBuilder;
 import com.epam.esm.user.service.UserService;
 import com.epam.esm.utils.validation.DataValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
@@ -26,7 +24,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
-    private final UserHateoasResponse userHateoasResponse;
+    private final UserHateoasBuilder userHateoasBuilder;
 
     @GetMapping
     public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -38,7 +36,7 @@ public class UserController {
         Page<User> allUsers = userService.getAllUsers(page, size);
         log.debug("Receive all users");
 
-        PagedModel<User> allUsersPagedModel = userHateoasResponse
+        PagedModel<User> allUsersPagedModel = userHateoasBuilder
                 .getHateoasUserForReading(allUsers);
         log.debug("Return Hateoas model of users");
 
@@ -53,7 +51,7 @@ public class UserController {
             User currentUser = userService.getById(id);
             log.debug("Receive user");
 
-            CollectionModel<User> userCollectionModel = userHateoasResponse.getHateoasUserForReadingById(currentUser);
+            CollectionModel<User> userCollectionModel = userHateoasBuilder.getHateoasUserForReadingById(currentUser);
             log.debug("Return Hateoas model of user");
 
             return ResponseEntity.ok(Map.of("user", userCollectionModel));
