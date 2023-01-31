@@ -30,7 +30,7 @@ public class GiftCertificate extends RepresentationModel<GiftCertificate> {
     @Column(name = "duration")
     private Integer durationDays;
     @ManyToMany(cascade = CascadeType.MERGE)
-    private Set<Tag> tags = Set.of();
+    private Set<Tag> tags;
     @CreatedDate
     private Date createDate;
     @LastModifiedDate
