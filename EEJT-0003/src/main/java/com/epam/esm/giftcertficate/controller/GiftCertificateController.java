@@ -3,14 +3,13 @@ package com.epam.esm.giftcertficate.controller;
 
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
-import com.epam.esm.giftcertficate.model.GiftCertificateHateoasResponse;
+import com.epam.esm.giftcertficate.model.GiftCertificateHateoasBuilder;
 import com.epam.esm.giftcertficate.service.GiftCertificateService;
 import com.epam.esm.utils.validation.DataValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -28,18 +27,18 @@ import java.util.Optional;
 public class GiftCertificateController {
     private final GiftCertificateService giftCertificateService;
 
-    private final GiftCertificateHateoasResponse giftCertificateHateoasResponse;
+    private final GiftCertificateHateoasBuilder giftCertificateHateoasBuilder;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody GiftCertificate giftCertificate) {
-        log.debug("Validation of request model of gift-certificate");
+        log.debug("Validation of request model of gift-certificate " + giftCertificate.toString());
 
         if (DataValidation.isValidCertificate(giftCertificate)) {
 
             GiftCertificate savedGiftCertificate = giftCertificateService.createGiftCertificate(giftCertificate);
             log.debug("Receive gift-certificate");
 
-            CollectionModel<GiftCertificate> collectionModelSavedGiftCertificate = giftCertificateHateoasResponse
+            CollectionModel<GiftCertificate> collectionModelSavedGiftCertificate = giftCertificateHateoasBuilder
                     .getHateoasGiftCertificateForCreating(savedGiftCertificate);
             log.debug("Return Hateoas model of current gift-certificate");
 
@@ -53,13 +52,13 @@ public class GiftCertificateController {
     @GetMapping
     public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "size", defaultValue = "20") int size) {
-        log.debug("Validation of request model fields");
+        log.debug("Validation of request model fields " + page + " " + size);
         DataValidation.validatePageAndSizePagination(page, size);
 
         Page<GiftCertificate> allGiftCertificates = giftCertificateService.getAll(page, size);
         log.debug("Receive all gift-certificates");
 
-        CollectionModel<GiftCertificate> allGiftCertificatesModel = giftCertificateHateoasResponse.getHateoasGiftCertificateForGettingAll(allGiftCertificates);
+        CollectionModel<GiftCertificate> allGiftCertificatesModel = giftCertificateHateoasBuilder.getHateoasGiftCertificateForGettingAll(allGiftCertificates);
         log.debug("Return Hateoas model of all gift-certificates");
 
         return ResponseEntity.ok(Map.of("gift-certificates", allGiftCertificatesModel));
@@ -67,13 +66,13 @@ public class GiftCertificateController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> readById(@PathVariable("id") long id) {
-        log.debug("Validation of request model field ID");
+        log.debug("Validation of request model field ID " + id);
         if (DataValidation.moreThenZero(id)) {
 
             GiftCertificate currentGiftCertificate = giftCertificateService.getOneGiftCertificateById(id);
             log.debug("Receive gift-certificate");
 
-            CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasResponse
+            CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasBuilder
                     .getHateoasGiftCertificateForGettingOne(currentGiftCertificate);
             log.debug("Return Hateoas model of all gift-certificates");
 
@@ -85,17 +84,17 @@ public class GiftCertificateController {
 
     @PatchMapping("/{id}")
     public ResponseEntity<?> updateCertificate(@RequestBody GiftCertificate giftCertificate, @PathVariable("id") long id) {
-        log.debug("Validation of request model field ID");
+        log.debug("Validation of request model field ID " + id);
         if (DataValidation.moreThenZero(id)) {
 
-            log.debug("Validation of request model fields");
+            log.debug("Validation of request model fields" + giftCertificate.toString());
             Optional<Map<String, String>> updatesMap = DataValidation.isGiftCertificateValidForUpdating(giftCertificate);
 
             if (updatesMap.isPresent()) {
                 GiftCertificate updatedGiftCertificate = giftCertificateService.updateGiftCertificate(id, giftCertificate.getTags(), updatesMap.get());
                 log.debug("Receive updated gift-certificate");
 
-                CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasResponse
+                CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasBuilder
                         .getHateoasGiftCertificateForUpdate(updatedGiftCertificate);
                 log.debug("Return Hateoas model of gift-certificate");
 
@@ -110,7 +109,7 @@ public class GiftCertificateController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") long id) {
-        log.debug("Validation of request model fields");
+        log.debug("Validation of request model fields " + id);
         if (DataValidation.moreThenZero(id)) {
 
             giftCertificateService.deleteGiftCertificate(id);
@@ -123,16 +122,16 @@ public class GiftCertificateController {
 
     @PatchMapping("update-price/{id}")
     public ResponseEntity<?> updatePrice(@PathVariable("id") long id, @RequestBody int price) {
-        log.debug("Validation of request model field ID");
+        log.debug("Validation of request model field ID " + id);
         if (DataValidation.moreThenZero(id)) {
 
-            log.debug("Validation of request model field price");
+            log.debug("Validation of request model field price " + price);
             if (DataValidation.moreThenZero(price)) {
 
                 GiftCertificate updatedGiftCertificate = giftCertificateService.updatePrice(id, price);
                 log.debug("Receive updated gift-certificate");
 
-                CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasResponse
+                CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasBuilder
                         .getHateoasGiftCertificateForUpdatingPrice(updatedGiftCertificate);
                 log.debug("Return Hateoas model of gift-certificate");
 
@@ -149,16 +148,16 @@ public class GiftCertificateController {
     public ResponseEntity<?> getGiftCertificatesByTagName(@RequestParam("name") String tagName,
                                                           @RequestParam(value = "page", defaultValue = "0") int page,
                                                           @RequestParam(value = "size", defaultValue = "20") int size) {
-        log.debug("Validation of request model of tag name");
+        log.debug("Validation of request model of tag name " + tagName);
         if (DataValidation.isStringValid(tagName)) {
 
-            log.debug("Validation of request model fields");
+            log.debug("Validation of request model fields " + page + " " + size);
             DataValidation.validatePageAndSizePagination(page, size);
 
             Page<GiftCertificate> giftCertificatesByTagName = giftCertificateService.getGiftCertificatesByTagName(tagName, page, size);
             log.debug("Receive gift-certificates");
 
-            PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
+            PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasBuilder
                     .getHateoasGiftCertificateForGettingByTagName(giftCertificatesByTagName);
             log.debug("Return Hateoas model of gift-certificates");
 
@@ -170,15 +169,15 @@ public class GiftCertificateController {
 
     @GetMapping("search/gift-certificate-name")
     public ResponseEntity<?> getGiftCertificatesAndTagsByNameOrByPartOfName(@RequestParam("name") String partOfName, @RequestParam("page") int page, @RequestParam("size") int size) {
-        log.debug("Validation of request model of gift-certificate name");
+        log.debug("Validation of request model of gift-certificate name " + partOfName);
         if (DataValidation.isStringValid(partOfName)) {
-            log.debug("Validation of request model fields");
+            log.debug("Validation of request model fields " + page + " " + size);
             DataValidation.validatePageAndSizePagination(page, size);
 
             Page<GiftCertificate> giftCertificatesByName = giftCertificateService.getGiftCertificatesByNameOrByPartOfName(partOfName, page, size);
             log.debug("Receive gift-certificates");
 
-            PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
+            PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasBuilder
                     .getHateoasGiftCertificateForGettingGiftCertificatesByNameOrByPartOfName(giftCertificatesByName);
             log.debug("Return Hateoas model of gift-certificates");
 
@@ -192,17 +191,17 @@ public class GiftCertificateController {
     public ResponseEntity<?> getGiftCertificatesSortedByDate(@RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
                                                              @RequestParam(value = "page", defaultValue = "0") int page,
                                                              @RequestParam(value = "size", defaultValue = "20") int size) {
-        log.debug("Validation of request model sortDir");
+        log.debug("Validation of request model sortDir " + sortDirection);
         if (DataValidation.isStringValid(sortDirection)) {
             if (DataValidation.isSortingTypeContains(sortDirection)) {
 
-                log.debug("Validation of request model fields");
+                log.debug("Validation of request model fields " + page + " " + size);
                 DataValidation.validatePageAndSizePagination(page, size);
 
                 Page<GiftCertificate> giftCertificatesSortedByDate = giftCertificateService.getGiftCertificatesSortedByDate(sortDirection, page, size);
                 log.debug("Receive gift-certificates");
 
-                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
+                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasBuilder
                         .getHateoasGiftCertificateForGettingGiftCertificatesSortedByDate(giftCertificatesSortedByDate);
                 log.debug("Return Hateoas model of gift-certificates");
 
@@ -221,19 +220,19 @@ public class GiftCertificateController {
                                                                @RequestParam("price") int price,
                                                                @RequestParam(value = "page", defaultValue = "0") int page,
                                                                @RequestParam(value = "size", defaultValue = "20") int size) {
-        log.debug("Validation of request model tagNames");
+        log.debug("Validation of request model tagNames " + firstTagName + " " + secondTagName);
         if (DataValidation.isStringValid(firstTagName) && DataValidation.isStringValid(secondTagName)) {
-            log.debug("Validation of request model price");
+            log.debug("Validation of request model price " + price);
             if (DataValidation.moreThenZero(price)) {
 
-                log.debug("Validation of request model fields");
+                log.debug("Validation of request model fields " + page + " " + size);
                 DataValidation.validatePageAndSizePagination(page, size);
 
                 Page<GiftCertificate> giftCertificatesByTagsAndPrice = giftCertificateService
                         .getGiftCertificatesByTagsAndPrice(firstTagName, secondTagName, price, page, size);
                 log.debug("Receive gift-certificates");
 
-                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
+                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasBuilder
                         .getHateoasGiftCertificateForGettingGiftCertificatesByTagsAndPrice(giftCertificatesByTagsAndPrice);
                 log.debug("Return Hateoas model of gift-certificates");
 
@@ -251,18 +250,18 @@ public class GiftCertificateController {
                                                                       @RequestParam(value = "secondSortDirection", defaultValue = "ASC") String secondSortDirection,
                                                                       @RequestParam(value = "page", defaultValue = "0") int page,
                                                                       @RequestParam(value = "size", defaultValue = "20") int size) {
-        log.debug("Validation of request model sortDirs");
+        log.debug("Validation of request model sortDirs " + firstSortDirection + " " + secondSortDirection);
         if (DataValidation.isStringValid(firstSortDirection) && DataValidation.isStringValid(secondSortDirection)) {
             if (DataValidation.isSortingTypeContains(firstSortDirection) && DataValidation.isSortingTypeContains(secondSortDirection)) {
 
-                log.debug("Validation of request model fields");
+                log.debug("Validation of request model fields " + page + " " + size);
                 DataValidation.validatePageAndSizePagination(page, size);
 
                 Page<GiftCertificate> giftCertificatesSortedByDateAndByName = giftCertificateService
                         .getGiftCertificatesSortedByDateAndByName(firstSortDirection, secondSortDirection, page, size);
                 log.debug("Receive gift-certificates");
 
-                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasResponse
+                PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasBuilder
                         .getHateoasGiftCertificateForGettingGiftCertificatesSortedByDateAndByName(giftCertificatesSortedByDateAndByName);
                 log.debug("Return Hateoas model of gift-certificates");
 
