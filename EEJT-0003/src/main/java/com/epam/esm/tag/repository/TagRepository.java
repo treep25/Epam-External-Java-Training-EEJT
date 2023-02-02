@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
     boolean existsByName(String tagName);
-
     @Query(SqlQuery.Tag.GET_ID_BY_TAG_NAME)
     long getIdByTagName(@Param("name") String tagName);
 

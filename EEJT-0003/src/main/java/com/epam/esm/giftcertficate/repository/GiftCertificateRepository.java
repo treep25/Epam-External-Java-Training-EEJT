@@ -13,7 +13,6 @@ import java.util.List;
 public interface GiftCertificateRepository extends JpaRepository<GiftCertificate, Long> {
 
     boolean existsByName(String name);
-
     @Query(value = SqlQuery.GiftCertificate.GET_ALL_GIFT_CERTIFICATES_BY_TAG_NAME, nativeQuery = true)
     List<GiftCertificate> getAllGiftCertificatesByTagName(String tagName, int begin, int end);
 
