@@ -8,12 +8,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
-    @Query(SqlQuery.Tag.IS_TAG_EXISTS_BY_NAME)
-    boolean isTagExistsByName(@Param("name") String tagName);
+    boolean existsByName(String tagName);
 
     @Query(SqlQuery.Tag.GET_ID_BY_TAG_NAME)
     long getIdByTagName(@Param("name") String tagName);

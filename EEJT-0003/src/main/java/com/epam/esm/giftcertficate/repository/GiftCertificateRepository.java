@@ -12,8 +12,7 @@ import java.util.List;
 @Repository
 public interface GiftCertificateRepository extends JpaRepository<GiftCertificate, Long> {
 
-    @Query(SqlQuery.GiftCertificate.IS_GIFT_CERTIFICATE_EXISTS_BY_NAME)
-    boolean isGiftCertificateExistByName(@Param("name") String name);
+    boolean existsByName(String name);
 
     @Query(value = SqlQuery.GiftCertificate.GET_ALL_GIFT_CERTIFICATES_BY_TAG_NAME, nativeQuery = true)
     List<GiftCertificate> getAllGiftCertificatesByTagName(String tagName, int begin, int end);
