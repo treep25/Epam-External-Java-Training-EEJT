@@ -12,8 +12,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 @Slf4j
@@ -23,9 +21,9 @@ public class TagService {
     private final TagRepository tagRepository;
 
     public Tag createTag(Tag tag) {
-        log.info("Service receives tag for creating");
+        log.info("Service receives tag for creating " + tag.toString());
 
-        log.debug("Verifying tag has not existed");
+        log.debug("Verifying tag has not existed " + tag.getName());
         if (isTagNotExistsByName(tag.getName())) {
 
             log.debug("Service returns representation of current tag");
@@ -36,10 +34,10 @@ public class TagService {
     }
 
     public boolean isTagNotExistsByName(String name) {
-        log.info("Service receives name for verifying is tag exist");
+        log.info("Service receives name for verifying is tag exist " + name);
 
         log.debug("Service returns result of this operation");
-        return !tagRepository.isTagExistsByName(name);
+        return !tagRepository.existsByName(name);
     }
 
     public Page<Tag> getAllTags(int page, int size) {
@@ -52,7 +50,7 @@ public class TagService {
     }
 
     public Tag getTagById(long id) {
-        log.info("Service receives ID for getting");
+        log.info("Service receives ID for getting " + id);
         log.debug("Service returns representation of current tag");
 
         return tagRepository.findById(id).orElseThrow(() -> {
@@ -62,7 +60,7 @@ public class TagService {
     }
 
     public boolean deleteTag(long id) {
-        log.info("Service receives params for deleting");
+        log.info("Service receives params for deleting " + id);
 
         log.debug("Checking that tag exists");
         if (tagRepository.existsById(id)) {
@@ -76,7 +74,7 @@ public class TagService {
     }
 
     public long getTagIdByTag(Tag tag) {
-        log.info("Service receives tag model for getting ID");
+        log.info("Service receives tag model for getting ID " + tag.toString());
         log.debug("Service returns ID of current tag");
 
         return tagRepository.getIdByTagName(tag.getName());
@@ -90,7 +88,7 @@ public class TagService {
     }
 
     public Set<Tag> verifyIsTagsExistWhenCreatingOrUpdatingGiftCertificate(Set<Tag> tags) {
-        log.info("Service receives Set tag model for verifying exist tag or not for creating and updating");
+        log.info("Service receives Set tag model for verifying exist tag or not for creating and updating " + tags);
 
         tags.forEach(tag -> {
             if (!isTagNotExistsByName(tag.getName())) {

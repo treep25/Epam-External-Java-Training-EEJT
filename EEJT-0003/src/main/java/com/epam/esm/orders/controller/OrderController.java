@@ -31,9 +31,9 @@ public class OrderController {
     public ResponseEntity<?> create(@PathVariable("userId") long userId,
                                     @PathVariable("giftCertificateId") long giftCertificateId) {
 
-        log.debug("Validation request model User ID");
+        log.debug("Validation request model User ID " + userId);
         if (DataValidation.moreThenZero(userId)) {
-            log.debug("Validation request model gift-certificate ID");
+            log.debug("Validation request model gift-certificate ID " + giftCertificateId);
             if (DataValidation.moreThenZero(giftCertificateId)) {
 
                 Order savedOrder = orderService.createOrder(userId, giftCertificateId);
@@ -52,8 +52,8 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(@PathVariable("id") long id) {
-        log.debug("Validation request model order ID");
+    public ResponseEntity<?> readById(@PathVariable("id") long id) {
+        log.debug("Validation request model order ID " + id);
 
         if (DataValidation.moreThenZero(id)) {
 
@@ -70,8 +70,8 @@ public class OrderController {
     }
 
     @GetMapping()
-    public ResponseEntity<?> getAll(@RequestParam(value = "page", defaultValue = "0") int page,
-                                    @RequestParam(value = "size", defaultValue = "20") int size) {
+    public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
+                                  @RequestParam(value = "size", defaultValue = "20") int size) {
         log.debug("Validation of request model params");
 
         DataValidation.validatePageAndSizePagination(page, size);

@@ -30,7 +30,7 @@ public class UserService {
     }
 
     public User getById(long id) {
-        log.info("Service receives ID for getting");
+        log.info("Service receives ID for getting " + id);
         log.debug("Service returns representation of user");
 
         return userRepository.findById(id).orElseThrow(
@@ -41,7 +41,7 @@ public class UserService {
     }
 
     public User updateUserOrder(User user) {
-        log.info("Service receives User for creating order");
+        log.info("Service receives User for creating order " + user.getId() + user.getOrders());
         log.debug("Service returns representation of updated user");
 
         return userRepository.save(user);

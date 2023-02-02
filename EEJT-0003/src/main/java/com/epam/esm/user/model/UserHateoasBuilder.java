@@ -37,7 +37,7 @@ public class UserHateoasBuilder {
 
                     user.getOrders().forEach(order -> {
                         order.add(linkTo(methodOn(OrderController.class)
-                                        .getById(order.getId()))
+                                        .readById(order.getId()))
                                         .withRel(() -> "get order"))
                                 .add(linkTo(methodOn(OrderController.class)
                                         .create(user.getId(), 0))
@@ -58,7 +58,7 @@ public class UserHateoasBuilder {
                                             .updatePrice(order.getGiftCertificate().getId(), 0))
                                             .withRel(() -> "update gift-certificate`s price"))
                                     .add(linkTo(methodOn(GiftCertificateController.class)
-                                            .getGiftCertificatesAndTagsByNameOrByPartOfName(order.getGiftCertificate().getName(), 0, 20))
+                                            .readByCertificateNameOrByPartOfName(order.getGiftCertificate().getName(), 0, 20))
                                             .withRel(() -> "get all gift-certificates by name or by part of name"));
                         }
                         if (order.getGiftCertificate().getTags() != null) {
@@ -71,7 +71,7 @@ public class UserHateoasBuilder {
                                                     .readById(tag.getId()))
                                                     .withRel(() -> "get tag"))
                                             .add(linkTo(methodOn(GiftCertificateController.class)
-                                                    .getGiftCertificatesByTagName(tag.getName(), 0, 20))
+                                                    .readByTagName(tag.getName(), 0, 20))
                                                     .withRel(() -> "get gift-certificates by tag name"));
                                 }
                             });
@@ -81,7 +81,7 @@ public class UserHateoasBuilder {
                 });
 
         users.add(linkTo(methodOn(OrderController.class)
-                .getAll(0, 20))
+                .read(0, 20))
                 .withRel(() -> "get all orders"));
 
         return users;
@@ -92,7 +92,7 @@ public class UserHateoasBuilder {
 
         user.getOrders().forEach(order -> {
             order.add(linkTo(methodOn(OrderController.class)
-                            .getById(order.getId()))
+                            .readById(order.getId()))
                             .withRel(() -> "get order"))
                     .add(linkTo(methodOn(OrderController.class)
                             .create(user.getId(), 0))
@@ -113,7 +113,7 @@ public class UserHateoasBuilder {
                                 .updatePrice(order.getGiftCertificate().getId(), 0))
                                 .withRel(() -> "update gift-certificate`s price"))
                         .add(linkTo(methodOn(GiftCertificateController.class)
-                                .getGiftCertificatesAndTagsByNameOrByPartOfName(order.getGiftCertificate().getName(), 0, 20))
+                                .readByCertificateNameOrByPartOfName(order.getGiftCertificate().getName(), 0, 20))
                                 .withRel(() -> "get all gift-certificates by name or by part of name"));
             }
             if (order.getGiftCertificate().getTags() != null) {
@@ -126,7 +126,7 @@ public class UserHateoasBuilder {
                                         .readById(tag.getId()))
                                         .withRel(() -> "get tag"))
                                 .add(linkTo(methodOn(GiftCertificateController.class)
-                                        .getGiftCertificatesByTagName(tag.getName(), 0, 20))
+                                        .readByTagName(tag.getName(), 0, 20))
                                         .withRel(() -> "get gift-certificates by tag name"));
                     }
                 });
@@ -139,7 +139,7 @@ public class UserHateoasBuilder {
                         .read(0, 20))
                         .withRel(() -> "get all users"))
                 .add(linkTo(methodOn(OrderController.class)
-                        .getAll(0, 20))
+                        .read(0, 20))
                         .withRel(() -> "get all orders"));
     }
 }

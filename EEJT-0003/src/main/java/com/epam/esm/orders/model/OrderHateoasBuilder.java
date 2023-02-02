@@ -32,7 +32,7 @@ public class OrderHateoasBuilder {
         PagedModel<Order> orders = representationModelAssembler
                 .toModel(pagedOrders, order -> {
                     order.add(linkTo(methodOn(OrderController.class)
-                            .getById(order.getId()))
+                            .readById(order.getId()))
                             .withRel(() -> "get order"));
 
                     if (order.getGiftCertificate().getLinks().isEmpty()) {
@@ -50,7 +50,7 @@ public class OrderHateoasBuilder {
                                         .updatePrice(order.getGiftCertificate().getId(), 0))
                                         .withRel(() -> "update gift-certificate`s price"))
                                 .add(linkTo(methodOn(GiftCertificateController.class)
-                                        .getGiftCertificatesAndTagsByNameOrByPartOfName(order.getGiftCertificate().getName(), 0, 20))
+                                        .readByCertificateNameOrByPartOfName(order.getGiftCertificate().getName(), 0, 20))
                                         .withRel(() -> "get all gift-certificates by name or by part of name"));
                     }
                     if (order.getGiftCertificate().getTags() != null) {
@@ -63,7 +63,7 @@ public class OrderHateoasBuilder {
                                                 .readById(tag.getId()))
                                                 .withRel(() -> "get tag"))
                                         .add(linkTo(methodOn(GiftCertificateController.class)
-                                                .getGiftCertificatesByTagName(tag.getName(), 0, 20))
+                                                .readByTagName(tag.getName(), 0, 20))
                                                 .withRel(() -> "get gift-certificates by tag name"));
                             }
                         });
@@ -113,7 +113,7 @@ public class OrderHateoasBuilder {
                             .updatePrice(order.getGiftCertificate().getId(), 0))
                             .withRel(() -> "update gift-certificate`s price"))
                     .add(linkTo(methodOn(GiftCertificateController.class)
-                            .getGiftCertificatesAndTagsByNameOrByPartOfName(order.getGiftCertificate().getName(), 0, 20))
+                            .readByCertificateNameOrByPartOfName(order.getGiftCertificate().getName(), 0, 20))
                             .withRel(() -> "get all gift-certificates by name or by part of name"));
         }
         if (order.getGiftCertificate().getTags() != null) {
@@ -126,14 +126,14 @@ public class OrderHateoasBuilder {
                                     .readById(tag.getId()))
                                     .withRel(() -> "get tag"))
                             .add(linkTo(methodOn(GiftCertificateController.class)
-                                    .getGiftCertificatesByTagName(tag.getName(), 0, 20))
+                                    .readByTagName(tag.getName(), 0, 20))
                                     .withRel(() -> "get gift-certificates by tag name"));
                 }
             });
         }
         savedOrder
                 .add(linkTo(methodOn(OrderController.class)
-                        .getAll(0, 20))
+                        .read(0, 20))
                         .withRel(() -> "get all orders"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
                         .read(0, 20))
@@ -174,7 +174,7 @@ public class OrderHateoasBuilder {
                             .updatePrice(order.getGiftCertificate().getId(), 0))
                             .withRel(() -> "update gift-certificate`s price"))
                     .add(linkTo(methodOn(GiftCertificateController.class)
-                            .getGiftCertificatesAndTagsByNameOrByPartOfName(order.getGiftCertificate().getName(), 0, 20))
+                            .readByCertificateNameOrByPartOfName(order.getGiftCertificate().getName(), 0, 20))
                             .withRel(() -> "get all gift-certificates by name or by part of name"));
         }
         if (order.getGiftCertificate().getTags() != null) {
@@ -187,7 +187,7 @@ public class OrderHateoasBuilder {
                                     .readById(tag.getId()))
                                     .withRel(() -> "get tag"))
                             .add(linkTo(methodOn(GiftCertificateController.class)
-                                    .getGiftCertificatesByTagName(tag.getName(), 0, 20))
+                                    .readByTagName(tag.getName(), 0, 20))
                                     .withRel(() -> "get gift-certificates by tag name"));
                 }
             });
@@ -197,7 +197,7 @@ public class OrderHateoasBuilder {
                         .create(0, 0))
                         .withRel(() -> "create order"))
                 .add(linkTo(methodOn(OrderController.class)
-                        .getAll(0, 20))
+                        .read(0, 20))
                         .withRel(() -> "get all orders"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
                         .read(0, 20))

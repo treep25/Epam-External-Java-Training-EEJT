@@ -29,7 +29,7 @@ public class TagController {
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody Tag tag) {
-        log.debug("Validation of request model of tag");
+        log.debug("Validation of request model of tag " + tag.toString());
 
         if (DataValidation.isValidTag(tag)) {
 
@@ -40,7 +40,7 @@ public class TagController {
                     .getHateoasTagForCreating(savedTag);
             log.debug("Return Hateoas model of current tag");
 
-            return new ResponseEntity<>(Map.of("saved tag", collectionModelSavedTag), HttpStatus.CREATED);
+            return new ResponseEntity<>(Map.of("tag", collectionModelSavedTag), HttpStatus.CREATED);
         }
         log.error("Something went wrong during the request, check your fields");
         throw new ServerException("Something went wrong during the request, check your fields");
@@ -49,7 +49,7 @@ public class TagController {
     @GetMapping
     public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "size", defaultValue = "20") int size) {
-        log.debug("Validation of request model params");
+        log.debug("Validation of request model params " + page + " " + size);
 
         DataValidation.validatePageAndSizePagination(page, size);
 
@@ -60,12 +60,12 @@ public class TagController {
                 .getHateoasTagForReading(allTags);
         log.debug("Return Hateoas model of tags");
 
-        return ResponseEntity.ok(Map.of("all tags", tagsPagedModel));
+        return ResponseEntity.ok(Map.of("tags", tagsPagedModel));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> readById(@PathVariable("id") long id) {
-        log.debug("Validation of request model field ID");
+        log.debug("Validation of request model field ID " + id);
 
         if (DataValidation.moreThenZero(id)) {
 
@@ -90,7 +90,7 @@ public class TagController {
                 .getHateoasTagForGettingTheMostWidelyUsedTag(theMostWidelyUsedTag);
         log.debug("Return Hateoas model of current tag");
 
-        return ResponseEntity.ok(Map.of("the most widely used tag", collectionModelTheMostWidelyUsed));
+        return ResponseEntity.ok(Map.of("tag", collectionModelTheMostWidelyUsed));
     }
 
     @DeleteMapping("/{id}")

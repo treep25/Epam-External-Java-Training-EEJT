@@ -54,7 +54,6 @@ public class GiftCertificateController {
                                   @RequestParam(value = "size", defaultValue = "20") int size) {
         log.debug("Validation of request model fields " + page + " " + size);
         DataValidation.validatePageAndSizePagination(page, size);
-
         Page<GiftCertificate> allGiftCertificates = giftCertificateService.getAll(page, size);
         log.debug("Receive all gift-certificates");
 
@@ -68,8 +67,7 @@ public class GiftCertificateController {
     public ResponseEntity<?> readById(@PathVariable("id") long id) {
         log.debug("Validation of request model field ID " + id);
         if (DataValidation.moreThenZero(id)) {
-
-            GiftCertificate currentGiftCertificate = giftCertificateService.getOneGiftCertificateById(id);
+            GiftCertificate currentGiftCertificate = giftCertificateService.getCertificateById(id);
             log.debug("Receive gift-certificate");
 
             CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasBuilder
@@ -91,7 +89,7 @@ public class GiftCertificateController {
             Optional<Map<String, String>> updatesMap = DataValidation.isGiftCertificateValidForUpdating(giftCertificate);
 
             if (updatesMap.isPresent()) {
-                GiftCertificate updatedGiftCertificate = giftCertificateService.updateGiftCertificate(id, giftCertificate.getTags(), updatesMap.get());
+                GiftCertificate updatedGiftCertificate = giftCertificateService.updateCertificate(id, giftCertificate.getTags(), updatesMap.get());
                 log.debug("Receive updated gift-certificate");
 
                 CollectionModel<GiftCertificate> giftCertificateCollectionModel = giftCertificateHateoasBuilder
@@ -112,7 +110,7 @@ public class GiftCertificateController {
         log.debug("Validation of request model fields " + id);
         if (DataValidation.moreThenZero(id)) {
 
-            giftCertificateService.deleteGiftCertificate(id);
+            giftCertificateService.deleteCertificate(id);
             log.debug("deleted - return noContent");
             return ResponseEntity.noContent().build();
         }
@@ -145,16 +143,16 @@ public class GiftCertificateController {
     }
 
     @GetMapping("search/tag-name")
-    public ResponseEntity<?> getGiftCertificatesByTagName(@RequestParam("name") String tagName,
-                                                          @RequestParam(value = "page", defaultValue = "0") int page,
-                                                          @RequestParam(value = "size", defaultValue = "20") int size) {
+    public ResponseEntity<?> readByTagName(@RequestParam("name") String tagName,
+                                           @RequestParam(value = "page", defaultValue = "0") int page,
+                                           @RequestParam(value = "size", defaultValue = "20") int size) {
         log.debug("Validation of request model of tag name " + tagName);
         if (DataValidation.isStringValid(tagName)) {
 
             log.debug("Validation of request model fields " + page + " " + size);
             DataValidation.validatePageAndSizePagination(page, size);
 
-            Page<GiftCertificate> giftCertificatesByTagName = giftCertificateService.getGiftCertificatesByTagName(tagName, page, size);
+            Page<GiftCertificate> giftCertificatesByTagName = giftCertificateService.getCertificatesByTagName(tagName, page, size);
             log.debug("Receive gift-certificates");
 
             PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasBuilder
@@ -168,13 +166,13 @@ public class GiftCertificateController {
     }
 
     @GetMapping("search/gift-certificate-name")
-    public ResponseEntity<?> getGiftCertificatesAndTagsByNameOrByPartOfName(@RequestParam("name") String partOfName, @RequestParam("page") int page, @RequestParam("size") int size) {
+    public ResponseEntity<?> readByCertificateNameOrByPartOfName(@RequestParam("name") String partOfName, @RequestParam("page") int page, @RequestParam("size") int size) {
         log.debug("Validation of request model of gift-certificate name " + partOfName);
         if (DataValidation.isStringValid(partOfName)) {
             log.debug("Validation of request model fields " + page + " " + size);
             DataValidation.validatePageAndSizePagination(page, size);
 
-            Page<GiftCertificate> giftCertificatesByName = giftCertificateService.getGiftCertificatesByNameOrByPartOfName(partOfName, page, size);
+            Page<GiftCertificate> giftCertificatesByName = giftCertificateService.getCertificatesByNameOrByPartOfName(partOfName, page, size);
             log.debug("Receive gift-certificates");
 
             PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasBuilder
@@ -188,9 +186,9 @@ public class GiftCertificateController {
     }
 
     @GetMapping("search/sort-date")
-    public ResponseEntity<?> getGiftCertificatesSortedByDate(@RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
-                                                             @RequestParam(value = "page", defaultValue = "0") int page,
-                                                             @RequestParam(value = "size", defaultValue = "20") int size) {
+    public ResponseEntity<?> readSortedByDate(@RequestParam(value = "sortDirection", defaultValue = "ASC") String sortDirection,
+                                              @RequestParam(value = "page", defaultValue = "0") int page,
+                                              @RequestParam(value = "size", defaultValue = "20") int size) {
         log.debug("Validation of request model sortDir " + sortDirection);
         if (DataValidation.isStringValid(sortDirection)) {
             if (DataValidation.isSortingTypeContains(sortDirection)) {
@@ -198,7 +196,7 @@ public class GiftCertificateController {
                 log.debug("Validation of request model fields " + page + " " + size);
                 DataValidation.validatePageAndSizePagination(page, size);
 
-                Page<GiftCertificate> giftCertificatesSortedByDate = giftCertificateService.getGiftCertificatesSortedByDate(sortDirection, page, size);
+                Page<GiftCertificate> giftCertificatesSortedByDate = giftCertificateService.getCertificatesSortedByDate(sortDirection, page, size);
                 log.debug("Receive gift-certificates");
 
                 PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasBuilder
@@ -215,11 +213,11 @@ public class GiftCertificateController {
     }
 
     @GetMapping("search/tag-name/cost")
-    public ResponseEntity<?> getGiftCertificatesByTagsAndPrice(@RequestParam("tag1") String firstTagName,
-                                                               @RequestParam("tag2") String secondTagName,
-                                                               @RequestParam("price") int price,
-                                                               @RequestParam(value = "page", defaultValue = "0") int page,
-                                                               @RequestParam(value = "size", defaultValue = "20") int size) {
+    public ResponseEntity<?> readByTagsAndPrice(@RequestParam("tag1") String firstTagName,
+                                                @RequestParam("tag2") String secondTagName,
+                                                @RequestParam("price") int price,
+                                                @RequestParam(value = "page", defaultValue = "0") int page,
+                                                @RequestParam(value = "size", defaultValue = "20") int size) {
         log.debug("Validation of request model tagNames " + firstTagName + " " + secondTagName);
         if (DataValidation.isStringValid(firstTagName) && DataValidation.isStringValid(secondTagName)) {
             log.debug("Validation of request model price " + price);
@@ -229,7 +227,7 @@ public class GiftCertificateController {
                 DataValidation.validatePageAndSizePagination(page, size);
 
                 Page<GiftCertificate> giftCertificatesByTagsAndPrice = giftCertificateService
-                        .getGiftCertificatesByTagsAndPrice(firstTagName, secondTagName, price, page, size);
+                        .getCertificatesByTagsAndPrice(firstTagName, secondTagName, price, page, size);
                 log.debug("Receive gift-certificates");
 
                 PagedModel<GiftCertificate> giftCertificatePagedModel = giftCertificateHateoasBuilder
@@ -246,10 +244,10 @@ public class GiftCertificateController {
     }
 
     @GetMapping("search/sort-name-date")
-    public ResponseEntity<?> getGiftCertificatesSortedByDateAndByName(@RequestParam(value = "firstSortDirection", defaultValue = "ASC") String firstSortDirection,
-                                                                      @RequestParam(value = "secondSortDirection", defaultValue = "ASC") String secondSortDirection,
-                                                                      @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                      @RequestParam(value = "size", defaultValue = "20") int size) {
+    public ResponseEntity<?> readSortedByDateAndByName(@RequestParam(value = "firstSortDirection", defaultValue = "ASC") String firstSortDirection,
+                                                       @RequestParam(value = "secondSortDirection", defaultValue = "ASC") String secondSortDirection,
+                                                       @RequestParam(value = "page", defaultValue = "0") int page,
+                                                       @RequestParam(value = "size", defaultValue = "20") int size) {
         log.debug("Validation of request model sortDirs " + firstSortDirection + " " + secondSortDirection);
         if (DataValidation.isStringValid(firstSortDirection) && DataValidation.isStringValid(secondSortDirection)) {
             if (DataValidation.isSortingTypeContains(firstSortDirection) && DataValidation.isSortingTypeContains(secondSortDirection)) {

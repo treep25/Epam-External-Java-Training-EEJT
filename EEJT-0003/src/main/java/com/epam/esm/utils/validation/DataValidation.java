@@ -3,6 +3,7 @@ package com.epam.esm.utils.validation;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.model.Tag;
+import com.epam.esm.utils.UpdateGiftCertificateMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -10,6 +11,8 @@ import java.util.*;
 
 @Slf4j
 public class DataValidation {
+    private static final UpdateGiftCertificateMapper updateGiftCertificateMapper = new UpdateGiftCertificateMapper();
+
     public static boolean isValidCertificate(GiftCertificate giftCertificate) {
         return isStringValid(giftCertificate.getName()) &&
                 giftCertificate.getDurationDays() != null && giftCertificate.getDurationDays() >= 0 &&
@@ -52,32 +55,11 @@ public class DataValidation {
     }
 
     public static Optional<Map<String, String>> isGiftCertificateValidForUpdating(GiftCertificate giftCertificate) {
-
-        Map<String, String> map = new HashMap<>();
         String answer = validateGiftCertificateForUpdating(giftCertificate);
 
         if (answer.isEmpty()) {
-            if (giftCertificate.getName() != null) {
 
-                map.put("name", giftCertificate.getName());
-            }
-            if (giftCertificate.getDescription() != null) {
-
-                map.put("description", giftCertificate.getDescription());
-            }
-            if (giftCertificate.getPrice() != null && giftCertificate.getPrice() >= 0) {
-
-                map.put("price", String.valueOf(giftCertificate.getPrice()));
-            }
-            if (giftCertificate.getDurationDays() != null && giftCertificate.getDurationDays() >= 0) {
-
-                map.put("duration", String.valueOf(giftCertificate.getDurationDays()));
-            }
-            if (giftCertificate.getTags() != null && isCertificateConsistsTagsOptionalValid(giftCertificate.getTags())) {
-
-                map.put("tags", "some tags");
-            }
-            return Optional.of(map);
+            return updateGiftCertificateMapper.buildMapForUpdating(giftCertificate);
         }
         log.error("Error during mapping gift-certificate Something went wrong, check this fields " + answer);
         throw new ServerException("Something went wrong, check this fields " + answer);

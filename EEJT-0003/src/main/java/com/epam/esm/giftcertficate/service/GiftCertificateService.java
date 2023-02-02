@@ -15,6 +15,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -35,14 +36,13 @@ public class GiftCertificateService {
 
     @Transactional
     public GiftCertificate createGiftCertificate(GiftCertificate giftCertificate) {
-        log.info("Service receives gift-certificate for creating");
-        log.info("Transaction has been started");
+        log.info("Service receives gift-certificate for creating " + giftCertificate.toString() + " Transaction has been started");
 
         log.debug("Checking that gift-certificate has not already exist");
-        if (!giftCertificateRepository.isGiftCertificateExistByName(giftCertificate.getName())) {
+        if (!giftCertificateRepository.existsByName(giftCertificate.getName())) {
 
-            log.debug("Checking tags of gift-certificate");
-            if (giftCertificate.getTags() != null) {
+            log.debug("Checking tags of gift-certificate " + giftCertificate.getTags());
+            if (!CollectionUtils.isEmpty(giftCertificate.getTags())) {
 
                 log.debug("Verify is tag exist");
                 tagService.verifyIsTagsExistWhenCreatingOrUpdatingGiftCertificate(giftCertificate.getTags());
@@ -52,8 +52,7 @@ public class GiftCertificateService {
             return giftCertificateRepository.save(giftCertificate);
         }
         log.info("Transaction has been ended");
-        log.error("Rollback");
-        log.error("This gift certificate with (name = " + giftCertificate.getName() + ") has already existed");
+        log.error("Rollback " + "This gift certificate with (name = " + giftCertificate.getName() + ") has already existed");
         throw new ServerException("this gift certificate with (name = " + giftCertificate.getName() + ") has already existed");
     }
 
@@ -66,31 +65,45 @@ public class GiftCertificateService {
         return giftCertificateRepository.findAll(pageRequest);
     }
 
-    public GiftCertificate getOneGiftCertificateById(long id) {
+    public GiftCertificate getCertificateById(long id) {
         log.info("Service receives params for getting gift-certificate by id");
         log.debug("Service returns one gift-certificate");
 
         return giftCertificateRepository.findById(id).orElseThrow(
                 () -> {
-                    log.error("there are no gift certificate with (id = " + id + ")");
+                    log.error("There are no gift certificate with (id = " + id + ")");
                     return new ItemNotFoundException("there are no gift certificate with (id = " + id + ")");
                 });
     }
 
+    private void updateTagsWhenUpdatingOfCertificate(GiftCertificate updatedGiftCertificate, Set<Tag> tags) {
+        log.debug("Checking tags of gift-certificate " + tags);
+        if (tags != null) {
+
+            log.debug("Updating tags of gift-certificate");
+            if (!updatedGiftCertificate.getTags().isEmpty()) {
+                updatedGiftCertificate.setTags(null);
+            }
+            if (!tags.isEmpty()) {
+                updatedGiftCertificate.setTags(tags);
+                tagService.verifyIsTagsExistWhenCreatingOrUpdatingGiftCertificate(updatedGiftCertificate.getTags());
+            }
+        }
+    }
+
     @Transactional
     @Modifying
-    public GiftCertificate updateGiftCertificate(long id, Set<Tag> tags, Map<String, String> updatesMap) {
-        log.info("Service receives gift-certificate for updating");
-        log.info("Transaction has been started");
+    public GiftCertificate updateCertificate(long id, Set<Tag> tags, Map<String, String> updatesMap) {
+        log.info("Service receives gift-certificate for updating" + "Transaction has been started");
 
         updatesMap.remove(TAGS);
 
-        log.debug("Checking that gift-certificate has not already exist to update on new name");
-        if (!giftCertificateRepository.isGiftCertificateExistByName(updatesMap.get(NAME))) {
+        log.debug("Checking that gift-certificate has not already exist to update on new name " + updatesMap.get(NAME));
+        if (!giftCertificateRepository.existsByName(updatesMap.get(NAME))) {
 
             log.debug("Update");
 
-            GiftCertificate updatedGiftCertificate = getOneGiftCertificateById(id);
+            GiftCertificate updatedGiftCertificate = getCertificateById(id);
 
             setFieldsForUpdatingNotNull(updatesMap.get("name"), updatedGiftCertificate::setName);
             setFieldsForUpdatingNotNull(updatesMap.get("description"), updatedGiftCertificate::setDescription);
@@ -102,18 +115,8 @@ public class GiftCertificateService {
                 setFieldsForUpdatingNotNull(Integer.parseInt(updatesMap.get("duration")), updatedGiftCertificate::setDurationDays);
             }
 
-            log.debug("Checking tags of gift-certificate");
-            if (tags != null) {
+            updateTagsWhenUpdatingOfCertificate(updatedGiftCertificate, tags);
 
-                log.debug("Updating tags of gift-certificate");
-                if (!updatedGiftCertificate.getTags().isEmpty()) {
-                    updatedGiftCertificate.setTags(null);
-                }
-                if (!tags.isEmpty()) {
-                    updatedGiftCertificate.setTags(tags);
-                    tagService.verifyIsTagsExistWhenCreatingOrUpdatingGiftCertificate(updatedGiftCertificate.getTags());
-                }
-            }
             log.info("Transaction has been ended");
             log.debug("Service returns updated gift-certificate");
             return giftCertificateRepository.save(updatedGiftCertificate);
@@ -127,18 +130,14 @@ public class GiftCertificateService {
     public GiftCertificate updatePrice(long id, int price) {
         log.info("Service receives gift-certificate`s params for updating price");
 
-        GiftCertificate giftCertificate = giftCertificateRepository.findById(id).orElseThrow(
-                () -> {
-                    log.error("there are no gift certificate with (id = " + id + ")");
-                    return new ItemNotFoundException("there are no gift certificate with (id = " + id + ")");
-                });
+        GiftCertificate giftCertificate = getCertificateById(id);
         giftCertificate.setPrice(price);
 
         log.debug("Service returns updated gift-certificate");
         return giftCertificateRepository.save(giftCertificate);
     }
 
-    public boolean deleteGiftCertificate(long id) {
+    public boolean deleteCertificate(long id) {
         log.info("Service receives params for deleting");
 
         log.debug("Checking that gift-certificate exists");
@@ -152,7 +151,7 @@ public class GiftCertificateService {
         throw new ItemNotFoundException("there are no gift certificate with (id = " + id + ")");
     }
 
-    public Page<GiftCertificate> getGiftCertificatesByTagName(String tagName, int page, int size) {
+    public Page<GiftCertificate> getCertificatesByTagName(String tagName, int page, int size) {
         log.info("Service receives params for getting");
 
         List<GiftCertificate> allGiftCertificateByTagName = giftCertificateRepository
@@ -162,7 +161,7 @@ public class GiftCertificateService {
         return new PageImpl<>(allGiftCertificateByTagName);
     }
 
-    public Page<GiftCertificate> getGiftCertificatesByTagsAndPrice(String firstTagName, String secondTagName, int price, int page, int size) {
+    public Page<GiftCertificate> getCertificatesByTagsAndPrice(String firstTagName, String secondTagName, int price, int page, int size) {
         log.info("Service receives params for getting");
         List<GiftCertificate> giftCertificatesByTagsAndPrice = giftCertificateRepository.
                 getGiftCertificatesByTagsAndPrice(firstTagName, secondTagName, price,
@@ -173,7 +172,7 @@ public class GiftCertificateService {
         return new PageImpl<>(giftCertificatesByTagsAndPrice);
     }
 
-    public Page<GiftCertificate> getGiftCertificatesByNameOrByPartOfName(String partOfName, int page, int size) {
+    public Page<GiftCertificate> getCertificatesByNameOrByPartOfName(String partOfName, int page, int size) {
         log.info("Service receives params for getting");
 
         List<GiftCertificate> allGiftCertificateByPartOfName = giftCertificateRepository.
@@ -185,7 +184,7 @@ public class GiftCertificateService {
         return new PageImpl<>(allGiftCertificateByPartOfName);
     }
 
-    public Page<GiftCertificate> getGiftCertificatesSortedByDate(String sortDirection, int page, int size) {
+    public Page<GiftCertificate> getCertificatesSortedByDate(String sortDirection, int page, int size) {
         log.info("Service receives params for getting");
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.valueOf(sortDirection.toUpperCase(Locale.ROOT)), CREATE_DATE));

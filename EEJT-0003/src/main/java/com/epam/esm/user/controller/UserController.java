@@ -29,7 +29,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "size", defaultValue = "20") int size) {
-        log.debug("Validation of request model fields");
+        log.debug("Validation of request model fields " + page + " " + size);
 
         DataValidation.validatePageAndSizePagination(page, size);
 
@@ -45,7 +45,7 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> readById(@PathVariable long id) {
-        log.debug("Validation request model User ID");
+        log.debug("Validation request model User ID " + id);
 
         if (DataValidation.moreThenZero(id)) {
             User currentUser = userService.getById(id);

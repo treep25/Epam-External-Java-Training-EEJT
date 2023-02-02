@@ -1,7 +1,6 @@
 package com.epam.esm.orders.service;
 
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
-import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.giftcertficate.service.GiftCertificateService;
 import com.epam.esm.orders.model.Order;
@@ -16,7 +15,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.Set;
 
@@ -33,12 +31,11 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(long userId, long giftCertificateId) {
-        log.info("Service receives gift-certificate ID and user ID for creating order");
-        log.info("Transaction has been started");
+        log.info("Service receives gift-certificate ID and user ID for creating order" + "Transaction has been started");
 
-        log.debug("Getting current gift-certificate");
-        GiftCertificate giftCertificateOrder = giftCertificateService.getOneGiftCertificateById(giftCertificateId);
-        log.debug("Getting current user");
+        log.debug("Getting current gift-certificate " + giftCertificateId);
+        GiftCertificate giftCertificateOrder = giftCertificateService.getCertificateById(giftCertificateId);
+        log.debug("Getting current user " + userId);
         User userById = userService.getById(userId);
 
         log.debug("Creating order");

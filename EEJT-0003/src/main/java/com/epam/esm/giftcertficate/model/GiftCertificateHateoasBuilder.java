@@ -36,13 +36,13 @@ public class GiftCertificateHateoasBuilder {
                         .read(0, 20))
                         .withRel(() -> "get all gift-certificates"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagsAndPrice("", "", 0, 0, 20))
+                        .readByTagsAndPrice("", "", 0, 0, 20))
                         .withRel(() -> "get all gift-certificates by tags and price"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDate("ASC", 0, 20))
+                        .readSortedByDate("ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDateAndByName("ASC", "ASC", 0, 20))
+                        .readSortedByDateAndByName("ASC", "ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date and by name"));
 
         getTagsLinksForGiftCertificate(giftCertificateCollectionModel);
@@ -65,13 +65,13 @@ public class GiftCertificateHateoasBuilder {
                         .create(new GiftCertificate()))
                         .withRel(() -> "create gift-certificate"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagsAndPrice("", "", 0, 0, 20))
+                        .readByTagsAndPrice("", "", 0, 0, 20))
                         .withRel(() -> "get all gift-certificates by tags and price"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDate("ASC", 0, 20))
+                        .readSortedByDate("ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDateAndByName("ASC", "ASC", 0, 20))
+                        .readSortedByDateAndByName("ASC", "ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date and by name"));
 
         getTagsLinksForGiftCertificatePagination(allGiftCertificatesModel);
@@ -96,7 +96,7 @@ public class GiftCertificateHateoasBuilder {
                                         .updatePrice(giftCertificate.getId(), 0))
                                         .withRel(() -> "update gift-certificate`s price"))
                                 .add(linkTo(methodOn(GiftCertificateController.class)
-                                        .getGiftCertificatesAndTagsByNameOrByPartOfName(giftCertificate.getName(), 0, 20))
+                                        .readByCertificateNameOrByPartOfName(giftCertificate.getName(), 0, 20))
                                         .withRel(() -> "get all gift-certificates by name ot by part of name"))))
 
                 .add(linkTo(methodOn(GiftCertificateController.class)
@@ -106,13 +106,13 @@ public class GiftCertificateHateoasBuilder {
                         .create(new GiftCertificate()))
                         .withRel(() -> "create gift-certificate"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagsAndPrice("", "", 0, 0, 20))
+                        .readByTagsAndPrice("", "", 0, 0, 20))
                         .withRel(() -> "get all gift-certificates by tags and price"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDate("ASC", 0, 20))
+                        .readSortedByDate("ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDateAndByName("ASC", "ASC", 0, 20))
+                        .readSortedByDateAndByName("ASC", "ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date and by name"));
 
         getTagsLinksForGiftCertificate(currentGiftCertificateModel);
@@ -134,7 +134,7 @@ public class GiftCertificateHateoasBuilder {
                                         .updatePrice(giftCertificate.getId(), 0))
                                         .withRel(() -> "update gift-certificate`s price"))
                                 .add(linkTo(methodOn(GiftCertificateController.class)
-                                        .getGiftCertificatesAndTagsByNameOrByPartOfName(giftCertificate.getName(), 0, 20))
+                                        .readByCertificateNameOrByPartOfName(giftCertificate.getName(), 0, 20))
                                         .withRel(() -> "get all gift-certificates by name or by part of name"))))
                 .add(linkTo(methodOn(GiftCertificateController.class)
                         .read(0, 20))
@@ -143,13 +143,13 @@ public class GiftCertificateHateoasBuilder {
                         .create(new GiftCertificate()))
                         .withRel(() -> "create gift-certificate"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagsAndPrice("", "", 0, 0, 20))
+                        .readByTagsAndPrice("", "", 0, 0, 20))
                         .withRel(() -> "get all gift-certificates by tags and price"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDate("ASC", 0, 20))
+                        .readSortedByDate("ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDateAndByName("ASC", "ASC", 0, 20))
+                        .readSortedByDateAndByName("ASC", "ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date and by name"));
 
         getTagsLinksForGiftCertificate(giftCertificateCollectionModel);
@@ -171,7 +171,7 @@ public class GiftCertificateHateoasBuilder {
                                         .updateCertificate(new GiftCertificate(), giftCertificate.getId()))
                                         .withRel(() -> "update gift-certificate"))
                                 .add(linkTo(methodOn(GiftCertificateController.class)
-                                        .getGiftCertificatesAndTagsByNameOrByPartOfName(giftCertificate.getName(), 0, 20))
+                                        .readByCertificateNameOrByPartOfName(giftCertificate.getName(), 0, 20))
                                         .withRel(() -> "get all gift-certificates by name ot by part of name"))))
                 .add(linkTo(methodOn(GiftCertificateController.class)
                         .read(0, 20))
@@ -180,13 +180,13 @@ public class GiftCertificateHateoasBuilder {
                         .create(new GiftCertificate()))
                         .withRel(() -> "create gift-certificate"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagsAndPrice("", "", 0, 0, 20))
+                        .readByTagsAndPrice("", "", 0, 0, 20))
                         .withRel(() -> "get all gift-certificates by tags and price"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDate("ASC", 0, 20))
+                        .readSortedByDate("ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDateAndByName("ASC", "ASC", 0, 20))
+                        .readSortedByDateAndByName("ASC", "ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date and by name"));
 
         getTagsLinksForGiftCertificate(giftCertificateCollectionModel);
@@ -220,13 +220,13 @@ public class GiftCertificateHateoasBuilder {
                         .create(new GiftCertificate()))
                         .withRel(() -> "create gift-certificate"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagsAndPrice("", "", 0, 0, 20))
+                        .readByTagsAndPrice("", "", 0, 0, 20))
                         .withRel(() -> "get all gift-certificates by tags and price"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDate("ASC", 0, 20))
+                        .readSortedByDate("ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDateAndByName("ASC", "ASC", 0, 20))
+                        .readSortedByDateAndByName("ASC", "ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date and by name"));
     }
 
@@ -262,10 +262,10 @@ public class GiftCertificateHateoasBuilder {
                         .create(new GiftCertificate()))
                         .withRel(() -> "create gift-certificate"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagsAndPrice("", "", 0, 0, 20))
+                        .readByTagsAndPrice("", "", 0, 0, 20))
                         .withRel(() -> "get all gift-certificates by tags and price"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDateAndByName("ASC", "ASC", 0, 20))
+                        .readSortedByDateAndByName("ASC", "ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date and by name"));
 
         getTagsLinksForGiftCertificatePagination(allGiftCertificatesModel);
@@ -288,10 +288,10 @@ public class GiftCertificateHateoasBuilder {
                         .create(new GiftCertificate()))
                         .withRel(() -> "create gift-certificate"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDate("ASC", 0, 20))
+                        .readSortedByDate("ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDateAndByName("ASC", "ASC", 0, 20))
+                        .readSortedByDateAndByName("ASC", "ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date and by name"));
 
         getTagsLinksForGiftCertificatePagination(allGiftCertificatesModel);
@@ -314,10 +314,10 @@ public class GiftCertificateHateoasBuilder {
                         .create(new GiftCertificate()))
                         .withRel(() -> "create gift-certificate"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagsAndPrice("", "", 0, 0, 20))
+                        .readByTagsAndPrice("", "", 0, 0, 20))
                         .withRel(() -> "get all gift-certificates by tags and price"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesSortedByDate("ASC", 0, 20))
+                        .readSortedByDate("ASC", 0, 20))
                         .withRel(() -> "get all gift-certificates order by date"));
 
         getTagsLinksForGiftCertificatePagination(allGiftCertificatesModel);
@@ -336,7 +336,7 @@ public class GiftCertificateHateoasBuilder {
                                     .readById(tag.getId()))
                                     .withRel(() -> "get tag"))
                             .add(linkTo(methodOn(GiftCertificateController.class)
-                                    .getGiftCertificatesByTagName(tag.getName(), 0, 20))
+                                    .readByTagName(tag.getName(), 0, 20))
                                     .withRel(() -> "get gift-certificates by tag name"));
                 }
             });
@@ -399,7 +399,7 @@ public class GiftCertificateHateoasBuilder {
                         .updatePrice(giftCertificate.getId(), 0))
                         .withRel(() -> "update gift-certificate`s price"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesAndTagsByNameOrByPartOfName(giftCertificate.getName(), 0, 20))
+                        .readByCertificateNameOrByPartOfName(giftCertificate.getName(), 0, 20))
                         .withRel(() -> "get all gift-certificates by name or by part of name"));
     }
 

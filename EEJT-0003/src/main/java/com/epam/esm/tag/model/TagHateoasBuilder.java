@@ -34,7 +34,7 @@ public class TagHateoasBuilder {
                                 .readById(tag.getId()))
                                 .withRel(() -> "get tag"))
                         .add(linkTo(methodOn(GiftCertificateController.class)
-                                .getGiftCertificatesByTagName(tag.getName(), 0, 20))
+                                .readByTagName(tag.getName(), 0, 20))
                                 .withRel(() -> "get gift-certificates by tag name"))))
 
                 .add(linkTo(methodOn(TagController.class)
@@ -57,7 +57,7 @@ public class TagHateoasBuilder {
                                 .readById(tag.getId()))
                                 .withRel(() -> "get tag"))
                         .add(linkTo(methodOn(GiftCertificateController.class)
-                                .getGiftCertificatesByTagName(tag.getName(), 0, 20))
+                                .readByTagName(tag.getName(), 0, 20))
                                 .withRel(() -> "get gift-certificates by tag name")));
 
         allTagsPagedModel.add(linkTo(methodOn(TagController.class)
@@ -78,7 +78,7 @@ public class TagHateoasBuilder {
                                 .delete(tag.getId()))
                                 .withRel(() -> "delete tag"))
                         .add(linkTo(methodOn(GiftCertificateController.class)
-                                .getGiftCertificatesByTagName(tag.getName(), 0, 20))
+                                .readByTagName(tag.getName(), 0, 20))
                                 .withRel(() -> "get gift-certificates by tag name"))))
 
 
@@ -102,7 +102,7 @@ public class TagHateoasBuilder {
                                 .delete(tag.getId()))
                                 .withRel(() -> "delete tag"))
                         .add(linkTo(methodOn(GiftCertificateController.class)
-                                .getGiftCertificatesByTagName(tag.getName(), 0, 20))
+                                .readByTagName(tag.getName(), 0, 20))
                                 .withRel(() -> "get gift-certificates by tag name"))))
 
                 .add(linkTo(methodOn(TagController.class)
