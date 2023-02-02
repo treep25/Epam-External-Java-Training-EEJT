@@ -72,7 +72,7 @@ class TagControllerTest {
 
         // then
         assertEquals(HttpStatus.CREATED.value(), response.getStatus());
-        assertEquals(jsonOrderTester.write(Map.of("saved tag", expected)).getJson()
+        assertEquals(jsonOrderTester.write(Map.of("tag", expected)).getJson()
                 , response.getContentAsString());
     }
 
@@ -154,7 +154,7 @@ class TagControllerTest {
 
         // then
         assertEquals(HttpStatus.OK.value(), response.getStatus());
-        assertEquals(jsonOrderTester.write(Map.of("the most widely used tag", expected)).getJson()
+        assertEquals(jsonOrderTester.write(Map.of("tag", expected)).getJson()
                 , response.getContentAsString());
     }
 

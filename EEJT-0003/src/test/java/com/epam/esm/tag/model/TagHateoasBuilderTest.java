@@ -53,7 +53,7 @@ class TagHateoasBuilderTest {
                         .readById(tagObj.getId()))
                         .withRel(() -> "get tag"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagName(tagObj.getName(), 0, 20))
+                        .readByTagName(tagObj.getName(), 0, 20))
                         .withRel(() -> "get gift-certificates by tag name"));
 
         expected
@@ -108,7 +108,7 @@ class TagHateoasBuilderTest {
                         .readById(tagObj.getId()))
                         .withRel(() -> "get tag"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagName(tagObj.getName(), 0, 20))
+                        .readByTagName(tagObj.getName(), 0, 20))
                         .withRel(() -> "get gift-certificates by tag name"));
         expected
                 .add(linkTo(methodOn(TagController.class)
@@ -138,7 +138,7 @@ class TagHateoasBuilderTest {
                         .delete(tagObj.getId()))
                         .withRel(() -> "delete tag"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
-                        .getGiftCertificatesByTagName(tagObj.getName(), 0, 20))
+                        .readByTagName(tagObj.getName(), 0, 20))
                         .withRel(() -> "get gift-certificates by tag name"));
 
         expected

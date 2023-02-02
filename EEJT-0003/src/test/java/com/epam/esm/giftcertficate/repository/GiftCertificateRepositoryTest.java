@@ -4,24 +4,16 @@ import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.model.Tag;
 import com.epam.esm.tag.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.jupiter.api.*;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.context.jdbc.SqlGroup;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.context.jdbc.Sql.ExecutionPhase.BEFORE_TEST_METHOD;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
@@ -80,13 +72,13 @@ class GiftCertificateRepositoryTest {
     @Test
     void isGiftCertificateExistByNameTest_ReturnTrueIfExists() {
 
-        assertTrue(giftCertificateRepository.isGiftCertificateExistByName("gc1"));
+        assertTrue(giftCertificateRepository.existsByName("gc1"));
     }
 
     @Test
     void isGiftCertificateExistByNameTest_ReturnFalseIfNotExists() {
 
-        assertFalse(giftCertificateRepository.isGiftCertificateExistByName("notEx"));
+        assertFalse(giftCertificateRepository.existsByName("notEx"));
     }
 
     @Test

@@ -49,7 +49,7 @@ class OrderServiceTest {
         User user = User.builder().orders(orderSet).build();
         Order orderExpected = Order.builder().cost(1000).giftCertificate(giftCertificate).build();
 
-        when(giftCertificateServiceMock.getOneGiftCertificateById(1L)).thenReturn(giftCertificate);
+        when(giftCertificateServiceMock.getCertificateById(1L)).thenReturn(giftCertificate);
 
         when(userServiceMock.getById(1L)).thenReturn(user);
 

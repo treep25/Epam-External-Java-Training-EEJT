@@ -142,7 +142,7 @@ class GiftCertificateControllerTest {
     void readByIdTest() {
         // given
         GiftCertificate giftCertificate = GiftCertificate.builder().id(1L).name("GfPlug").description("Plug").price(100).durationDays(10).tags(Set.of(new Tag().builder().id(1L).name("tagPlug").build())).build();
-        when(giftCertificateService.getOneGiftCertificateById(1L)).thenReturn(giftCertificate);
+        when(giftCertificateService.getCertificateById(1L)).thenReturn(giftCertificate);
         when(hateoasResponse.getHateoasGiftCertificateForGettingOne(giftCertificate)).thenReturn(CollectionModel.of(List.of(giftCertificate)));
         CollectionModel<GiftCertificate> expected = CollectionModel.of(List.of(giftCertificate));
 
@@ -181,7 +181,7 @@ class GiftCertificateControllerTest {
     void updateCertificateTest_ReturnUpdatedGiftCertificate_WhenAllOk() {
         // given
         GiftCertificate giftCertificate = GiftCertificate.builder().name("GfPlug").build();
-        when(giftCertificateService.updateGiftCertificate(1L, null, Map.of("name", "GfPlug"))).thenReturn(giftCertificate);
+        when(giftCertificateService.updateCertificate(1L, null, Map.of("name", "GfPlug"))).thenReturn(giftCertificate);
         when(hateoasResponse.getHateoasGiftCertificateForUpdate(giftCertificate)).thenReturn(CollectionModel.of(List.of(giftCertificate)));
         CollectionModel<GiftCertificate> expected = CollectionModel.of(List.of(giftCertificate));
 
@@ -224,7 +224,7 @@ class GiftCertificateControllerTest {
     void deleteTest() {
         // given
         long giftCertificateId = 1L;
-        when(giftCertificateService.deleteGiftCertificate(giftCertificateId)).thenReturn(true);
+        when(giftCertificateService.deleteCertificate(giftCertificateId)).thenReturn(true);
 
         // when
         MockHttpServletResponse response = mvc.perform(MockMvcRequestBuilders

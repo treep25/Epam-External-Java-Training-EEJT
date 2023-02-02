@@ -7,7 +7,6 @@ import com.epam.esm.orders.repository.OrderRepository;
 import com.epam.esm.tag.model.Tag;
 import com.epam.esm.user.model.User;
 import com.epam.esm.user.repository.UserRepository;
-import com.epam.esm.utils.query.SqlQuery;
 import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +32,14 @@ class TagRepositoryTest {
     void isTagExistsByNameTest_ReturnTrueIfTagExists() {
         tagRepository.save(Tag.builder().name("em db test").build());
 
-        assertTrue(tagRepository.isTagExistsByName("em db test"));
+        assertTrue(tagRepository.existsByName("em db test"));
     }
 
     @Test
     void isTagExistsByNameTest_ReturnFalseIfTagNotExists() {
         tagRepository.save(Tag.builder().name("em db test").build());
 
-        assertFalse(tagRepository.isTagExistsByName("em db test1"));
+        assertFalse(tagRepository.existsByName("em db test1"));
     }
 
     @Test

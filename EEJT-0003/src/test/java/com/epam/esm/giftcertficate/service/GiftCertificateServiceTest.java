@@ -5,8 +5,6 @@ import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.giftcertficate.repository.GiftCertificateRepository;
 import com.epam.esm.tag.model.Tag;
-import com.epam.esm.tag.repository.TagRepository;
-import com.epam.esm.tag.service.TagService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -26,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.yaml.snakeyaml.tokens.Token.ID.Tag;
 
 @RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
@@ -42,7 +39,7 @@ class GiftCertificateServiceTest {
     void createGiftCertificateTest_ReturnSavedGiftCertificate_WhenNoTags() {
         //given
         GiftCertificate giftCertificateExpected = GiftCertificate.builder().name("").build();
-        when(giftCertificateRepositoryMock.isGiftCertificateExistByName(giftCertificateExpected.getName())).thenReturn(false);
+        when(giftCertificateRepositoryMock.existsByName(giftCertificateExpected.getName())).thenReturn(false);
 
         when(giftCertificateRepositoryMock.save(giftCertificateExpected)).thenReturn(giftCertificateExpected);
         //when
@@ -56,7 +53,7 @@ class GiftCertificateServiceTest {
     void createGiftCertificateTest_ReturnServerException_WhenGiftCertificateExists() {
         //given
         GiftCertificate giftCertificate = GiftCertificate.builder().name("123").build();
-        when(giftCertificateRepositoryMock.isGiftCertificateExistByName(giftCertificate.getName())).thenReturn(true);
+        when(giftCertificateRepositoryMock.existsByName(giftCertificate.getName())).thenReturn(true);
 
         //when
         ServerException thrown = assertThrows(ServerException.class,
@@ -87,7 +84,7 @@ class GiftCertificateServiceTest {
         when(giftCertificateRepositoryMock.findById(1L)).thenReturn(Optional.of(giftCertificateExpectedObj));
 
         //when
-        GiftCertificate giftCertificateActualObj = giftCertificateServiceMock.getOneGiftCertificateById(1L);
+        GiftCertificate giftCertificateActualObj = giftCertificateServiceMock.getCertificateById(1L);
 
         //then
         assertEquals(giftCertificateExpectedObj, giftCertificateActualObj);
@@ -100,7 +97,7 @@ class GiftCertificateServiceTest {
 
         //when
         ItemNotFoundException thrown = assertThrows(ItemNotFoundException.class,
-                () -> giftCertificateServiceMock.getOneGiftCertificateById(1L));
+                () -> giftCertificateServiceMock.getCertificateById(1L));
 
         //then
         assertEquals("there are no gift certificate with (id = " + 1 + ")", thrown.getMessage());
@@ -112,11 +109,11 @@ class GiftCertificateServiceTest {
         Map<String, String> updatesMap = new HashMap<>() {{
             put("name", "Plug");
         }};
-        when(giftCertificateRepositoryMock.isGiftCertificateExistByName("Plug")).thenReturn(true);
+        when(giftCertificateRepositoryMock.existsByName("Plug")).thenReturn(true);
 
         //when
         ServerException thrown = assertThrows(ServerException.class,
-                () -> giftCertificateServiceMock.updateGiftCertificate(1L, null, updatesMap));
+                () -> giftCertificateServiceMock.updateCertificate(1L, null, updatesMap));
 
         //then
         assertEquals("the certificate with (name= " + updatesMap.get("name") + ") has already existed", thrown.getMessage());
@@ -130,12 +127,12 @@ class GiftCertificateServiceTest {
         }};
         GiftCertificate giftCertificate = GiftCertificate.builder().tags(null).build();
         GiftCertificate giftCertificateExpected = GiftCertificate.builder().name("Plug").tags(null).build();
-        when(giftCertificateRepositoryMock.isGiftCertificateExistByName("Plug")).thenReturn(false);
+        when(giftCertificateRepositoryMock.existsByName("Plug")).thenReturn(false);
         when(giftCertificateRepositoryMock.findById(1L)).thenReturn(Optional.of(giftCertificate));
         when(giftCertificateRepositoryMock.save(giftCertificateExpected)).thenReturn(giftCertificateExpected);
 
         //when
-        GiftCertificate giftCertificateActual = giftCertificateServiceMock.updateGiftCertificate(1L, null, updatesMap);
+        GiftCertificate giftCertificateActual = giftCertificateServiceMock.updateCertificate(1L, null, updatesMap);
 
         //then
         assertEquals(giftCertificateExpected, giftCertificateActual);
@@ -149,12 +146,12 @@ class GiftCertificateServiceTest {
         }};
         GiftCertificate giftCertificate = GiftCertificate.builder().tags(Set.of(new Tag())).build();
         GiftCertificate giftCertificateExpected = GiftCertificate.builder().name("Plug").tags(null).build();
-        when(giftCertificateRepositoryMock.isGiftCertificateExistByName("Plug")).thenReturn(false);
+        when(giftCertificateRepositoryMock.existsByName("Plug")).thenReturn(false);
         when(giftCertificateRepositoryMock.findById(1L)).thenReturn(Optional.of(giftCertificate));
         when(giftCertificateRepositoryMock.save(giftCertificateExpected)).thenReturn(giftCertificateExpected);
 
         //when
-        GiftCertificate giftCertificateActual = giftCertificateServiceMock.updateGiftCertificate(1L, Set.of(), updatesMap);
+        GiftCertificate giftCertificateActual = giftCertificateServiceMock.updateCertificate(1L, Set.of(), updatesMap);
 
         //then
         assertEquals(giftCertificateExpected, giftCertificateActual);
@@ -194,7 +191,7 @@ class GiftCertificateServiceTest {
         when(giftCertificateRepositoryMock.existsById(1L)).thenReturn(true);
 
         //when
-        boolean actual = giftCertificateServiceMock.deleteGiftCertificate(1L);
+        boolean actual = giftCertificateServiceMock.deleteCertificate(1L);
 
         //then
         assertTrue(actual);
@@ -208,7 +205,7 @@ class GiftCertificateServiceTest {
 
         //when
         ItemNotFoundException thrown = assertThrows(ItemNotFoundException.class,
-                () -> giftCertificateServiceMock.deleteGiftCertificate(1L));
+                () -> giftCertificateServiceMock.deleteCertificate(1L));
 
         //then
         assertEquals("there are no gift certificate with (id = " + 1 + ")", thrown.getMessage());
@@ -221,7 +218,7 @@ class GiftCertificateServiceTest {
         when(giftCertificateRepositoryMock.getAllGiftCertificatesByTagName("tagNamePlug", 0, 5)).thenReturn(allGiftCertificatesExpected);
 
         //when
-        Page<GiftCertificate> byTag = giftCertificateServiceMock.getGiftCertificatesByTagName("tagNamePlug", 0, 5);
+        Page<GiftCertificate> byTag = giftCertificateServiceMock.getCertificatesByTagName("tagNamePlug", 0, 5);
 
         //then
         assertEquals(List.of(new GiftCertificate()), byTag.get().collect(Collectors.toList()));
@@ -234,7 +231,7 @@ class GiftCertificateServiceTest {
         when(giftCertificateRepositoryMock.getGiftCertificatesByTagsAndPrice("tagNamePlug", "tagNamePlug1", 1, 0, 5)).thenReturn(allGiftCertificatesExpected);
 
         //when
-        Page<GiftCertificate> byTagsAndPrice = giftCertificateServiceMock.getGiftCertificatesByTagsAndPrice("tagNamePlug", "tagNamePlug1", 1, 0, 5);
+        Page<GiftCertificate> byTagsAndPrice = giftCertificateServiceMock.getCertificatesByTagsAndPrice("tagNamePlug", "tagNamePlug1", 1, 0, 5);
 
         //then
         assertEquals(List.of(new GiftCertificate()), byTagsAndPrice.get().collect(Collectors.toList()));
@@ -248,7 +245,7 @@ class GiftCertificateServiceTest {
         when(giftCertificateRepositoryMock.getAllGiftCertificateByPartOfName("plug%", 0, 5)).thenReturn(allGiftCertificatesExpected);
 
         //when
-        Page<GiftCertificate> byPartOfName = giftCertificateServiceMock.getGiftCertificatesByNameOrByPartOfName("plug", 0, 5);
+        Page<GiftCertificate> byPartOfName = giftCertificateServiceMock.getCertificatesByNameOrByPartOfName("plug", 0, 5);
 
         //then
         assertEquals(List.of(new GiftCertificate()), byPartOfName.get().collect(Collectors.toList()));
@@ -262,7 +259,7 @@ class GiftCertificateServiceTest {
         when(giftCertificateRepositoryMock.findAll(pageRequest)).thenReturn(allGiftCertificatesExpected);
 
         //when
-        Page<GiftCertificate> sortedByDateDescActual = giftCertificateServiceMock.getGiftCertificatesSortedByDate("DESC", 0, 5);
+        Page<GiftCertificate> sortedByDateDescActual = giftCertificateServiceMock.getCertificatesSortedByDate("DESC", 0, 5);
 
         //then
         assertEquals(allGiftCertificatesExpected, sortedByDateDescActual);

@@ -2,7 +2,6 @@ package com.epam.esm.tag.service;
 
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
 import com.epam.esm.exceptionhandler.exception.ServerException;
-import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.model.Tag;
 import com.epam.esm.tag.repository.TagRepository;
 import org.junit.jupiter.api.Test;
@@ -39,7 +38,7 @@ class TagServiceTest {
         //given
         Tag tagExpected = new Tag();
         tagExpected.setName("Qwerty");
-        when(tagRepositoryMock.isTagExistsByName(tagExpected.getName())).thenReturn(false);
+        when(tagRepositoryMock.existsByName(tagExpected.getName())).thenReturn(false);
         when(tagRepositoryMock.save(tagExpected)).thenReturn(tagExpected);
 
         //when
@@ -54,7 +53,7 @@ class TagServiceTest {
         //given
         Tag tagExpected = new Tag();
         tagExpected.setName("Qwerty");
-        when(tagRepositoryMock.isTagExistsByName(tagExpected.getName())).thenReturn(true);
+        when(tagRepositoryMock.existsByName(tagExpected.getName())).thenReturn(true);
 
         //when
         ServerException thrown = assertThrows(ServerException.class,
@@ -67,7 +66,7 @@ class TagServiceTest {
     @Test
     void isTagNotExistsByNameTestReturnTrue() {
         //given
-        when(tagRepositoryMock.isTagExistsByName("Tag")).thenReturn(false);
+        when(tagRepositoryMock.existsByName("Tag")).thenReturn(false);
 
         //then
         assertTrue(tagServiceMock.isTagNotExistsByName("Tag"));
@@ -77,7 +76,7 @@ class TagServiceTest {
     @Test
     void isTagNotExistsByNameTestReturnFalse() {
         //given
-        when(tagRepositoryMock.isTagExistsByName("Tag")).thenReturn(true);
+        when(tagRepositoryMock.existsByName("Tag")).thenReturn(true);
 
         //then
         assertFalse(tagServiceMock.isTagNotExistsByName("Tag"));
@@ -179,7 +178,7 @@ class TagServiceTest {
     void verifyIsTagsExistWhenCreatingOrUpdatingGiftCertificateTest() {
         //given
         Set<Tag> tagsExpected = Set.of(Tag.builder().name("Plug").build());
-        when(tagRepositoryMock.isTagExistsByName("Plug")).thenReturn(false);
+        when(tagRepositoryMock.existsByName("Plug")).thenReturn(false);
         when(tagRepositoryMock.saveAll(tagsExpected)).thenReturn(tagsExpected.stream().toList());
 
         //when
