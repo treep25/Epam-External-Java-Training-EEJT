@@ -1,0 +1,543 @@
+{
+  "info": {
+    "_postman_id": "23430624-b703-4fc3-aa82-44072cd5bcff",
+    "name": "SpringBoot",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23817306"
+  },
+  "item": [
+    {
+      "name": "get tag by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tags/136",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tags",
+            "136"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get the most widely used tag",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tags/widely-used-tag",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tags",
+            "widely-used-tag"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get all tags",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tags",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tags"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create tag",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\":\"topp11\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/tags",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tags"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "delete tag",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/tags/147",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "tags",
+            "147"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update gift-certificate price",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "1000324",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/certificates/update-price/162",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates",
+            "update-price",
+            "162"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create gift-certificate",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"HateosGiftCertificate4\",\r\n    \"description\":\"tooort\",\r\n    \"price\": 1000,\r\n    \"durationDays\":31,\r\n    \"tags\":[{\r\n        \"name\":\"to1\"\r\n    }]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/certificates",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get all gift-certificates",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/certificates",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get gift-certificate by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/certificates/164",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates",
+            "164"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "update gift-certificate",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"tags\":[\r\n        {\r\n            \"name\": \"test12\"\r\n        }\r\n    ]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/certificates/162",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates",
+            "162"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search by tag-name",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/certificates/search/tag-name?name=pavel",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates",
+            "search",
+            "tag-name"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "pavel"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search by gift-certificate name or by part od name",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/certificates/search/gift-certificate-name?name=updateTest3&page=0&size=20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates",
+            "search",
+            "gift-certificate-name"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "updateTest3"
+            },
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get all gift-certificates order by date",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/certificates/search/sort-date",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates",
+            "search",
+            "sort-date"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search all gift-certificates order by name and by date",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/certificates/search/sort-name-date?firstSortDirection=ASC&secondSortDirection=ASC&page=0&size=20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates",
+            "search",
+            "sort-name-date"
+          ],
+          "query": [
+            {
+              "key": "firstSortDirection",
+              "value": "ASC"
+            },
+            {
+              "key": "secondSortDirection",
+              "value": "ASC"
+            },
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search all gift-certificates by two tags and price more then",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/certificates/search/tag-name/cost?tag1=pavel&tag2=e&price=2&page=0&size=20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates",
+            "search",
+            "tag-name",
+            "cost"
+          ],
+          "query": [
+            {
+              "key": "tag1",
+              "value": "pavel"
+            },
+            {
+              "key": "tag2",
+              "value": "e"
+            },
+            {
+              "key": "price",
+              "value": "2"
+            },
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "search all gift-certificates by tag-name",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/certificates/search/tag-name?name=e&page=0&size=20",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "certificates",
+            "search",
+            "tag-name"
+          ],
+          "query": [
+            {
+              "key": "name",
+              "value": "e"
+            },
+            {
+              "key": "page",
+              "value": "0"
+            },
+            {
+              "key": "size",
+              "value": "20"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get users",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get user by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/users/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "users",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "create order",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/orders/2/279",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "orders",
+            "2",
+            "279"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get all orders",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/orders",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "orders"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "get order by id",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/orders/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "orders",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
