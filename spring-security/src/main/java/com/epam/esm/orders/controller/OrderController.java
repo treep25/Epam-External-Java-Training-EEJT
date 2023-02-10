@@ -4,6 +4,7 @@ import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.orders.model.Order;
 import com.epam.esm.orders.model.OrderHateoasBuilder;
 import com.epam.esm.orders.service.OrderService;
+import com.epam.esm.user.model.User;
 import com.epam.esm.utils.validation.DataValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +15,9 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -27,16 +31,16 @@ public class OrderController {
     private final OrderService orderService;
     private final OrderHateoasBuilder orderHateoasBuilder;
 
-    @PostMapping("/{userId}/{giftCertificateId}")
-    public ResponseEntity<?> create(@PathVariable("userId") long userId,
+    @PostMapping("/{giftCertificateId}")
+    public ResponseEntity<?> create(@AuthenticationPrincipal User user,
                                     @PathVariable("giftCertificateId") long giftCertificateId) {
 
-        log.debug("Validation request model User ID " + userId);
-        if (DataValidation.moreThenZero(userId)) {
+        log.debug("Validation request model User ID " + user.getId());
+        if (DataValidation.moreThenZero(user.getId())) {
             log.debug("Validation request model gift-certificate ID " + giftCertificateId);
             if (DataValidation.moreThenZero(giftCertificateId)) {
 
-                Order savedOrder = orderService.createOrder(userId, giftCertificateId);
+                Order savedOrder = orderService.createOrder(user.getId(), giftCertificateId);
                 log.debug("Receive order");
 
                 CollectionModel<Order> collectionModelOrder = orderHateoasBuilder.getHateoasOrderForCreating(savedOrder);
@@ -47,17 +51,18 @@ public class OrderController {
             log.error("The gift-certificate ID is not valid: id = " + giftCertificateId);
             throw new ServerException("the gift-certificate ID is not valid: id = " + giftCertificateId);
         }
-        log.error("The user ID is not valid: id = " + userId);
-        throw new ServerException("the user ID is not valid: id = " + userId);
+        log.error("The user ID is not valid: id = " + user.getId());
+        throw new ServerException("the user ID is not valid: id = " + user.getId());
     }
 
+    @PreAuthorize("#user.ordersIds.contains(#id) or #user.role.name().equals('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<?> readById(@PathVariable("id") long id) {
+    public ResponseEntity<?> readById(@AuthenticationPrincipal User user, @PathVariable("id") long id) {
         log.debug("Validation request model order ID " + id);
 
         if (DataValidation.moreThenZero(id)) {
 
-            Order orderById = orderService.getOrderById(id);
+            Order orderById = orderService.getOrderById(user,id);
             log.debug("Receive order");
 
             CollectionModel<Order> collectionModelOrder = orderHateoasBuilder.getHateoasOrderForReadingById(orderById);

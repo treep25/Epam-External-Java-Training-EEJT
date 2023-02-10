@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,10 +68,10 @@ public class OrderService {
         return orderRepository.findAll(pageRequest);
     }
 
-    public Order getOrderById(Long id) {
+    public Order getOrderById(User user,Long id) {
         log.info("Service receives params for getting");
         log.debug("Service returns representation of orders");
-
+        System.out.println();
         return orderRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("there are no orders with (id = " + id + ")");
