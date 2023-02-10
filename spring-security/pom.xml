@@ -106,7 +106,6 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.wildfly.openssl/wildfly-openssl-java -->
         <dependency>
             <groupId>org.wildfly.openssl</groupId>
             <artifactId>wildfly-openssl-java</artifactId>
