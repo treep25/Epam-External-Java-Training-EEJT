@@ -1,5 +1,6 @@
 package com.epam.esm.config;
 
+import com.epam.esm.exceptionhandler.exception.UserInvalidData;
 import com.epam.esm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +23,7 @@ public class ApplicationConfig {
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> repository.findByName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new UserInvalidData("User not found"));
     }
 
     @Bean
