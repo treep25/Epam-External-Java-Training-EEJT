@@ -1,8 +1,9 @@
 package com.epam.esm.user.service;
 
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
-import com.epam.esm.giftcertficate.model.GiftCertificate;
+import com.epam.esm.user.dto.UserDTO;
 import com.epam.esm.user.model.User;
+import com.epam.esm.user.model.UserDTOBuilder;
 import com.epam.esm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,8 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -40,10 +39,10 @@ public class UserService {
                 });
     }
 
-    public User updateUserOrder(User user) {
+    public void updateUserOrder(User user) {
         log.info("Service receives User for creating order " + user.getId() + user.getOrders());
         log.debug("Service returns representation of updated user");
 
-        return userRepository.save(user);
+        userRepository.save(user);
     }
 }

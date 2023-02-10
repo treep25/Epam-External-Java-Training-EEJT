@@ -5,6 +5,7 @@ import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.orders.controller.OrderController;
 import com.epam.esm.tag.controller.TagController;
 import com.epam.esm.tag.model.Tag;
+import com.epam.esm.user.model.User;
 import com.epam.esm.user.model.UserHateoasBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +34,7 @@ public class OrderHateoasBuilder {
         PagedModel<Order> orders = representationModelAssembler
                 .toModel(pagedOrders, order -> {
                     order.add(linkTo(methodOn(OrderController.class)
-                            .readById(order.getId()))
+                            .readById(new User(),order.getId()))
                             .withRel(() -> "get order"));
 
                     UserHateoasBuilder.builderForGettingAll(order);
@@ -41,7 +42,7 @@ public class OrderHateoasBuilder {
                 });
 
         orders.add(linkTo(methodOn(OrderController.class)
-                        .create(0, 0))
+                        .create(new User(), 0))
                         .withRel(() -> "create order"))
                 .add(linkTo(methodOn(GiftCertificateController.class)
                         .read(0, 20))
@@ -99,7 +100,7 @@ public class OrderHateoasBuilder {
         UserHateoasBuilder.builderForGettingAll(order);
         orderById
                 .add(linkTo(methodOn(OrderController.class)
-                        .create(0, 0))
+                        .create(new User(), 0))
                         .withRel(() -> "create order"))
                 .add(linkTo(methodOn(OrderController.class)
                         .read(0, 20))

@@ -6,6 +6,7 @@ import com.epam.esm.orders.controller.OrderController;
 import com.epam.esm.orders.model.Order;
 import com.epam.esm.tag.controller.TagController;
 import com.epam.esm.user.controller.UserController;
+import com.epam.esm.user.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +26,15 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserHateoasBuilder {
 
-    private final PagedResourcesAssembler<User> representationModelAssembler;
+    private final PagedResourcesAssembler<UserDTO> representationModelAssembler;
 
-    public PagedModel<User> getHateoasUserForReading(Page<User> pagedUsers) {
+    public PagedModel<UserDTO> getHateoasUserForReading(Page<UserDTO> pagedUsers) {
         log.info("Building HATEOAS paged-model entity");
 
-        PagedModel<User> users = representationModelAssembler
+        PagedModel<UserDTO> users = representationModelAssembler
                 .toModel(pagedUsers, user -> {
                     user.add(linkTo(methodOn(UserController.class)
-                            .readById(user.getId()))
+                            .readById(new User(),user.getId()))
                             .withRel(() -> "get user"));
 
                     builderForCreate(user);
@@ -47,13 +48,13 @@ public class UserHateoasBuilder {
         return users;
     }
 
-    private void builderForCreate(User user) {
+    private void builderForCreate(UserDTO user) {
         user.getOrders().forEach(order -> {
             order.add(linkTo(methodOn(OrderController.class)
-                            .readById(order.getId()))
+                            .readById(new User(),order.getId()))
                             .withRel(() -> "get order"))
                     .add(linkTo(methodOn(OrderController.class)
-                            .create(user.getId(), 0))
+                            .create(new User(), 0))
                             .withRel(() -> "create order"));
 
             builderForGettingAll(order);
@@ -96,13 +97,13 @@ public class UserHateoasBuilder {
         }
     }
 
-    public CollectionModel<User> getHateoasUserForReadingById(User user) {
+    public CollectionModel<UserDTO> getHateoasUserForReadingById(UserDTO userDTO) {
         log.info("Building HATEOAS collection-model entity");
 
-        builderForCreate(user);
+        builderForCreate(userDTO);
 
 
-        return CollectionModel.of(List.of(user))
+        return CollectionModel.of(List.of(userDTO))
                 .add(linkTo(methodOn(UserController.class)
                         .read(0, 20))
                         .withRel(() -> "get all users"))
