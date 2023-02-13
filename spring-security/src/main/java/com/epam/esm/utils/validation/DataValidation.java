@@ -1,5 +1,7 @@
 package com.epam.esm.utils.validation;
 
+import com.epam.esm.authentication.model.AuthenticationRequest;
+import com.epam.esm.authentication.model.RegisterRequest;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.model.Tag;
@@ -73,15 +75,23 @@ public class DataValidation {
         return List.of(SortingTypes.ASC.name(), SortingTypes.DESC.name()).contains(method.toUpperCase(Locale.ROOT));
     }
 
-    public static boolean validatePageAndSizePagination(int page, int size) {
+    public static void validatePageAndSizePagination(int page, int size) {
         if (page >= 0) {
             if (size >= 1) {
-                return true;
+                return;
             }
             log.error("Page size must not be less than one size = " + size);
             throw new ServerException("page size must not be less than one size = " + size);
         }
         log.error("Page index must not be less than zero page = " + page);
         throw new ServerException("page index must not be less than zero page = " + page);
+    }
+    public static boolean validateAuthenticationRequest(AuthenticationRequest request){
+        return isStringValid(request.getUsername()) && request.getPassword().matches(".{6,}");
+    }
+
+    public static boolean validateRegisterRequest(RegisterRequest request){
+        return isStringValid(request.getUsername()) && request.getPassword().matches(".{6,}");
+
     }
 }
