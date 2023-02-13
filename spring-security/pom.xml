@@ -14,8 +14,6 @@
     <name>EEJT-0004</name>
     <description>EEJT-0004</description>
     <properties>
-        <!--        <spring-security.version>5.3.4.RELEASE</spring-security.version>-->
-        <!--        <spring.version>5.2.8.RELEASE</spring.version>-->
         <java.version>17</java.version>
     </properties>
     <dependencies>
@@ -102,6 +100,11 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
         </dependency>
@@ -128,6 +131,12 @@
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>0.11.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.7.0</version>
         </dependency>
 
     </dependencies>
