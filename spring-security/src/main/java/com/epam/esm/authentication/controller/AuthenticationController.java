@@ -24,7 +24,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-        if(DataValidation.validateRegisterRequest(request)){
+        if (DataValidation.validateRegisterRequest(request)) {
 
             return ResponseEntity.ok(service.register(request));
         }
@@ -33,7 +33,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
-        if(DataValidation.validateAuthenticationRequest(request)){
+        if (DataValidation.validateAuthenticationRequest(request)) {
 
             return ResponseEntity.ok(service.authenticate(request));
         }
@@ -42,7 +42,7 @@ public class AuthenticationController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@RequestBody AuthenticationRefreshRequest token) {
-        if(DataValidation.isStringValid(token.getRefreshToken())){
+        if (DataValidation.isStringValid(token.getRefreshToken())) {
 
             return ResponseEntity.ok(service.refreshToken(token));
         }
@@ -51,7 +51,7 @@ public class AuthenticationController {
 
     @PostMapping("/google-auth")
     public ResponseEntity<?> loginWithGoogle(@RequestBody GoogleRequestToken token) {
-        if(DataValidation.isStringValid(token.getGoogleToken())){
+        if (DataValidation.isStringValid(token.getGoogleToken())) {
 
             return ResponseEntity.ok(service.authenticate(token));
         }
