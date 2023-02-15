@@ -17,7 +17,7 @@ public class ExceptionController implements ErrorController {
     public ResponseEntity<?> handleError(final HttpServletRequest request,
                                          final HttpServletResponse response) {
 
-        return new ResponseEntity<>(Map.of("HTTP Status", "" + HttpStatus.FORBIDDEN, "response body", Map.of("message", "invalid token detected or token has already expired")),HttpStatus.FORBIDDEN);
+        return new ResponseEntity<>(Map.of("HTTP Status", "" + HttpStatus.FORBIDDEN, "response body", Map.of("message", "invalid token detected or token has already expired")), HttpStatus.FORBIDDEN);
     }
 
 }

@@ -1,18 +1,18 @@
 package com.epam.esm.exceptionhandler.handler;
 
 
-import com.epam.esm.exceptionhandler.exception.*;
+import com.epam.esm.exceptionhandler.exception.ApplicationException;
+import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
+import com.epam.esm.exceptionhandler.exception.ServerException;
+import com.epam.esm.exceptionhandler.exception.UserInvalidData;
 import feign.FeignException;
-import io.jsonwebtoken.MalformedJwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -60,12 +60,12 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity<?> handleAuthenticationException(Exception ex) {
-        return new ResponseEntity<>(buildResponseMap(HttpStatus.UNAUTHORIZED, ex.getMessage()),HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(buildResponseMap(HttpStatus.UNAUTHORIZED, ex.getMessage()), HttpStatus.UNAUTHORIZED);
     }
 
     @ExceptionHandler({FeignException.class})
     public ResponseEntity<?> handleAuthenticationException(FeignException ex) {
-        return new ResponseEntity<>(buildResponseMap(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid Value - verify your jwt token"),HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(buildResponseMap(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid Value - verify your jwt token"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
