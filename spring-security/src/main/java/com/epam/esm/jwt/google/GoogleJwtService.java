@@ -1,6 +1,7 @@
 package com.epam.esm.jwt.google;
 
 import com.epam.esm.jwt.openfeign.client.ApiClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -10,6 +11,10 @@ import java.util.Map;
 public class GoogleJwtService {
 
     private final ApiClient apiClient;
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
+    private String aud;
+    @Value("${google.jwt.iss}")
+    private String iss;
 
     public GoogleJwtService(ApiClient apiClient) {
         this.apiClient = apiClient;
@@ -38,7 +43,7 @@ public class GoogleJwtService {
 
     private boolean isTokenHaveNormPayment(String token) {
         Map<String, String> mapOfClaimsFromToken = getMapOfClaimsFromToken(token);
-        return mapOfClaimsFromToken.get("aud").equals("1091690724125-tl75t5e2s6kumv8ealqksa5q6rfidcel.apps.googleusercontent.com") && mapOfClaimsFromToken.get("iss").equals("https://accounts.google.com");
+        return mapOfClaimsFromToken.get("aud").equals(aud) && mapOfClaimsFromToken.get("iss").equals(iss);
     }
 }
 

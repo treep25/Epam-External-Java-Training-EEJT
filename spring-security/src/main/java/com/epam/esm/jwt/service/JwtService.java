@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -20,8 +21,12 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
+    @Value("${jwt.secret.key}")
+    private String SECRET_KEY;
+    private static final String ROLES = "roles";
 
-    private static final String SECRET_KEY = "404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970";
+    private static final int ONE_DAY_MILLIS = 1000 * 60 * 60 * 24;
+    private static final int ONE_DAY_PLUS_15_MINUTES_MILLIS = ONE_DAY_MILLIS + 900 * 1000;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -43,7 +48,7 @@ public class JwtService {
     private String generateToken(
             Map<String, Object> extraClaims,
             User user) {
-        extraClaims.put("roles", user.getAuthorities().stream()
+        extraClaims.put(ROLES, user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(",")));
         return Jwts
@@ -52,7 +57,7 @@ public class JwtService {
                 .setSubject(user.getUsername())
                 .setId(String.valueOf(user.getId()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + ONE_DAY_MILLIS))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -65,7 +70,7 @@ public class JwtService {
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 + 900 * 1000))
+                .setExpiration(new Date(System.currentTimeMillis() + ONE_DAY_PLUS_15_MINUTES_MILLIS))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

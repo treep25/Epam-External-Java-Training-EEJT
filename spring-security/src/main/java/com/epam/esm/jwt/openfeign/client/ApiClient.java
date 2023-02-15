@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@FeignClient(value = "google-verify", url = "https://oauth2.googleapis.com/tokeninfo")
+@FeignClient(value = "${app.feign.config.name}", url = "${app.feign.config.url}")
 public interface ApiClient {
 
     @GetMapping
