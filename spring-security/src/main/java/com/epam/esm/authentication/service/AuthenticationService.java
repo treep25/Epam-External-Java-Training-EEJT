@@ -5,12 +5,10 @@ import com.epam.esm.authentication.model.*;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.exceptionhandler.exception.UserInvalidData;
 import com.epam.esm.jwt.google.GoogleJwtService;
-import com.epam.esm.role.Role;
 import com.epam.esm.jwt.service.JwtService;
+import com.epam.esm.role.Role;
 import com.epam.esm.user.model.User;
 import com.epam.esm.user.repository.UserRepository;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -63,6 +61,7 @@ public class AuthenticationService {
                 .refreshToken(refreshToken)
                 .build();
     }
+
     @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         User user = repository.findByName(request.getUsername())

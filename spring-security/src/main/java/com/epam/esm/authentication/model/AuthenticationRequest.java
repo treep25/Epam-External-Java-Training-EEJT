@@ -1,4 +1,5 @@
 package com.epam.esm.authentication.model;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

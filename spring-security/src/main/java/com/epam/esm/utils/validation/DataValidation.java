@@ -13,7 +13,6 @@ import java.util.*;
 
 @Slf4j
 public class DataValidation {
-    private static final UpdateGiftCertificateMapper updateGiftCertificateMapper = new UpdateGiftCertificateMapper();
 
     public static boolean isValidCertificate(GiftCertificate giftCertificate) {
         return isStringValid(giftCertificate.getName()) &&
@@ -61,7 +60,7 @@ public class DataValidation {
 
         if (answer.isEmpty()) {
 
-            return updateGiftCertificateMapper.buildMapForUpdating(giftCertificate);
+            return UpdateGiftCertificateMapper.buildMapForUpdating(giftCertificate);
         }
         log.error("Error during mapping gift-certificate Something went wrong, check this fields " + answer);
         throw new ServerException("Something went wrong, check this fields " + answer);
