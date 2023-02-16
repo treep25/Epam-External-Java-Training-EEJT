@@ -1,8 +1,10 @@
 package com.epam.esm.jwt.config.security;
 
+import com.epam.esm.exceptionhandler.handler.RestAccessDeniedHandler;
 import com.epam.esm.jwt.filter.JwtAuthenticationFilter;
 import com.epam.esm.role.Role;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -25,6 +27,8 @@ public class SecurityConfiguration {
     private final AuthenticationProvider authenticationProvider;
 
     private final AuthenticationEntryPoint authEntryPoint;
+    private final RestAccessDeniedHandler restAccessDeniedHandler;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -57,9 +61,8 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling()
-                .authenticationEntryPoint(authEntryPoint);
+                .authenticationEntryPoint(authEntryPoint)
+                .accessDeniedHandler(restAccessDeniedHandler);
         return http.build();
     }
-
-
 }
