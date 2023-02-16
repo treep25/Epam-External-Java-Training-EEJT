@@ -33,7 +33,6 @@ public class GiftCertificateService {
     private static final String NAME = "name";
     private static final String CREATE_DATE = "createDate";
     private static final String PERCENT_FOR_SEARCHING_BY_PART = "%";
-    //TODO new tactik of deleting
     @Transactional
     public GiftCertificate createGiftCertificate(GiftCertificate giftCertificate) {
         log.info("Service receives gift-certificate for creating " + giftCertificate.toString() + " Transaction has been started");
