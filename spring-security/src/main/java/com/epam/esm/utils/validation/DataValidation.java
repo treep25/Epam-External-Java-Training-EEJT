@@ -50,6 +50,12 @@ public class DataValidation {
             if (!isCertificateConsistsTagsOptionalValid(giftCertificate.getTags())) {
                 answer.add("tags" + giftCertificate.getTags().toString());
             }
+            if (giftCertificate.getPrice() != null && giftCertificate.getPrice() < 0) {
+                answer.add("price" + giftCertificate.getPrice());
+            }
+            if (giftCertificate.getDurationDays() != null && giftCertificate.getDurationDays() < 0) {
+                answer.add("duration" + giftCertificate.getDurationDays());
+            }
             return answer.toString();
         }
         return "Gift certificate cannot be null for updating";
@@ -85,11 +91,12 @@ public class DataValidation {
         log.error("Page index must not be less than zero page = " + page);
         throw new ServerException("page index must not be less than zero page = " + page);
     }
-    public static boolean validateAuthenticationRequest(AuthenticationRequest request){
+
+    public static boolean validateAuthenticationRequest(AuthenticationRequest request) {
         return isStringValid(request.getUsername()) && request.getPassword().matches(".{6,}");
     }
 
-    public static boolean validateRegisterRequest(RegisterRequest request){
+    public static boolean validateRegisterRequest(RegisterRequest request) {
         return isStringValid(request.getUsername()) && request.getPassword().matches(".{6,}");
 
     }

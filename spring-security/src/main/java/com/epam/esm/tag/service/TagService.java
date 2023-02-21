@@ -69,9 +69,10 @@ public class TagService {
             tagRepository.deleteById(id);
 
             log.debug("Service returns result od deleting");
+        }else {
+            log.error("There is no tag with (id = " + id + ")");
+            throw new ItemNotFoundException("there is no tag with (id = " + id + ")");
         }
-        log.error("There is no tag with (id = " + id + ")");
-        throw new ItemNotFoundException("there is no tag with (id = " + id + ")");
     }
 
     public long getTagIdByTag(Tag tag) {

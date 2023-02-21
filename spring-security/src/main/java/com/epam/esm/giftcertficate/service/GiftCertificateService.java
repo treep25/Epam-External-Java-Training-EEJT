@@ -144,9 +144,10 @@ public class GiftCertificateService {
             giftCertificateRepository.deleteById(id);
 
             log.debug("Service returns result od deleting");
+        }else {
+            log.error("There are no gift certificate with (id = " + id + ")");
+            throw new ItemNotFoundException("there are no gift certificate with (id = " + id + ")");
         }
-        log.error("There are no gift certificate with (id = " + id + ")");
-        throw new ItemNotFoundException("there are no gift certificate with (id = " + id + ")");
     }
 
     public Page<GiftCertificate> getCertificatesByTagName(String tagName, int page, int size) {

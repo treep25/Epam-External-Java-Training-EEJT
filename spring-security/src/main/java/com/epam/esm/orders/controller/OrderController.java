@@ -54,23 +54,18 @@ public class OrderController {
         throw new ServerException("the user ID is not valid: id = " + user.getId());
     }
 
-    @PreAuthorize("#user.ordersIds.contains(#id) or #user.role.name().equals('ADMIN')")
+    @PreAuthorize("@authOrderComponent.hasPermission(#user,#id)")
     @GetMapping("/{id}")
     public ResponseEntity<?> readById(@AuthenticationPrincipal User user, @PathVariable("id") long id) {
-        log.debug("Validation request model order ID " + id);
+        Order orderById = orderService.getOrderById(id);
+        log.debug("Receive order");
 
-        if (DataValidation.moreThenZero(id)) {
+        CollectionModel<Order> collectionModelOrder = orderHateoasBuilder.getHateoasOrderForReadingById(orderById);
+        log.debug("Return Hateoas model of current order");
 
-            Order orderById = orderService.getOrderById(user, id);
-            log.debug("Receive order");
+        return ResponseEntity.ok(Map.of("order", collectionModelOrder));
 
-            CollectionModel<Order> collectionModelOrder = orderHateoasBuilder.getHateoasOrderForReadingById(orderById);
-            log.debug("Return Hateoas model of current order");
 
-            return ResponseEntity.ok(Map.of("order", collectionModelOrder));
-        }
-        log.error("The user ID is not valid: id = " + id);
-        throw new ServerException("the user ID is not valid: id = " + id);
     }
 
     @GetMapping

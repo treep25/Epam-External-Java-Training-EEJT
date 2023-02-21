@@ -34,6 +34,7 @@ public class UserController {
     private final UserHateoasBuilder userHateoasBuilder;
 
     private final UserDTOBuilder userDTOBuilder;
+
     @GetMapping
     public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "size", defaultValue = "20") int size) {
@@ -54,22 +55,17 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("#id == #user.id or #user.role.name().equals('ADMIN')")
-    public ResponseEntity<?> readById(@AuthenticationPrincipal User user,@PathVariable Long id) {
-        log.debug("Validation request model User ID " + id);
+    @PreAuthorize("@authUserComponent.hasPermission(#user,#id)")
+    public ResponseEntity<?> readById(@AuthenticationPrincipal User user, @PathVariable Long id) {
+        User currentUser = userService.getById(id);
+        log.debug("Receive user");
 
-        if (DataValidation.moreThenZero(id)) {
-            User currentUser = userService.getById(id);
-            log.debug("Receive user");
+        UserDTO userDTO = userDTOBuilder.convertUserToUserDTO(currentUser);
 
-            UserDTO userDTO = userDTOBuilder.convertUserToUserDTO(currentUser);
+        CollectionModel<UserDTO> userCollectionModel = userHateoasBuilder.getHateoasUserForReadingById(userDTO);
+        log.debug("Return Hateoas model of user");
 
-            CollectionModel<UserDTO> userCollectionModel = userHateoasBuilder.getHateoasUserForReadingById(userDTO);
-            log.debug("Return Hateoas model of user");
+        return ResponseEntity.ok(Map.of("user", userCollectionModel));
 
-            return ResponseEntity.ok(Map.of("user", userCollectionModel));
-        }
-        log.error("The user ID is not valid: id = " + id);
-        throw new ServerException("the user ID is not valid: id = " + id);
     }
 }

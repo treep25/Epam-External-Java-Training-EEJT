@@ -167,7 +167,9 @@ public class GiftCertificateController {
     }
 
     @GetMapping("search/gift-certificate-name")
-    public ResponseEntity<?> readByCertificateNameOrByPartOfName(@RequestParam("name") String partOfName, @RequestParam("page") int page, @RequestParam("size") int size) {
+    public ResponseEntity<?> readByCertificateNameOrByPartOfName(@RequestParam("name") String partOfName,
+                                                                 @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                 @RequestParam(value = "size", defaultValue = "20") int size) {
         log.debug("Validation of request model of gift-certificate name " + partOfName);
         if (DataValidation.isStringValid(partOfName)) {
             log.debug("Validation of request model fields " + page + " " + size);

@@ -68,7 +68,7 @@ public class OrderService {
         return orderRepository.findAll(pageRequest);
     }
 
-    public Order getOrderById(User user,Long id) {
+    public Order getOrderById(long id) {
         log.info("Service receives params for getting");
         log.debug("Service returns representation of orders");
         System.out.println();

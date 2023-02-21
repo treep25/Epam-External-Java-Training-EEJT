@@ -17,6 +17,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static org.springframework.security.config.Customizer.withDefaults;
+
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -46,11 +48,11 @@ public class SecurityConfiguration {
                         "/api/v1/tags/**",
                         "/api/v1/tags/widely-used")
                 .permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/v1/certificates", "/api/v1/tags", "api/v1/orders/**").hasAuthority(Role.ADMIN.name())
+                .requestMatchers(HttpMethod.POST, "/api/v1/certificates", "/api/v1/tags").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/certificates/**", "/api/v1/certificates/update-price/**").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/certificates/**", "/api/v1/tags/**").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/api/v1/orders", "/api/v1/users").hasAuthority(Role.ADMIN.name())
-                .requestMatchers(HttpMethod.POST, "/api/v1/orders/**").hasAuthority(Role.USER.name())
+                .requestMatchers(HttpMethod.POST, "/api/v1/orders/**").hasAnyAuthority(Role.USER.name(), Role.ADMIN.name())
                 .requestMatchers(HttpMethod.GET, "/api/v1/users/**", "/api/v1/orders/**").hasAnyAuthority(Role.ADMIN.name(), Role.USER.name())
                 .anyRequest()
                 .authenticated()
