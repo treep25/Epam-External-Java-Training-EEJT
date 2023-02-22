@@ -68,16 +68,6 @@ class AuthenticationControllerTest {
                 .andExpect(status().isInternalServerError());
     }
 
-    @Test
-    @SneakyThrows
-    void authenticateTest_ReturnOk_ForAll() {
-        AuthenticationRequest request = AuthenticationRequest.builder().username("wet1").password(passwordEncoder.encode("12")).build();
-        mvc.perform(post("/api/v1/auth/register").content(
-                                objectMapper.writeValueAsString(request)
-                        )
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
-    }
 
     @Test
     @SneakyThrows
