@@ -48,7 +48,7 @@ public class AuthenticationService {
                 user = userByName.get();
                 user.setPassword(passwordEncoder.encode(request.getPassword()));
             } else {
-                throw new ServerException("Sorry, such username has already taken");
+                throw new ServerException("sorry, such username has already taken");
             }
         }
 
@@ -98,7 +98,7 @@ public class AuthenticationService {
                     .refreshToken(refreshToken)
                     .build();
         }
-        throw new AccessDeniedException("Token is not valid");
+        throw new AccessDeniedException("token is not valid");
     }
 
     @Transactional
@@ -115,11 +115,14 @@ public class AuthenticationService {
                 String accessToken = jwtService.generateToken(userByName.get());
                 String refreshToken = jwtService.generateRefreshToken(userByName.get());
 
-                return AuthenticationResponse.builder().accessToken(accessToken).refreshToken(refreshToken).build();
+                return AuthenticationResponse.builder()
+                        .accessToken(accessToken)
+                        .refreshToken(refreshToken)
+                        .build();
             }
-            throw new AccessDeniedException("Bad token signature");
+            throw new AccessDeniedException("bad token signature");
         }
-        throw new AccessDeniedException("Token is not valid");
+        throw new AccessDeniedException("token is not valid");
 
     }
 }
