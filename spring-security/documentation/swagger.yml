@@ -1,17 +1,131 @@
 openapi: 3.0.0
 info:
-  version: '1.0'
-  title: REST API Advanced
-  description: Documentation REST API
+  version: '2.0'
+  title: REST API Advanced Security
+  description: Documentation REST API Security
 servers:
   - url: http://localhost:8080
 paths:
-  /certificates:
+
+  /api/v1/auth/login:
+    post:
+      tags:
+        - Authentication
+      description: Authentication
+      summary: Returns access and refresh tokens
+      requestBody:
+        description: Authentication request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity500'
+          description: Server Error
+
+  /api/v1/auth/register:
+    post:
+      tags:
+        - Authentication
+      description: Registration
+      summary: Returns access and refresh tokens
+      requestBody:
+        description: Registration request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity500'
+          description: Server Error
+
+  /api/v1/auth/refresh:
+    post:
+      tags:
+        - Authentication
+      description: Refreshing access token
+      summary: Returns access and refresh tokens
+      requestBody:
+        description: Refresh request
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthenticationRefreshRequest'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity500'
+          description: Server Error
+
+  /api/v1/auth/google-auth:
+    post:
+      tags:
+        - Authentication
+      description: Google authentication
+      summary: Returns access and refresh tokens
+      security:
+        - OAuth2: []
+        - OpenID: []
+      requestBody:
+        description: Google request token
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GoogleRequestToken'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthenticationResponse'
+        '500':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity500'
+          description: Server Error
+
+  /api/v1/certificates:
     post:
       tags:
         - Gift-certificate
       description: Returns created gift-certificate
       summary: Returns created gift-certificate
+      security:
+        - BearerAuth: []
       operationId: createGiftCertificate
       requestBody:
         description: Gift-certificate
@@ -21,6 +135,19 @@ paths:
             schema:
               $ref: '#/components/schemas/GiftCertificateBody'
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
+
         '201':
           description: Created
           content:
@@ -129,7 +256,7 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-  /certificates/{id}:
+  /api/v1/certificates/{id}:
     get:
       tags:
         - Gift-certificate
@@ -186,6 +313,8 @@ paths:
         - Gift-certificate
       description: Returns updated gift-certificate
       summary: Returns updated gift-certificate
+      security:
+        - BearerAuth: []
       operationId: updatedGiftCertificateById
       parameters:
         - name: id
@@ -203,6 +332,18 @@ paths:
             schema:
               $ref: '#/components/schemas/GiftCertificateBody'
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
         '200':
           description: Status OK
           content:
@@ -233,6 +374,8 @@ paths:
         - Gift-certificate
       description: Returns no Content
       summary: Returns result deleting by ID
+      security:
+        - BearerAuth: []
       operationId: deleteGiftCertificateById
       parameters:
         - name: id
@@ -243,6 +386,18 @@ paths:
             type: integer
             format: int64
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
         '204':
           description: no Content
         '404':
@@ -259,12 +414,14 @@ paths:
           description: Server Error
 
 
-  /certificates/update-price/{id}:
+  /api/v1/certificates/update-price/{id}:
     patch:
       tags:
         - Gift-certificate
       description: Returns updated gift-certificate with new price
       summary: Returns updated gift-certificate with new price
+      security:
+        - BearerAuth: []
       operationId: updatedPriceGiftCertificateByIdWithPrice
       parameters:
         - name: id
@@ -284,6 +441,18 @@ paths:
         description: new price you want to put
         required: true
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
         '200':
           description: Status OK
           content:
@@ -310,7 +479,7 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-  /certificates/search/tag-name:
+  /api/v1/certificates/search/tag-name:
     get:
       tags:
         - Gift-certificate
@@ -362,7 +531,7 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-  /certificates/search/gift-certificate-name:
+  /api/v1/certificates/search/gift-certificate-name:
     get:
       tags:
         - Gift-certificate
@@ -415,7 +584,7 @@ paths:
           description: Server Error
 
 
-  /certificates/search/sort-date:
+  /api/v1/certificates/search/sort-date:
     get:
       tags:
         - Gift-certificate
@@ -467,7 +636,7 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-  /certificates/search/tag-name/cost:
+  /api/v1/certificates/search/tag-name/cost:
     get:
       tags:
         - Gift-certificate
@@ -533,7 +702,7 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-  /certificates/search/sort-name-date:
+  /api/v1/certificates/search/sort-name-date:
     get:
       tags:
         - Gift-certificate
@@ -590,12 +759,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
-  /tags:
+  /api/v1/tags:
     post:
       tags:
         - Tag
       description: Returns created tag
       summary: Returns created tag
+      security:
+        - BearerAuth: []
       operationId: createTag
       requestBody:
         description: Tag
@@ -605,6 +776,18 @@ paths:
             schema:
               $ref: '#/components/schemas/TagBody'
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
         '201':
           description: Created
           content:
@@ -701,7 +884,7 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-  /tags/{id}:
+  /api/v1/tags/{id}:
     get:
       tags:
         - Tag
@@ -761,6 +944,8 @@ paths:
         - Tag
       description: Returns result of deleting
       summary: Returns result of deleting
+      security:
+        - BearerAuth: []
       operationId: deleteTagById
       parameters:
         - name: id
@@ -772,6 +957,18 @@ paths:
             format: int64
             example: 1
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
         '204':
           description: no Content
         '404':
@@ -787,7 +984,7 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-  /tags/widely-used-tag:
+  /api/v1/tags/widely-used-tag:
     get:
       tags:
         - Tag
@@ -832,13 +1029,15 @@ paths:
           description: Server Error
 
 
-  /users:
+  /api/v1/users:
     get:
       tags:
         - Users
       description: Returns all users
       operationId: getAllUsers
       summary: Returns all users
+      security:
+        - BearerAuth: []
       parameters:
         - name: page
           in: query
@@ -859,6 +1058,18 @@ paths:
             minimum: 1
             default: 20
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
         '200':
           description: Status OK
           content:
@@ -884,11 +1095,13 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-  /users/{id}:
+  /api/v1/users/{id}:
     get:
       tags:
         - Users
       summary: Returns a user by ID.
+      security:
+        - BearerAuthUser: []
       description: Returns user by ID
       operationId: getUserById
       parameters:
@@ -900,6 +1113,18 @@ paths:
             type: integer
             format: int64
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
         '200':
           description: Status OK
           content:
@@ -926,18 +1151,19 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-
-  /orders/{userId}/{giftCertificateId}:
+  /api/v1/orders/{giftCertificateId}:
     post:
       tags:
         - Orders
       description: Returns created order
       summary: Returns created order
+      security:
+        - BearerAuthUser: []
       operationId: createOrder
       parameters:
-        - name: userId
-          in: path
-          description: User ID
+        - name: User
+          in: header
+          description: Current auth user
           required: true
           schema:
             type: integer
@@ -950,6 +1176,18 @@ paths:
             type: integer
             format: int64
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
         '201':
           description: Created
           content:
@@ -983,12 +1221,14 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-  /orders:
+  /api/v1/orders:
     get:
       tags:
         - Orders
-      description: Returns order
+      description: Returns orders
       summary: Returns order
+      security:
+        - BearerAuth: []
       operationId: getAllOrders
       parameters:
         - name: page
@@ -1010,6 +1250,18 @@ paths:
             minimum: 1
             default: 20
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
         '200':
           description: Status OK
           content:
@@ -1044,12 +1296,14 @@ paths:
                 $ref: '#/components/schemas/ResponseEntity500'
           description: Server Error
 
-  /orders/{id}:
+  /api/v1/orders/{id}:
     get:
       tags:
         - Orders
-      description: Returns order by ID
+      description: Return order if user has this one
       summary: Returns order by ID
+      security:
+        - BearerAuthUser: []
       operationId: getOrderById
       parameters:
         - name: id
@@ -1060,6 +1314,18 @@ paths:
             type: integer
             format: int64
       responses:
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity401'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseEntity403'
         '200':
           content:
             application/json:
@@ -1098,6 +1364,55 @@ paths:
 
 components:
   schemas:
+    AuthenticationRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+
+    AuthenticationResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+      required:
+        - accessToken
+        - refreshToken
+
+    RegisterRequest:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+      required:
+        - username
+        - password
+
+    AuthenticationRefreshRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+      required:
+        - refreshToken
+
+    GoogleRequestToken:
+      type: object
+      properties:
+        googleToken:
+          type: string
+      required:
+        - googleToken
+
     User:
       type: object
       properties:
@@ -1233,6 +1548,45 @@ components:
           type: string
           example: "NOT_FOUND"
 
+
+    ResponseEntity403:
+      type: object
+      properties:
+        HTTP Status:
+          type: string
+          enum:
+            - 403 FORBIDDEN
+        response body:
+          type: array
+          items:
+            $ref: '#/components/schemas/messageResponseForbidden'
+
+    messageResponseForbidden:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "FORBIDDEN"
+
+    ResponseEntity401:
+      type: object
+      properties:
+        HTTP Status:
+          type: string
+          enum:
+            - 401 UNAUTHORIZED
+        response body:
+          type: array
+          items:
+            $ref: '#/components/schemas/messageResponseUnauthorized'
+
+    messageResponseUnauthorized:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "UNAUTHORIZED"
+
     ResponseEntity500:
       type: object
       properties:
@@ -1251,3 +1605,27 @@ components:
         message:
           type: string
           example: "INTERNAL_SERVER_ERROR"
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'ADMIN only'
+    BearerAuthUser:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: 'Authorized USER and ADMIN'
+    OpenID:
+      type: openIdConnect
+      openIdConnectUrl: https://example.com/.well-known/openid-configuration
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://example.com/oauth/authorize
+          tokenUrl: https://example.com/oauth/token
+          scopes:
+            read: Grants read access
+            write: Grants write access
+            admin: Grants access to admin operations
