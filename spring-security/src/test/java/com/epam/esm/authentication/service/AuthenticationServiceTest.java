@@ -61,13 +61,28 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void registerTest_ReturnTokens_WhenUserHasRegisteredViaGoogle() {
+    void registerTest_ReturnTokens_WhenUserHasRegisteredViaGoogle_WithoutToken() {
         User user = User.builder().name("123123").password("").role(Role.USER).build();
         RegisterRequest request = RegisterRequest.builder().username("123123").password("wqeqweq").build();
         when(repositoryMock.existsByName(request.getUsername())).thenReturn(false);
         when(passwordEncoder.encode(request.getPassword())).thenReturn("");
         when(repositoryMock.findByName(request.getUsername())).thenReturn(Optional.of(User.builder().name("123123").password(null).role(Role.USER).build()));
 
+        AccessDeniedException thrown = assertThrows(AccessDeniedException.class,
+                () ->authenticationServiceMock.register(request));
+
+        assertEquals("bad token signature or token is empty", thrown.getMessage());
+    }
+
+    @Test
+    void registerTest_ReturnTokens_WhenUserHasRegisteredViaGoogle_WithTokenCorrect() {
+        User user = User.builder().name("123123").password("").role(Role.USER).build();
+        RegisterRequest request = RegisterRequest.builder().username("123123").password("wqeqweq").googleToken("").build();
+        when(repositoryMock.existsByName(request.getUsername())).thenReturn(false);
+        when(passwordEncoder.encode(request.getPassword())).thenReturn("");
+        when(repositoryMock.findByName(request.getUsername())).thenReturn(Optional.of(User.builder().name("123123").password(null).role(Role.USER).build()));
+        when(googleJwtServiceMock.isTokenValid("")).thenReturn(true);
+        when(googleJwtServiceMock.extractUsername("")).thenReturn("123123");
         when(repositoryMock.save(user)).thenReturn(user);
 
         authenticationServiceMock.register(request);
@@ -83,7 +98,7 @@ class AuthenticationServiceTest {
         ServerException thrown = assertThrows(ServerException.class,
                 () -> authenticationServiceMock.register(request));
 
-        assertEquals("sorry, such username has already taken", thrown.getMessage());
+        assertEquals("sorry, such username has already taken "+ request.getUsername(), thrown.getMessage());
     }
 
     @Test
