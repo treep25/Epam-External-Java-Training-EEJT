@@ -3,10 +3,6 @@ package com.epam.esm.orders.model;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.LazyToOne;
-import org.hibernate.annotations.LazyToOneOption;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.hateoas.RepresentationModel;
@@ -34,14 +30,23 @@ public class Order extends RepresentationModel<Order> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (!(o instanceof Order order)) return false;
+        if (!super.equals(o)) return false;
 
-        return new EqualsBuilder().appendSuper(super.equals(o)).append(getId(), order.getId()).append(getCost(), order.getCost()).append(getGiftCertificate(), order.getGiftCertificate()).append(getPurchaseDate(), order.getPurchaseDate()).isEquals();
+        if (getId() != order.getId()) return false;
+        if (getCost() != order.getCost()) return false;
+        if (getGiftCertificate() != null ? !getGiftCertificate().equals(order.getGiftCertificate()) : order.getGiftCertificate() != null)
+            return false;
+        return getPurchaseDate() != null ? getPurchaseDate().equals(order.getPurchaseDate()) : order.getPurchaseDate() == null;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).appendSuper(super.hashCode()).append(getId()).append(getGiftCertificate()).append(getCost()).append(getPurchaseDate()).toHashCode();
+        int result = super.hashCode();
+        result = 31 * result + (int) (getId() ^ (getId() >>> 32));
+        result = 31 * result + (getGiftCertificate() != null ? getGiftCertificate().hashCode() : 0);
+        result = 31 * result + getCost();
+        result = 31 * result + (getPurchaseDate() != null ? getPurchaseDate().hashCode() : 0);
+        return result;
     }
 }
