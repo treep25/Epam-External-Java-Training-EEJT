@@ -36,11 +36,11 @@ public class AuthenticationService {
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) {
         log.info("Transaction has been started");
-        log.debug("Service receives params for registration {}",request.getUsername());
+        log.debug("Service receives params for registration {}", request.getUsername());
 
         User user = new User();
 
-        log.debug("Verifying existing such username {}",request.getUsername());
+        log.debug("Verifying existing such username {}", request.getUsername());
         if (!repository.existsByName(request.getUsername())) {
             user = User.builder()
                     .name(request.getUsername())
@@ -51,15 +51,24 @@ public class AuthenticationService {
         log.debug("Verifying existing od such username registered via google");
 
         Optional<User> userByName = repository.findByName(request.getUsername());
+
         if (userByName.isPresent()) {
             if (userByName.get().getPassword() == null) {
-                user = userByName.get();
-                user.setPassword(passwordEncoder.encode(request.getPassword()));
+                if (request.getGoogleToken() != null
+                        && googleJwtService.isTokenValid(request.getGoogleToken())
+                        && googleJwtService.extractUsername(request.getGoogleToken()).equals(userByName.get().getName())) {
+
+                    user = userByName.get();
+                    user.setPassword(passwordEncoder.encode(request.getPassword()));
+                } else {
+                    throw new AccessDeniedException("bad token signature or token is empty");
+                }
             } else {
-                log.error("sorry, such username has already taken {} , Transaction has been ended ROLLBACK",request.getUsername());
-                throw new ServerException("sorry, such username has already taken "+request.getUsername());
+                log.error("sorry, such username has already taken {} , Transaction has been ended ROLLBACK", request.getUsername());
+                throw new ServerException("sorry, such username has already taken " + request.getUsername());
             }
         }
+
         log.debug("Saving user and generating access and refresh tokens");
         repository.save(user);
 
@@ -75,11 +84,11 @@ public class AuthenticationService {
     @Transactional
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         log.info("Transaction has been started");
-        log.debug("Service receives params for authentication {} , verifying login and password",request.getUsername());
+        log.debug("Service receives params for authentication {} , verifying login and password", request.getUsername());
 
 
         User user = repository.findByName(request.getUsername())
-                .orElseThrow(() ->{
+                .orElseThrow(() -> {
                     log.error("incorrect login or password, Transaction has been ended ROLLBACK");
                     return new AccessDeniedException("incorrect login or password");
                 });
@@ -107,10 +116,10 @@ public class AuthenticationService {
     }
 
     public AuthenticationResponse refreshToken(AuthenticationRefreshRequest request) {
-        log.debug("Service receives params for refreshing {} , verifying refresh token",request.getRefreshToken());
+        log.debug("Service receives params for refreshing {} , verifying refresh token", request.getRefreshToken());
 
         User currentUser = repository.findByName(jwtService.extractUsername(request.getRefreshToken()))
-                .orElseThrow(() ->{
+                .orElseThrow(() -> {
                     log.error("error occurred during the request");
                     return new UserInvalidData("error occurred during the request");
                 });
@@ -127,7 +136,7 @@ public class AuthenticationService {
                     .refreshToken(refreshToken)
                     .build();
         }
-        log.error("token is not valid {}" ,request.getRefreshToken());
+        log.error("token is not valid {}", request.getRefreshToken());
         throw new AccessDeniedException("token is not valid");
     }
 
