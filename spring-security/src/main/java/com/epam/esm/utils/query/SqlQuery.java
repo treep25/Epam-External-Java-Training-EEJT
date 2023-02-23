@@ -1,7 +1,5 @@
 package com.epam.esm.utils.query;
 
-import java.util.Locale;
-
 public class SqlQuery {
     public static class GiftCertificate {
 

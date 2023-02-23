@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-
+@Slf4j
 @Service
 public class JwtService {
     @Value("${jwt.secret.key}")
@@ -29,6 +30,7 @@ public class JwtService {
     private static final int ONE_DAY_PLUS_15_MINUTES_MILLIS = ONE_DAY_MILLIS + 900 * 1000;
 
     public String extractUsername(String token) {
+        log.debug("Getting expiration");
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -38,10 +40,12 @@ public class JwtService {
     }
 
     public String generateToken(User user) {
+        log.debug("Generating access token");
         return generateToken(new HashMap<>(), user);
     }
 
     public String generateRefreshToken(User user) {
+        log.debug("Generating refresh token");
         return generateRefreshToken(new HashMap<>(), user);
     }
 
@@ -76,15 +80,18 @@ public class JwtService {
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
+        log.debug("Validation of token");
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
     }
 
     private boolean isTokenExpired(String token) {
+        log.debug("Is token expired");
         return extractExpiration(token).before(new Date());
     }
 
     private Date extractExpiration(String token) {
+        log.debug("Getting token expiration");
         return extractClaim(token, Claims::getExpiration);
     }
 

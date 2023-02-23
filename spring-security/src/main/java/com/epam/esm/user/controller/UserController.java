@@ -1,6 +1,5 @@
 package com.epam.esm.user.controller;
 
-import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.user.dto.UserDTO;
 import com.epam.esm.user.model.User;
 import com.epam.esm.user.model.UserDTOBuilder;
@@ -16,10 +15,7 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
@@ -38,7 +34,7 @@ public class UserController {
     @GetMapping
     public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
                                   @RequestParam(value = "size", defaultValue = "20") int size) {
-        log.debug("Validation of request model fields " + page + " " + size);
+        log.debug("Validation of request model fields {},{}" , page , size);
 
         DataValidation.validatePageAndSizePagination(page, size);
 

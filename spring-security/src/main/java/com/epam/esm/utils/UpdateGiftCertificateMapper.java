@@ -1,17 +1,17 @@
 package com.epam.esm.utils;
 
-import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.utils.validation.DataValidation;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.epam.esm.utils.validation.DataValidation.isCertificateConsistsTagsOptionalValid;
-
+@Slf4j
 public class UpdateGiftCertificateMapper {
     public static Optional<Map<String, String>> buildMapForUpdating(GiftCertificate giftCertificate) {
+        log.debug("Building map for updating of giftCertificate {}",giftCertificate);
         Map<String, String> map = new HashMap<>();
 
         if (giftCertificate.getName() != null) {
@@ -34,6 +34,7 @@ public class UpdateGiftCertificateMapper {
 
             map.put("tags", "some tags");
         }
+        log.debug("Returns map with valid fields for updating");
         return Optional.of(map);
     }
 }
