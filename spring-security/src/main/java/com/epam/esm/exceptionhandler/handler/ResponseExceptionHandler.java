@@ -6,6 +6,7 @@ import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.exceptionhandler.exception.UserInvalidData;
 import feign.FeignException;
+import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +67,11 @@ public class ResponseExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler({FeignException.class})
     public ResponseEntity<?> handleAuthenticationException(FeignException ex) {
         return new ResponseEntity<>(buildResponseMap(HttpStatus.INTERNAL_SERVER_ERROR, "Invalid Value - verify your jwt token"), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler({JwtException.class})
+    public ResponseEntity<?> handleJwtException(JwtException ex) {
+        return new ResponseEntity<>(buildResponseMap(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage()), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }
