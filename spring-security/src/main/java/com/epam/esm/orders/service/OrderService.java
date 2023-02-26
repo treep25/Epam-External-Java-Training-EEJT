@@ -71,7 +71,7 @@ public class OrderService {
     public Order getOrderById(long id) {
         log.info("Service receives params for getting");
         log.debug("Service returns representation of orders");
-        System.out.println();
+
         return orderRepository.findById(id).orElseThrow(
                 () -> {
                     log.error("there are no orders with (id = " + id + ")");
