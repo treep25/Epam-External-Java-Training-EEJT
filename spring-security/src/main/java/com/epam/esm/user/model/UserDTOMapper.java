@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 @Slf4j
 @Component
-public class UserDTOBuilder {
+public class UserDTOMapper {
 
     public UserDTO convertUserToUserDTO(User user) {
         log.debug("Converting user into userDTO, returns userDTO ");
