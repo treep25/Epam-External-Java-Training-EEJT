@@ -26,7 +26,7 @@ class GoogleJwtServiceTest {
     void extractUsername() {
         when(apiClient.verifyGoogleToken("")).thenReturn(Map.of("email",""));
 
-        googleJwtService.extractUsername("");
+        assertEquals("",googleJwtService.extractUsername(""));
     }
 
     @Test
@@ -34,6 +34,6 @@ class GoogleJwtServiceTest {
         Map<String, String> propTest = Map.of("email", "", "aud", "1091690724125-tl75t5e2s6kumv8ealqksa5q6rfidcel.apps.googleusercontent.com", "iss", "https://accounts.google.com", "exp", "15162539022");
         when(apiClient.verifyGoogleToken("")).thenReturn(propTest);
 
-        googleJwtService.isTokenValid("");
+        assertFalse(googleJwtService.isTokenValid(""));
     }
 }
