@@ -1,7 +1,5 @@
 package com.epam.esm.user.model;
 
-import com.epam.esm.user.authComponent.AuthUserComponent;
-import com.epam.esm.user.dto.UserDTO;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
@@ -16,16 +14,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
-class UserDTOBuilderTest {
+class UserDTOMapperTest {
 
     @InjectMocks
-    private UserDTOBuilder userDTOBuilder;
+    private UserDTOMapper userDTOMapper;
 
     @Test
     void convertUserToUserDTO() {
         User before = User.builder().id(1L).build();
 
-        assertNotNull(userDTOBuilder.convertUserToUserDTO(before));
+        assertNotNull(userDTOMapper.convertUserToUserDTO(before));
 
     }
 
@@ -34,6 +32,6 @@ class UserDTOBuilderTest {
         User before = User.builder().id(1L).build();
         Page<User> pagedUsers = new PageImpl<>(List.of(before));
 
-        assertNotNull(userDTOBuilder.convertUserPageToUserDTOPage(pagedUsers));
+        assertNotNull(userDTOMapper.convertUserPageToUserDTOPage(pagedUsers));
     }
 }
