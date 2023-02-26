@@ -16,6 +16,11 @@ public class GoogleJwtService {
     private String aud;
     @Value("${google.jwt.iss}")
     private String iss;
+    private static final long THREE_HOURS = 3 * 3600;
+    private static final String EXPIRATIONS_DATE = "exp";
+    private static final String EMAIL = "email";
+    private static final String AUDIENCE = "aud";
+    private static final String ISSUER = "iss";
 
     public GoogleJwtService(ApiClient apiClient) {
         this.apiClient = apiClient;
@@ -28,7 +33,7 @@ public class GoogleJwtService {
 
     public String extractUsername(String token) {
         log.debug("Getting name from token");
-        return getMapOfClaimsFromToken(token).get("email");
+        return getMapOfClaimsFromToken(token).get(EMAIL);
     }
 
     public boolean isTokenValid(String token) {
@@ -38,18 +43,18 @@ public class GoogleJwtService {
 
     private Long extractExpiration(String token) {
         log.debug("Getting expiration");
-        return Long.parseLong(getMapOfClaimsFromToken(token).get("exp"));
+        return Long.parseLong(getMapOfClaimsFromToken(token).get(EXPIRATIONS_DATE));
     }
 
     private boolean isTokenExpired(String token) {
         log.debug("Is token expired");
-        return extractExpiration(token) + 3 * 3600 >= Instant.now().getEpochSecond();
+        return extractExpiration(token) + THREE_HOURS >= Instant.now().getEpochSecond();
     }
 
     private boolean isTokenHaveNormPayment(String token) {
         log.debug("Validation token payment");
         Map<String, String> mapOfClaimsFromToken = getMapOfClaimsFromToken(token);
-        return mapOfClaimsFromToken.get("aud").equals(aud) && mapOfClaimsFromToken.get("iss").equals(iss);
+        return mapOfClaimsFromToken.get(AUDIENCE).equals(aud) && mapOfClaimsFromToken.get(ISSUER).equals(iss);
     }
 }
 

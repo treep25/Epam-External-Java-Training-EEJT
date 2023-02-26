@@ -13,6 +13,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final HandlerExceptionResolver resolver;
+    private final Object handler = null;
 
     public DelegatedAuthenticationEntryPoint(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
         this.resolver = resolver;
@@ -21,6 +22,6 @@ public class DelegatedAuthenticationEntryPoint implements AuthenticationEntryPoi
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException)
             throws IOException {
-        resolver.resolveException(request, response, null, authException);
+        resolver.resolveException(request, response, handler, authException);
     }
 }

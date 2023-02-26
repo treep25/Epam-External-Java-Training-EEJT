@@ -12,6 +12,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     private final HandlerExceptionResolver resolver;
+    private final Object handler = null;
 
     public RestAccessDeniedHandler(@Qualifier("handlerExceptionResolver") HandlerExceptionResolver resolver) {
         this.resolver = resolver;
@@ -19,6 +20,6 @@ public class RestAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) {
-        resolver.resolveException(request, response, null, accessDeniedException);
+        resolver.resolveException(request, response, handler, accessDeniedException);
     }
 }
