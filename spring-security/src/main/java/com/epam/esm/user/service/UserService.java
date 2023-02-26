@@ -1,9 +1,7 @@
 package com.epam.esm.user.service;
 
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
-import com.epam.esm.user.dto.UserDTO;
 import com.epam.esm.user.model.User;
-import com.epam.esm.user.model.UserDTOBuilder;
 import com.epam.esm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
