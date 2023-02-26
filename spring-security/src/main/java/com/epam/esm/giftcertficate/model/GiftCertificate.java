@@ -3,7 +3,6 @@ package com.epam.esm.giftcertficate.model;
 import com.epam.esm.tag.model.Tag;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.Hibernate;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -41,13 +40,13 @@ public class GiftCertificate extends RepresentationModel<GiftCertificate> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        GiftCertificate that = (GiftCertificate) o;
-        return id != null && Objects.equals(id, that.id);
+        if (!(o instanceof GiftCertificate that)) return false;
+        if (!super.equals(o)) return false;
+        return Objects.equals(getId(), that.getId()) && Objects.equals(getName(), that.getName()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getPrice(), that.getPrice()) && Objects.equals(getDurationDays(), that.getDurationDays()) && Objects.equals(getTags(), that.getTags()) && Objects.equals(getCreateDate(), that.getCreateDate()) && Objects.equals(getLastUpdateDate(), that.getLastUpdateDate());
     }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode();
+        return Objects.hash(super.hashCode(), getId(), getName(), getDescription(), getPrice(), getDurationDays(), getTags(), getCreateDate(), getLastUpdateDate());
     }
 }
