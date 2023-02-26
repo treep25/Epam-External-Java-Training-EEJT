@@ -2,7 +2,7 @@ package com.epam.esm.user.controller;
 
 import com.epam.esm.user.dto.UserDTO;
 import com.epam.esm.user.model.User;
-import com.epam.esm.user.model.UserDTOBuilder;
+import com.epam.esm.user.model.UserDTOMapper;
 import com.epam.esm.user.model.UserHateoasBuilder;
 import com.epam.esm.user.service.UserService;
 import com.epam.esm.utils.validation.DataValidation;
@@ -29,7 +29,7 @@ public class UserController {
     private final UserService userService;
     private final UserHateoasBuilder userHateoasBuilder;
 
-    private final UserDTOBuilder userDTOBuilder;
+    private final UserDTOMapper userDTOMapper;
 
     @GetMapping
     public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -40,7 +40,7 @@ public class UserController {
 
         Page<User> allUsers = userService.getAllUsers(page, size);
 
-        Page<UserDTO> userDTOs = userDTOBuilder.convertUserPageToUserDTOPage(allUsers);
+        Page<UserDTO> userDTOs = userDTOMapper.convertUserPageToUserDTOPage(allUsers);
         log.debug("Receive all users");
 
         PagedModel<UserDTO> allUsersPagedModel = userHateoasBuilder
@@ -51,12 +51,12 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("@authUserComponent.hasPermission(#user,#id)")
+    @PreAuthorize("@authUserVerify.hasPermission(#user,#id)")
     public ResponseEntity<?> readById(@AuthenticationPrincipal User user, @PathVariable Long id) {
         User currentUser = userService.getById(id);
         log.debug("Receive user");
 
-        UserDTO userDTO = userDTOBuilder.convertUserToUserDTO(currentUser);
+        UserDTO userDTO = userDTOMapper.convertUserToUserDTO(currentUser);
 
         CollectionModel<UserDTO> userCollectionModel = userHateoasBuilder.getHateoasUserForReadingById(userDTO);
         log.debug("Return Hateoas model of user");

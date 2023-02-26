@@ -54,7 +54,7 @@ public class OrderController {
         throw new ServerException("the user ID is not valid: id = " + user.getId());
     }
 
-    @PreAuthorize("@authOrderComponent.hasPermission(#user,#id)")
+    @PreAuthorize("@authOrderVerify.hasPermission(#user,#id)")
     @GetMapping("/{id}")
     public ResponseEntity<?> readById(@AuthenticationPrincipal User user, @PathVariable("id") long id) {
         Order orderById = orderService.getOrderById(id);
