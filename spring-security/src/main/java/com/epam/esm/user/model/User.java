@@ -77,6 +77,10 @@ public class User extends RepresentationModel<User> implements UserDetails{
         return true;
     }
 
+    public boolean is(Role role){
+        return this.getRole().equals(role);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
