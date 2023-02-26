@@ -33,7 +33,49 @@ public class AuthenticationService {
     private final GoogleJwtService googleJwtService;
     private final AuthenticationManager authenticationManager;
 
-    @Transactional
+    private boolean verifyTokenIfHasRegisteredViaGoogle(Optional<User> currentUserByName, RegisterRequest request) {
+
+        if (currentUserByName.isPresent()) {
+            if (currentUserByName.get().getPassword() == null) {
+                if (request.getGoogleToken() != null
+                        && googleJwtService.isTokenValid(request.getGoogleToken())
+                        && googleJwtService.extractUsername(request.getGoogleToken()).equals(currentUserByName.get().getName())) {
+
+                    return true;
+                } else {
+                    throw new AccessDeniedException("bad token signature or token is empty");
+                }
+            } else {
+                log.error("sorry, such username has already taken {} , Transaction has been ended ROLLBACK", request.getUsername());
+                throw new ServerException("sorry, such username has already taken " + request.getUsername());
+            }
+        }
+
+        return false;
+    }
+
+    private AuthenticationResponse generateResponseTokens(String accessToken, String refreshToken) {
+        log.debug("Service returns authentication response with two tokens, transaction has been ended success ");
+        return AuthenticationResponse.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .build();
+    }
+
+    private void managerAuthentication(AuthenticationRequest request) {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            request.getUsername(),
+                            request.getPassword()
+                    )
+            );
+        } catch (BadCredentialsException ex) {
+            log.error("incorrect login or password");
+            throw new AccessDeniedException("incorrect login or password");
+        }
+    }
+
     public AuthenticationResponse register(RegisterRequest request) {
         log.info("Transaction has been started");
         log.debug("Service receives params for registration {}", request.getUsername());
@@ -50,69 +92,35 @@ public class AuthenticationService {
         }
         log.debug("Verifying existing od such username registered via google");
 
-        Optional<User> userByName = repository.findByName(request.getUsername());
+        Optional<User> currentUserByName = repository.findByName(request.getUsername());
 
-        if (userByName.isPresent()) {
-            if (userByName.get().getPassword() == null) {
-                if (request.getGoogleToken() != null
-                        && googleJwtService.isTokenValid(request.getGoogleToken())
-                        && googleJwtService.extractUsername(request.getGoogleToken()).equals(userByName.get().getName())) {
-
-                    user = userByName.get();
-                    user.setPassword(passwordEncoder.encode(request.getPassword()));
-                } else {
-                    throw new AccessDeniedException("bad token signature or token is empty");
-                }
-            } else {
-                log.error("sorry, such username has already taken {} , Transaction has been ended ROLLBACK", request.getUsername());
-                throw new ServerException("sorry, such username has already taken " + request.getUsername());
-            }
+        if (verifyTokenIfHasRegisteredViaGoogle(currentUserByName, request)) {
+            user = currentUserByName.get();
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
         }
 
         log.debug("Saving user and generating access and refresh tokens");
         repository.save(user);
 
-        String accessToken = jwtService.generateToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
-        log.debug("Service returns authentication response with two tokens, transaction has been ended success ");
-        return AuthenticationResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        return generateResponseTokens(jwtService.generateToken(user), jwtService.generateRefreshToken(user));
     }
 
-    @Transactional
+
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
-        log.info("Transaction has been started");
         log.debug("Service receives params for authentication {} , verifying login and password", request.getUsername());
 
 
         User user = repository.findByName(request.getUsername())
                 .orElseThrow(() -> {
-                    log.error("incorrect login or password, Transaction has been ended ROLLBACK");
+                    log.error("incorrect login or password");
                     return new AccessDeniedException("incorrect login or password");
                 });
-        log.debug("authentication");
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getUsername(),
-                            request.getPassword()
-                    )
-            );
-        } catch (BadCredentialsException ex) {
-            log.error("incorrect login or password Transaction has been ended ROLLBACK");
-            throw new AccessDeniedException("incorrect login or password");
-        }
 
-        log.debug("Service returns authentication response with two tokens, transaction has been ended success ");
+        managerAuthentication(request);
 
-        String accessToken = jwtService.generateToken(user);
-        String refreshToken = jwtService.generateRefreshToken(user);
-        return AuthenticationResponse.builder()
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
+        log.debug("Service returns authentication response with two tokens");
+
+        return generateResponseTokens(jwtService.generateToken(user), jwtService.generateRefreshToken(user));
     }
 
     public AuthenticationResponse refreshToken(AuthenticationRefreshRequest request) {
@@ -129,20 +137,15 @@ public class AuthenticationService {
 
             log.debug("Service returns authentication response with two tokens");
 
-            String accessToken = jwtService.generateToken(currentUser);
-            String refreshToken = jwtService.generateRefreshToken(currentUser);
-            return AuthenticationResponse.builder()
-                    .accessToken(accessToken)
-                    .refreshToken(refreshToken)
-                    .build();
+            return generateResponseTokens(jwtService.generateToken(currentUser), jwtService.generateRefreshToken(currentUser));
+
         }
         log.error("token is not valid {}", request.getRefreshToken());
         throw new AccessDeniedException("token is not valid");
     }
 
-    @Transactional
+
     public AuthenticationResponse authenticate(GoogleRequestToken request) {
-        log.info("Transaction has been started");
         log.debug("Service receives params for authentication , verifying google token id");
 
 
@@ -150,25 +153,20 @@ public class AuthenticationService {
             String username = googleJwtService.extractUsername(request.getGoogleToken());
 
             if (username != null) {
-                Optional<User> userByName = repository.findByName(username);
-                if (userByName.isEmpty()) {
-                    userByName = Optional.of(repository.save(User.builder().name(username.trim()).role(Role.USER).build()));
-                }
 
-                log.debug("Service returns authentication response with two tokens, transaction has been ended success ");
+                Optional<User> userByName = repository.findByName(username)
+                        .or(() -> Optional.of(repository.save(User.builder().name(username.trim()).role(Role.USER).build())));
 
-                String accessToken = jwtService.generateToken(userByName.get());
-                String refreshToken = jwtService.generateRefreshToken(userByName.get());
+                log.debug("Service returns authentication response with two tokens");
 
-                return AuthenticationResponse.builder()
-                        .accessToken(accessToken)
-                        .refreshToken(refreshToken)
-                        .build();
+                return generateResponseTokens(jwtService.generateToken(userByName.get()),
+                        jwtService.generateRefreshToken(userByName.get()));
+
             }
-            log.error("bad token signature, Transaction has been ended ROLLBACK");
+            log.error("bad token signature");
             throw new AccessDeniedException("bad token signature");
         }
-        log.error("token is not valid, Transaction has been ended ROLLBACK");
+        log.error("token is not valid");
         throw new AccessDeniedException("token is not valid");
 
     }
