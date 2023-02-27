@@ -1,6 +1,9 @@
 package com.epam.esm.authentication.service;
 
 
+import com.epam.esm.confirmation_token.model.ConfirmationToken;
+import com.epam.esm.confirmation_token.repository.ConfirmationTokenRepository;
+import com.epam.esm.confirmation_token.service.EmailService;
 import com.epam.esm.authentication.model.*;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.exceptionhandler.exception.UserInvalidData;
@@ -11,6 +14,8 @@ import com.epam.esm.user.model.User;
 import com.epam.esm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,8 +23,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -32,6 +37,9 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final GoogleJwtService googleJwtService;
     private final AuthenticationManager authenticationManager;
+    private final ConfirmationTokenRepository confirmationTokenRepository;
+    private final EmailService emailService;
+
 
     private boolean verifyTokenIfHasRegisteredViaGoogle(Optional<User> currentUserByName, RegisterRequest request) {
 
@@ -76,6 +84,80 @@ public class AuthenticationService {
         }
     }
 
+    private boolean verifyTokenConfirmation(ConfirmationToken token) {
+        log.debug("Verify token and its expiration {}", token);
+        if (token != null) {
+            if (token.getStatus()) {
+                return true;
+            }
+            log.error("Confirmation token has already expired {}", token);
+            throw new ServerException("Confirmation token has already expired");
+        }
+        return false;
+    }
+
+    private void sendEmailConfirmation(User user, ConfirmationToken confirmationToken) {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        mailMessage.setTo(user.getName());
+
+        mailMessage.setSubject("Complete Registration Spring Security!");
+        mailMessage.setText("To confirm your account, please click here : "
+                + "http://localhost:8080/api/v2/auth/confirm-account?token=" + confirmationToken.getConfirmationToken());
+
+        emailService.sendEmail(mailMessage);
+    }
+
+    public Map<String, ?> registerViaEmail(RegisterRequest request) {
+        log.debug("Receive registration request with letter confirmation {}",request.getUsername());
+        if (repository.existsByName(request.getUsername())) {
+
+            log.error("username has already existed {}", request.getUsername());
+            throw new ServerException("username has already existed " + request.getUsername());
+        }
+
+        User user = User.builder()
+                .name(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
+                .isEnabled(false)
+                .build();
+
+        repository.save(user);
+
+        ConfirmationToken confirmationToken = ConfirmationToken
+                .builder()
+                .confirmationToken(RandomStringUtils.randomAlphanumeric(133))
+                .user(user)
+                .build();
+
+        confirmationTokenRepository.save(confirmationToken);
+
+        log.debug("Build user model {} and confirmation token {}",user,confirmationToken);
+
+        sendEmailConfirmation(user, confirmationToken);
+
+        return Map.of("message", "Verify email by the link sent on your email address");
+    }
+
+    public Map<String, ?> confirmEmail(String confirmationToken) {
+        log.debug("Receive token to confirm email {}",confirmationToken);
+        ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
+
+        if (verifyTokenConfirmation(token)) {
+            User byName = repository.findByName(token.getUser().getName()).get();
+            byName.setEnabled(true);
+
+            repository.save(byName);
+
+            confirmationTokenRepository.delete(token);
+
+            return Map.of("message", "Email verified successfully!",
+                    "tokens", generateResponseTokens(jwtService.generateToken(byName), jwtService.generateRefreshToken(byName)));
+        }
+        log.error("Error occurred during the request {}",token);
+        throw new ServerException("Error occurred during the request");
+    }
+
     public AuthenticationResponse register(RegisterRequest request) {
         log.info("Transaction has been started");
         log.debug("Service receives params for registration {}", request.getUsername());
@@ -88,6 +170,7 @@ public class AuthenticationService {
                     .name(request.getUsername())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .role(Role.USER)
+                    .isEnabled(true)
                     .build();
         }
         log.debug("Verifying existing od such username registered via google");

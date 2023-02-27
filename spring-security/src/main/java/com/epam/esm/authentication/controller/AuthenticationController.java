@@ -11,20 +11,34 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/api")
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class AuthenticationController {
 
     private final AuthenticationService service;
 
-    @PostMapping("/register")
+    @PostMapping("/v2/auth/register")
+    public ResponseEntity<?> registerViaEmail(@RequestBody RegisterRequest request) {
+        log.debug("Validation of request model for registration via verification email " + request.getUsername());
+
+        if (DataValidation.validateRegisterRequest(request)) {
+            log.debug("Return tokens for auth");
+            return ResponseEntity.ok(service.registerViaEmail(request));
+        }
+        log.error("username or password cannot be empty " + request.getUsername());
+        throw new ServerException("username or password cannot be empty");
+    }
+
+    @GetMapping("/v2/auth/confirm-account")
+    public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String confirmationToken) {
+        return ResponseEntity.ok(service.confirmEmail(confirmationToken));
+    }
+
+    @PostMapping("/v1/auth/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
         log.debug("Validation of request model for registration " + request.getUsername());
 
@@ -36,7 +50,7 @@ public class AuthenticationController {
         throw new ServerException("username or password cannot be empty");
     }
 
-    @PostMapping("/login")
+    @PostMapping("/v1/auth/login")
     public ResponseEntity<?> authenticate(@RequestBody AuthenticationRequest request) {
         log.debug("Validation of request model authentication " + request.getUsername());
 
@@ -48,7 +62,7 @@ public class AuthenticationController {
         throw new ServerException("username or password cannot be empty");
     }
 
-    @PostMapping("/refresh")
+    @PostMapping("/v1/auth/refresh")
     public ResponseEntity<?> refresh(@RequestBody AuthenticationRefreshRequest token) {
         log.debug("Validation of request model for refreshing " + token.getRefreshToken());
 
@@ -60,7 +74,7 @@ public class AuthenticationController {
         throw new ServerException("refresh token cannot be empty or be consists of only numbers");
     }
 
-    @PostMapping("/google-auth")
+    @PostMapping("/v1/auth/google-auth")
     public ResponseEntity<?> loginWithGoogle(@RequestBody GoogleRequestToken token) {
         log.debug("Validation of request model for google auth " + token.getGoogleToken());
 

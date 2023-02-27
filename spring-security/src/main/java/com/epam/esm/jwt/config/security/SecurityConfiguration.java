@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                 .cors().disable()
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/api/v1/auth/**", "/error")
+                .requestMatchers("/api/v1/auth/**","/api/v2/auth/**", "/error")
                 .permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/v1/certificates",
                         "/api/v1/certificates/**",
