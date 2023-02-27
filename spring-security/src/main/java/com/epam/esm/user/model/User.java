@@ -32,6 +32,7 @@ public class User extends RepresentationModel<User> implements UserDetails{
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    private boolean isEnabled;
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private Set<Order> orders = Set.of();
 
