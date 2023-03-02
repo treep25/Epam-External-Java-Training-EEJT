@@ -1,8 +1,8 @@
 package com.epam.esm.user.controller;
 
-import com.epam.esm.user.dto.UserDTO;
+import com.epam.esm.user.model.UserResponse;
 import com.epam.esm.user.model.User;
-import com.epam.esm.user.model.UserDTOMapper;
+import com.epam.esm.user.model.UserResponseMapper;
 import com.epam.esm.user.model.UserHateoasBuilder;
 import com.epam.esm.user.service.UserService;
 import com.epam.esm.utils.validation.DataValidation;
@@ -29,7 +29,7 @@ public class UserController {
     private final UserService userService;
     private final UserHateoasBuilder userHateoasBuilder;
 
-    private final UserDTOMapper userDTOMapper;
+    private final UserResponseMapper userResponseMapper;
 
     @GetMapping
     public ResponseEntity<?> read(@RequestParam(value = "page", defaultValue = "0") int page,
@@ -40,10 +40,10 @@ public class UserController {
 
         Page<User> allUsers = userService.getAllUsers(page, size);
 
-        Page<UserDTO> userDTOs = userDTOMapper.convertUserPageToUserDTOPage(allUsers);
+        Page<UserResponse> userDTOs = userResponseMapper.convertUserPageToUserDTOPage(allUsers);
         log.debug("Receive all users");
 
-        PagedModel<UserDTO> allUsersPagedModel = userHateoasBuilder
+        PagedModel<UserResponse> allUsersPagedModel = userHateoasBuilder
                 .getHateoasUserForReading(userDTOs);
         log.debug("Return Hateoas model of users");
 
@@ -56,9 +56,9 @@ public class UserController {
         User currentUser = userService.getById(id);
         log.debug("Receive user");
 
-        UserDTO userDTO = userDTOMapper.convertUserToUserDTO(currentUser);
+        UserResponse userResponse = userResponseMapper.convertUserToUserDTO(currentUser);
 
-        CollectionModel<UserDTO> userCollectionModel = userHateoasBuilder.getHateoasUserForReadingById(userDTO);
+        CollectionModel<UserResponse> userCollectionModel = userHateoasBuilder.getHateoasUserForReadingById(userResponse);
         log.debug("Return Hateoas model of user");
 
         return ResponseEntity.ok(Map.of("user", userCollectionModel));

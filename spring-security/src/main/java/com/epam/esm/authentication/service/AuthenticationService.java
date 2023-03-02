@@ -54,7 +54,7 @@ public class AuthenticationService {
                     throw new AccessDeniedException("bad token signature or token is empty");
                 }
             } else {
-                log.error("sorry, such username has already taken {} , Transaction has been ended ROLLBACK", request.getUsername());
+                log.error("sorry, such username has already taken {}", request.getUsername());
                 throw new ServerException("sorry, such username has already taken " + request.getUsername());
             }
         }
@@ -63,7 +63,7 @@ public class AuthenticationService {
     }
 
     private AuthenticationResponse generateResponseTokens(String accessToken, String refreshToken) {
-        log.debug("Service returns authentication response with two tokens, transaction has been ended success ");
+        log.debug("Service returns authentication response with two tokens {} , {}",accessToken ,refreshToken);
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -133,7 +133,6 @@ public class AuthenticationService {
         confirmationTokenRepository.save(confirmationToken);
 
         log.debug("Build user model {} and confirmation token {}",user,confirmationToken);
-
         sendEmailConfirmation(user, confirmationToken);
 
         return Map.of("message", "Verify email by the link sent on your email address");
@@ -238,7 +237,7 @@ public class AuthenticationService {
             if (username != null) {
 
                 Optional<User> userByName = repository.findByName(username)
-                        .or(() -> Optional.of(repository.save(User.builder().name(username.trim()).role(Role.USER).build())));
+                        .or(() -> Optional.of(repository.save(User.builder().name(username.trim()).isEnabled(true).role(Role.USER).build())));
 
                 log.debug("Service returns authentication response with two tokens");
 

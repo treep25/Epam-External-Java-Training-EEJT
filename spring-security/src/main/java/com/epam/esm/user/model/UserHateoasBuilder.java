@@ -6,7 +6,6 @@ import com.epam.esm.orders.controller.OrderController;
 import com.epam.esm.orders.model.Order;
 import com.epam.esm.tag.controller.TagController;
 import com.epam.esm.user.controller.UserController;
-import com.epam.esm.user.dto.UserDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +25,12 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class UserHateoasBuilder {
 
-    private final PagedResourcesAssembler<UserDTO> representationModelAssembler;
+    private final PagedResourcesAssembler<UserResponse> representationModelAssembler;
 
-    public PagedModel<UserDTO> getHateoasUserForReading(Page<UserDTO> pagedUsers) {
+    public PagedModel<UserResponse> getHateoasUserForReading(Page<UserResponse> pagedUsers) {
         log.info("Building HATEOAS paged-model entity");
 
-        PagedModel<UserDTO> users = representationModelAssembler
+        PagedModel<UserResponse> users = representationModelAssembler
                 .toModel(pagedUsers, user -> {
                     user.add(linkTo(methodOn(UserController.class)
                             .readById(new User(),user.getId()))
@@ -48,7 +47,7 @@ public class UserHateoasBuilder {
         return users;
     }
 
-    private void builderForCreate(UserDTO user) {
+    private void builderForCreate(UserResponse user) {
         user.getOrders().forEach(order -> {
             order.add(linkTo(methodOn(OrderController.class)
                             .readById(new User(),order.getId()))
@@ -97,13 +96,13 @@ public class UserHateoasBuilder {
         }
     }
 
-    public CollectionModel<UserDTO> getHateoasUserForReadingById(UserDTO userDTO) {
+    public CollectionModel<UserResponse> getHateoasUserForReadingById(UserResponse userResponse) {
         log.info("Building HATEOAS collection-model entity");
 
-        builderForCreate(userDTO);
+        builderForCreate(userResponse);
 
 
-        return CollectionModel.of(List.of(userDTO))
+        return CollectionModel.of(List.of(userResponse))
                 .add(linkTo(methodOn(UserController.class)
                         .read(0, 20))
                         .withRel(() -> "get all users"))
