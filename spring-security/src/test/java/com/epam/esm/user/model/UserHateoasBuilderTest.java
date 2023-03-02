@@ -1,6 +1,5 @@
 package com.epam.esm.user.model;
 
-import com.epam.esm.user.dto.UserDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +31,7 @@ class UserHateoasBuilderTest {
     @InjectMocks
     private UserHateoasBuilder userHateoasBuilder;
     @Mock
-    private PagedResourcesAssembler<UserDTO> representationModelAssembler;
+    private PagedResourcesAssembler<UserResponse> representationModelAssembler;
 
     @Captor
     ArgumentCaptor<Link> linkCaptor;
@@ -40,16 +39,16 @@ class UserHateoasBuilderTest {
     @Test
     void getHateoasUserForReadingTest() {
         //given
-        UserDTO userDTO = UserDTO.builder().id(1L).username("USerPlug").orders(Set.of()).build();
-        Page<UserDTO> users = new PageImpl<>(List.of(userDTO));
-        PagedModel<UserDTO> allUserModel = mock(PagedModel.class);
+        UserResponse userResponse = UserResponse.builder().id(1L).username("USerPlug").orders(Set.of()).build();
+        Page<UserResponse> users = new PageImpl<>(List.of(userResponse));
+        PagedModel<UserResponse> allUserModel = mock(PagedModel.class);
 
         when(allUserModel.add(ArgumentMatchers.<Link>any())).thenReturn(allUserModel);
 
-        when(representationModelAssembler.toModel(eq(users), ArgumentMatchers.<RepresentationModelAssembler<UserDTO, UserDTO>>any())).thenReturn(allUserModel);
+        when(representationModelAssembler.toModel(eq(users), ArgumentMatchers.<RepresentationModelAssembler<UserResponse, UserResponse>>any())).thenReturn(allUserModel);
 
         //when
-        PagedModel<UserDTO> actual = userHateoasBuilder.getHateoasUserForReading(users);
+        PagedModel<UserResponse> actual = userHateoasBuilder.getHateoasUserForReading(users);
 
         //then
         assertEquals(actual, allUserModel);
@@ -60,13 +59,13 @@ class UserHateoasBuilderTest {
     @Test
     void getHateoasUserForReadingByIdTest() {
         //given
-        UserDTO userObj = UserDTO.builder().id(1L).username("USerPlug").orders(Set.of()).build();
-        UserDTO userExpected = UserDTO.builder().id(1L).username("USerPlug").orders(Set.of()).build();
+        UserResponse userObj = UserResponse.builder().id(1L).username("USerPlug").orders(Set.of()).build();
+        UserResponse userExpected = UserResponse.builder().id(1L).username("USerPlug").orders(Set.of()).build();
 
-        CollectionModel<UserDTO> expected = CollectionModel.of(List.of(userObj));
+        CollectionModel<UserResponse> expected = CollectionModel.of(List.of(userObj));
 
         //when
-        CollectionModel<UserDTO> actual = userHateoasBuilder.getHateoasUserForReadingById(userExpected);
+        CollectionModel<UserResponse> actual = userHateoasBuilder.getHateoasUserForReadingById(userExpected);
 
         //then
         assertEquals(expected.getContent().stream().toList(), actual.getContent().stream().toList());
