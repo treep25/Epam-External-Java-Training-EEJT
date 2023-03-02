@@ -14,16 +14,16 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 @RunWith(SpringRunner.class)
 @ExtendWith(MockitoExtension.class)
-class UserDTOMapperTest {
+class UserResponseMapperTest {
 
     @InjectMocks
-    private UserDTOMapper userDTOMapper;
+    private UserResponseMapper userResponseMapper;
 
     @Test
     void convertUserToUserDTO() {
         User before = User.builder().id(1L).build();
 
-        assertNotNull(userDTOMapper.convertUserToUserDTO(before));
+        assertNotNull(userResponseMapper.convertUserToUserDTO(before));
 
     }
 
@@ -32,6 +32,6 @@ class UserDTOMapperTest {
         User before = User.builder().id(1L).build();
         Page<User> pagedUsers = new PageImpl<>(List.of(before));
 
-        assertNotNull(userDTOMapper.convertUserPageToUserDTOPage(pagedUsers));
+        assertNotNull(userResponseMapper.convertUserPageToUserDTOPage(pagedUsers));
     }
 }
