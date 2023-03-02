@@ -1,0 +1,49 @@
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: 'jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1;NON_KEYWORDS=KEY,VALUE'
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  mail:
+    host: smtp.gmail.com
+    port: '587'
+    username: bogdan.grigorenko.jb@gmail.com
+    password: kmemeaajetbvymrv
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: >-
+              1091690724125-tl75t5e2s6kumv8ealqksa5q6rfidcel.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - openid
+              - profile
+              - email
+      resourceserver:
+        jwt:
+          issuer-uri: 'https://accounts.google.com'
+          jwk-set-uri: 'https://www.googleapis.com/oauth2/v3/certs'
+app:
+  feign:
+    config:
+      name: google-verify
+      url: 'https://oauth2.googleapis.com/tokeninfo'
+jwt:
+  secret:
+    key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+google:
+  jwt:
+    iss: 'https://accounts.google.com'
