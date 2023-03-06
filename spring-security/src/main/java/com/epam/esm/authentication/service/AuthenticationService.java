@@ -31,7 +31,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @EnableTransactionManagement
-public class AuthenticationService {
+public class AuthenticationService implements AuthenticationServiceInterface {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
@@ -40,6 +40,8 @@ public class AuthenticationService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
     private final EmailService emailService;
 
+    private final static boolean NOT_VERIFIED = false;
+    private final static boolean VERIFIED = true;
 
     private boolean verifyTokenIfHasRegisteredViaGoogle(Optional<User> currentUserByName, RegisterRequest request) {
 
@@ -63,7 +65,8 @@ public class AuthenticationService {
     }
 
     private AuthenticationResponse generateResponseTokens(String accessToken, String refreshToken) {
-        log.debug("Service returns authentication response with two tokens {} , {}",accessToken ,refreshToken);
+        log.debug("Service returns authentication response with two tokens {} , {}", accessToken, refreshToken);
+
         return AuthenticationResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
@@ -107,22 +110,7 @@ public class AuthenticationService {
         emailService.sendEmail(mailMessage);
     }
 
-    public Map<String, ?> registerViaEmail(RegisterRequest request) {
-        log.debug("Receive registration request with letter confirmation {}",request.getUsername());
-        if (repository.existsByName(request.getUsername())) {
-
-            log.error("username has already existed {}", request.getUsername());
-            throw new ServerException("username has already existed " + request.getUsername());
-        }
-
-        User user = User.builder()
-                .name(request.getUsername())
-                .password(passwordEncoder.encode(request.getPassword()))
-                .role(Role.USER)
-                .isEnabled(false)
-                .build();
-
-        repository.save(user);
+    private void generateVerificationTokenAndSend(User user) {
 
         ConfirmationToken confirmationToken = ConfirmationToken
                 .builder()
@@ -132,19 +120,71 @@ public class AuthenticationService {
 
         confirmationTokenRepository.save(confirmationToken);
 
-        log.debug("Build user model {} and confirmation token {}",user,confirmationToken);
+        log.debug("Build user model {} and confirmation token {}", user, confirmationToken);
         sendEmailConfirmation(user, confirmationToken);
+    }
+
+    private boolean verifyIfUserTryingTiRegisterButDoNotCheckEmail(RegisterRequest request) {
+        return repository.existsByName(request.getUsername());
+    }
+
+    @Override
+    public Map<String, ?> registerViaEmail(RegisterRequest request) {
+        log.debug("Receive registration request with letter confirmation {}", request.getUsername());
+        if (verifyIfUserTryingTiRegisterButDoNotCheckEmail(request)) {
+
+            User user = repository.findByName(request.getUsername()).get();
+            log.debug("verifying if user has status enabled false {}", user.getVerificationStatus());
+
+            if (!user.getVerificationStatus()) {
+
+                ConfirmationToken confirmationToken = confirmationTokenRepository.findByUser(user);
+
+                if (!confirmationToken.getStatus()) {
+                    confirmationTokenRepository.delete(confirmationToken);
+
+                    generateVerificationTokenAndSend(user);
+
+                    return Map.of("message", "Verify email by the link sent on your email address");
+                }
+                return Map.of("message", "Your verification link has already sent, verify email " + user.getName());
+
+            } else if (verifyTokenIfHasRegisteredViaGoogle(Optional.of(user), request)) {
+
+                user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+                log.debug("Saving user and generating access and refresh tokens");
+                repository.save(user);
+
+                return generateResponseTokens(jwtService.generateToken(user), jwtService.generateRefreshToken(user))
+                        .buildRegisterMapWithTokens();
+            }
+
+            log.error("username has already existed {}", request.getUsername());
+            throw new ServerException("username has already existed " + request.getUsername());
+        }
+
+        User user = User.builder()
+                .name(request.getUsername())
+                .password(passwordEncoder.encode(request.getPassword()))
+                .role(Role.USER)
+                .isEnabled(NOT_VERIFIED)
+                .build();
+
+        repository.save(user);
+
+        generateVerificationTokenAndSend(user);
 
         return Map.of("message", "Verify email by the link sent on your email address");
     }
-
+    @Override
     public Map<String, ?> confirmEmail(String confirmationToken) {
-        log.debug("Receive token to confirm email {}",confirmationToken);
+        log.debug("Receive token to confirm email {}", confirmationToken);
         ConfirmationToken token = confirmationTokenRepository.findByConfirmationToken(confirmationToken);
 
         if (verifyTokenConfirmation(token)) {
             User byName = repository.findByName(token.getUser().getName()).get();
-            byName.setEnabled(true);
+            byName.setEnabled(VERIFIED);
 
             repository.save(byName);
 
@@ -153,10 +193,10 @@ public class AuthenticationService {
             return Map.of("message", "Email verified successfully!",
                     "tokens", generateResponseTokens(jwtService.generateToken(byName), jwtService.generateRefreshToken(byName)));
         }
-        log.error("Error occurred during the request {}",token);
+        log.error("Error occurred during the request {}", token);
         throw new ServerException("Error occurred during the request");
     }
-
+    @Override
     public AuthenticationResponse register(RegisterRequest request) {
         log.info("Transaction has been started");
         log.debug("Service receives params for registration {}", request.getUsername());
@@ -169,7 +209,7 @@ public class AuthenticationService {
                     .name(request.getUsername())
                     .password(passwordEncoder.encode(request.getPassword()))
                     .role(Role.USER)
-                    .isEnabled(true)
+                    .isEnabled(VERIFIED)
                     .build();
         }
         log.debug("Verifying existing od such username registered via google");
@@ -187,7 +227,7 @@ public class AuthenticationService {
         return generateResponseTokens(jwtService.generateToken(user), jwtService.generateRefreshToken(user));
     }
 
-
+    @Override
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         log.debug("Service receives params for authentication {} , verifying login and password", request.getUsername());
 
@@ -204,7 +244,7 @@ public class AuthenticationService {
 
         return generateResponseTokens(jwtService.generateToken(user), jwtService.generateRefreshToken(user));
     }
-
+    @Override
     public AuthenticationResponse refreshToken(AuthenticationRefreshRequest request) {
         log.debug("Service receives params for refreshing {} , verifying refresh token", request.getRefreshToken());
 
@@ -226,7 +266,7 @@ public class AuthenticationService {
         throw new AccessDeniedException("token is not valid");
     }
 
-
+    @Override
     public AuthenticationResponse authenticate(GoogleRequestToken request) {
         log.debug("Service receives params for authentication , verifying google token id");
 
@@ -237,7 +277,7 @@ public class AuthenticationService {
             if (username != null) {
 
                 Optional<User> userByName = repository.findByName(username)
-                        .or(() -> Optional.of(repository.save(User.builder().name(username.trim()).isEnabled(true).role(Role.USER).build())));
+                        .or(() -> Optional.of(repository.save(User.builder().name(username.trim()).isEnabled(VERIFIED).role(Role.USER).build())));
 
                 log.debug("Service returns authentication response with two tokens");
 

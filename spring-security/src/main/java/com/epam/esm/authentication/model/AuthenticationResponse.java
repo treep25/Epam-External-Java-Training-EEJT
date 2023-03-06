@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -13,4 +15,8 @@ public class AuthenticationResponse {
 
     private String accessToken;
     private String refreshToken;
+
+    public Map<String,String> buildRegisterMapWithTokens(){
+        return Map.of("accessToken",accessToken,"refreshToken",refreshToken);
+    }
 }

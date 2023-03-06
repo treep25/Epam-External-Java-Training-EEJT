@@ -18,7 +18,7 @@ import java.util.Date;
 public class ConfirmationToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long tokenId;
 
     private String confirmationToken;

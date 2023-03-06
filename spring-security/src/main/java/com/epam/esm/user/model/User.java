@@ -23,7 +23,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Builder
 @Table(name = "users")
-public class User extends RepresentationModel<User> implements UserDetails{
+public class User extends RepresentationModel<User> implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -33,7 +33,7 @@ public class User extends RepresentationModel<User> implements UserDetails{
     private Role role;
 
     private boolean isEnabled;
-    @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Order> orders = Set.of();
 
     @Override
@@ -41,11 +41,15 @@ public class User extends RepresentationModel<User> implements UserDetails{
         return password;
     }
 
-    public List<Long> getOrdersIds(){
+    public List<Long> getOrdersIds() {
         List<Long> ids = new ArrayList<>();
         orders.forEach(order -> ids.add(order.getId()));
 
         return ids;
+    }
+
+    public boolean getVerificationStatus() {
+        return isEnabled;
     }
 
     @Override
@@ -78,7 +82,7 @@ public class User extends RepresentationModel<User> implements UserDetails{
         return true;
     }
 
-    public boolean is(Role role){
+    public boolean is(Role role) {
         return this.getRole().equals(role);
     }
 
