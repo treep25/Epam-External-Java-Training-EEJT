@@ -17,6 +17,7 @@
     <description>EEJT-0004</description>
 
     <properties>
+        <maven.compiler.release>10</maven.compiler.release>
         <spring-cloud.version>2022.0.1</spring-cloud.version>
         <java.version>17</java.version>
     </properties>
@@ -201,6 +202,13 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>10</release>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
