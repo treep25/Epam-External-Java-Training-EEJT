@@ -1,10 +1,10 @@
 package com.epam.esm.authentication.service;
 
 
+import com.epam.esm.authentication.model.*;
 import com.epam.esm.confirmation_token.model.ConfirmationToken;
 import com.epam.esm.confirmation_token.repository.ConfirmationTokenRepository;
 import com.epam.esm.confirmation_token.service.EmailService;
-import com.epam.esm.authentication.model.*;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.exceptionhandler.exception.UserInvalidData;
 import com.epam.esm.jwt.google.GoogleJwtService;
@@ -255,7 +255,7 @@ public class AuthenticationService implements AuthenticationServiceInterface {
                 });
 
         log.debug("Validation of refresh token");
-        if (jwtService.isTokenValid(request.getRefreshToken(), currentUser)) {
+        if (jwtService.isTokenRefreshValid(request.getRefreshToken(), currentUser)) {
 
             log.debug("Service returns authentication response with two tokens");
 

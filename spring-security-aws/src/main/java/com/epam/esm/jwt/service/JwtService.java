@@ -83,7 +83,15 @@ public class JwtService {
     public boolean isTokenValid(String token, UserDetails userDetails) {
         log.debug("Validation of token");
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername())) && !isTokenExpired(token);
+        final String role = extractAllClaims(token).get("roles").toString();
+
+        return username.equals(userDetails.getUsername()) && userDetails.getAuthorities().stream().toList().toString().contains(role) && !isTokenExpired(token);
+    }
+
+    public boolean isTokenRefreshValid(String refreshToken, UserDetails userDetails) {
+        log.debug("Validation of token");
+        final String username = extractUsername(refreshToken);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(refreshToken);
     }
 
     private boolean isTokenExpired(String token) {

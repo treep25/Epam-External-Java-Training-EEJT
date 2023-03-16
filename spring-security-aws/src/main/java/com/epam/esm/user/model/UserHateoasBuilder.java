@@ -29,7 +29,6 @@ public class UserHateoasBuilder {
 
     public PagedModel<UserResponse> getHateoasUserForReading(Page<UserResponse> pagedUsers) {
         log.info("Building HATEOAS paged-model entity");
-
         PagedModel<UserResponse> users = representationModelAssembler
                 .toModel(pagedUsers, user -> {
                     user.add(linkTo(methodOn(UserController.class)

@@ -60,6 +60,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                     authenticateToken(userDetails,request);
                 }
+                throw new JwtException("");
             }
             filterChain.doFilter(request, response);
         } catch (JwtException ex) {
