@@ -209,8 +209,12 @@
     <profiles>
         <profile>
             <id>SonarQube</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
-                <sonar.profile>SonarQube</sonar.profile>
+                <sonar.host.url>http://localhost:9000</sonar.host.url>
+
             </properties>
         </profile>
     </profiles>
