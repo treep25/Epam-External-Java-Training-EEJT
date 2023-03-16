@@ -34,7 +34,7 @@ public class AuthenticationController {
     }
 
     @GetMapping("/v2/auth/confirm-account")
-    public ResponseEntity<?> confirmUserAccount(@RequestParam("token")String confirmationToken) {
+    public ResponseEntity<?> confirmUserAccount(@RequestParam("token") String confirmationToken) {
         return ResponseEntity.ok(service.confirmEmail(confirmationToken));
     }
 
