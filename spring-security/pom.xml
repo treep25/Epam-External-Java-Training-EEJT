@@ -197,18 +197,25 @@
             <version>2.2.1.RELEASE</version>
         </dependency>
 
-    </dependencies>
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.sonarsource.scanner.maven</groupId>
-                    <artifactId>sonar-maven-plugin</artifactId>
-                    <version>3.4.0.905</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
+        <dependency>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>sonar-maven-plugin</artifactId>
+            <version>3.9.0.2155</version>
+            <type>pom</type>
+        </dependency>
 
+    </dependencies>
+
+    <profiles>
+        <profile>
+            <id>SonarQube</id>
+            <properties>
+                <sonar.profile>SonarQube</sonar.profile>
+            </properties>
+        </profile>
+    </profiles>
+
+    <build>
         <plugins>
             <plugin>
                 <!-- Build an executable JAR -->
