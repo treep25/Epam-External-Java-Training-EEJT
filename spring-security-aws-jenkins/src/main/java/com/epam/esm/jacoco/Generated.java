@@ -1,4 +1,4 @@
-package com.epam.esm;
+package com.epam.esm.jacoco;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
