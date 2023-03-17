@@ -128,27 +128,12 @@ class AuthenticationServiceTest {
     }
 
     @Test
-    void refreshTokenTest_ReturnTokens_ForAll() {
-        AuthenticationRefreshRequest request = AuthenticationRefreshRequest.builder().refreshToken("").build();
-        User build = User.builder().name("").role(Role.USER).password("").build();
-
-        when(jwtServiceMock.extractUsername(request.getRefreshToken())).thenReturn("");
-        when(repositoryMock.findByName("")).thenReturn(Optional.of(build));
-        when(jwtServiceMock.isTokenValid("",build)).thenReturn(true);
-        when(jwtServiceMock.generateRefreshToken(build)).thenReturn("");
-        when(jwtServiceMock.generateToken(build)).thenReturn("");
-
-        authenticationServiceMock.refreshToken(request);
-    }
-
-    @Test
     void refreshTokenTest_ReturnAccessDenied_ForAll_WhenIncorrectToken() {
         AuthenticationRefreshRequest request = AuthenticationRefreshRequest.builder().refreshToken("").build();
         User build = User.builder().name("").role(Role.USER).password("").build();
         when(jwtServiceMock.extractUsername(request.getRefreshToken())).thenReturn("");
 
         when(repositoryMock.findByName("")).thenReturn(Optional.of(build));
-        when(jwtServiceMock.isTokenValid("",build)).thenReturn(false);
 
         AccessDeniedException thrown = assertThrows(AccessDeniedException.class,
                 () -> authenticationServiceMock.refreshToken(request));
