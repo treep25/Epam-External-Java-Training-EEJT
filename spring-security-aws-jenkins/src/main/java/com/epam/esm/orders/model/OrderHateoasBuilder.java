@@ -1,8 +1,8 @@
 package com.epam.esm.orders.model;
 
-import com.epam.esm.Generated;
 import com.epam.esm.giftcertficate.controller.GiftCertificateController;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
+import com.epam.esm.jacoco.Generated;
 import com.epam.esm.orders.controller.OrderController;
 import com.epam.esm.tag.controller.TagController;
 import com.epam.esm.tag.model.Tag;

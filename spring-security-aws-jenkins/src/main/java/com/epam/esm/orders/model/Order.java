@@ -1,7 +1,7 @@
 package com.epam.esm.orders.model;
 
-import com.epam.esm.Generated;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
+import com.epam.esm.jacoco.Generated;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;

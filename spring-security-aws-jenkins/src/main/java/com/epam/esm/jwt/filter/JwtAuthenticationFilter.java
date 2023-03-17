@@ -1,6 +1,6 @@
 package com.epam.esm.jwt.filter;
 
-import com.epam.esm.Generated;
+import com.epam.esm.jacoco.Generated;
 import com.epam.esm.jwt.service.JwtService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;

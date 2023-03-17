@@ -1,7 +1,7 @@
 package com.epam.esm.jwt.config.security;
 
-import com.epam.esm.Generated;
 import com.epam.esm.exceptionhandler.handler.RestAccessDeniedHandler;
+import com.epam.esm.jacoco.Generated;
 import com.epam.esm.jwt.filter.JwtAuthenticationFilter;
 import com.epam.esm.role.Role;
 import lombok.RequiredArgsConstructor;

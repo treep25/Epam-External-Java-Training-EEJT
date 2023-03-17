@@ -1,7 +1,7 @@
 package com.epam.esm.tag.model;
 
-import com.epam.esm.Generated;
 import com.epam.esm.giftcertficate.controller.GiftCertificateController;
+import com.epam.esm.jacoco.Generated;
 import com.epam.esm.tag.controller.TagController;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

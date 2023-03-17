@@ -1,6 +1,6 @@
 package com.epam.esm.tag.model;
 
-import com.epam.esm.Generated;
+import com.epam.esm.jacoco.Generated;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

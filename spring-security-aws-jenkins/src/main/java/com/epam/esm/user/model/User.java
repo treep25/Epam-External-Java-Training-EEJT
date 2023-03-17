@@ -1,6 +1,6 @@
 package com.epam.esm.user.model;
 
-import com.epam.esm.Generated;
+import com.epam.esm.jacoco.Generated;
 import com.epam.esm.orders.model.Order;
 import com.epam.esm.role.Role;
 import jakarta.persistence.*;

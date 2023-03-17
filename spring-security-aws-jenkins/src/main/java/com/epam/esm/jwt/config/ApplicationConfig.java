@@ -1,7 +1,7 @@
 package com.epam.esm.jwt.config;
 
-import com.epam.esm.Generated;
 import com.epam.esm.exceptionhandler.exception.UserInvalidData;
+import com.epam.esm.jacoco.Generated;
 import com.epam.esm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

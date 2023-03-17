@@ -1,6 +1,6 @@
 package com.epam.esm.confirmation_token.model;
 
-import com.epam.esm.Generated;
+import com.epam.esm.jacoco.Generated;
 import com.epam.esm.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;

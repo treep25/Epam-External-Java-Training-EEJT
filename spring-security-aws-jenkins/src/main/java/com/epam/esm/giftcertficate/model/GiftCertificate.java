@@ -1,6 +1,6 @@
 package com.epam.esm.giftcertficate.model;
 
-import com.epam.esm.Generated;
+import com.epam.esm.jacoco.Generated;
 import com.epam.esm.tag.model.Tag;
 import jakarta.persistence.*;
 import lombok.*;
