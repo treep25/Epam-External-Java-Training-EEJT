@@ -45,7 +45,8 @@ public class SecurityConfiguration {
                         "/api/v1/certificates/search/**",
                         "/api/v1/tags",
                         "/api/v1/tags/**",
-                        "/api/v1/tags/widely-used")
+                        "/api/v1/tags/widely-used",
+                        "/actuator/health")
                 .permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/v1/certificates", "/api/v1/tags").hasAuthority(Role.ADMIN.name())
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/certificates/**", "/api/v1/certificates/update-price/**").hasAuthority(Role.ADMIN.name())
