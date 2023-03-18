@@ -63,7 +63,6 @@ google:
 server:
   error:
     include-message: always
-  port: 9093
 management:
   health:
     mail:
