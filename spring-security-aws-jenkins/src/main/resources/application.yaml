@@ -21,6 +21,7 @@ spring:
           auth: true
           starttls:
             enable: true
+
   security:
     oauth2:
       client:
@@ -62,3 +63,8 @@ google:
 server:
   error:
     include-message: always
+  port: 9093
+management:
+  health:
+    mail:
+      enabled: false
