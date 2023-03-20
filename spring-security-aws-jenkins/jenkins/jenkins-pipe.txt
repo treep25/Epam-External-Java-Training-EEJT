@@ -1,0 +1,99 @@
+pipeline {
+    agent any
+    tools {
+        maven 'Maven_Latest'
+    }
+    stages {
+        stage('Setup parameters') {
+            steps {
+                script {
+                    properties([
+                        parameters([
+                            choice(
+                                choices: ['master','EEJT-0004','EEJT-0005','EEJT-0006'],
+                                name: 'BRANCH'
+                            ),
+                            string(
+                                defaultValue: 'spring-security-aws-jenkins', name: 'MAVEN_ROOT'
+                            ),
+                            choice(
+                                choices: ['dev','prod'],
+                                name: 'PROFILE'
+                            )
+                        ])
+                    ])
+                }
+            }
+        }
+        stage('pool') {
+            steps{
+                checkout([$class: 'GitSCM',
+                branches: [[name: BRANCH]],
+                userRemoteConfigs: [[url: 'https://github.com/treep25/Epam-External-Java-Training-EEJT.git']],
+                changelog: false,
+                poll: true
+                ])
+            }
+        }
+        stage('run test') {
+            steps{
+                dir(MAVEN_ROOT) {
+                    bat 'mvn test'
+                }
+
+            }
+        }
+
+        stage('JaCoCo') {
+            steps{
+                dir(MAVEN_ROOT) {
+                    junit 'target/surefire-reports/**/*xml'
+                    jacoco()
+                }
+            }
+        }
+
+        stage('sonarQube') {
+            steps{
+                dir(MAVEN_ROOT) {
+                    bat 'mvn clean'
+                    bat 'mvn verify'
+                    bat 'mvn sonar:sonar -Dsonar.login=squ_fd0200e80cf5f7fa3d1fa7032dc2c1b28ef50a29 -Dsonar.projectName=EEJT'
+                }
+            }
+        }
+
+        stage('build') {
+            steps{
+                dir(MAVEN_ROOT) {
+                    bat 'mvn clean'
+                    bat 'mvn package -Dmaven.test.skip'
+                }
+            }
+        }
+
+        stage('deploy') {
+            steps{
+                dir(MAVEN_ROOT) {
+                    withEnv(['JENKINS_NODE_COOKIE=dontkill']) {
+                        script {
+                            try{
+                                bat 'mvn spring-boot:stop'
+                                bat 'mvn spring-boot:start -Dspring-boot.run.arguments=--spring.profiles.active='+PROFILE+' &'
+
+                                def response = bat(script: "curl -sf http://localhost:8080/actuator/health", returnStdout: true).trim()
+
+                            }catch(Exception e){
+                                bat 'mvn spring-boot:stop'
+                                error("There are some failures while deploying the job")
+                                throw e
+                            }
+                        }
+
+                    }
+                }
+            }
+        }
+
+    }
+}
