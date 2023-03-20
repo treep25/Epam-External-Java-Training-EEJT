@@ -63,7 +63,7 @@ google:
 server:
   error:
     include-message: always
-#management:
-#  health:
-#    mail:
-#      enabled: false
+management:
+  health:
+    mail:
+      enabled: false
