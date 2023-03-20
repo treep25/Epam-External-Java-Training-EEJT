@@ -279,13 +279,13 @@ public class AuthenticationService implements AuthenticationServiceInterface {
 
             if (username != null) {
 
-                Optional<User> userByName = repository.findByName(username)
-                        .or(() -> Optional.of(repository.save(User.builder().name(username.trim()).isEnabled(VERIFIED).role(Role.USER).build())));
+                User userByName = repository.findByName(username)
+                        .or(() -> Optional.of(repository.save(User.builder().name(username.trim()).isEnabled(VERIFIED).role(Role.USER).build()))).orElseThrow(() -> new ServerException("There are no user " + username));
 
                 log.debug("Service returns authentication response with two tokens");
 
-                return generateResponseTokens(jwtService.generateToken(userByName.orElseThrow(() -> new ServerException("There are no user " + username))),
-                        jwtService.generateRefreshToken(userByName.get()));
+                return generateResponseTokens(jwtService.generateToken(userByName),
+                        jwtService.generateRefreshToken(userByName));
 
             }
             log.error("bad token signature");
