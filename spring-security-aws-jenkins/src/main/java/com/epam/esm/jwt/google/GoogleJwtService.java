@@ -16,7 +16,7 @@ public class GoogleJwtService {
     private String aud;
     @Value("${google.jwt.iss}")
     private String iss;
-    private static final long THREE_HOURS = 3 * 3600;
+    private static final long THREE_HOURS = 3L * 3600;
     private static final String EXPIRATIONS_DATE = "exp";
     private static final String EMAIL = "email";
     private static final String AUDIENCE = "aud";

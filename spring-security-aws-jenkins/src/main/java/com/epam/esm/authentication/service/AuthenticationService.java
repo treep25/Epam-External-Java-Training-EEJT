@@ -177,6 +177,7 @@ public class AuthenticationService implements AuthenticationServiceInterface {
 
         return Map.of("message", "Verify email by the link sent on your email address");
     }
+
     @Override
     public Map<String, ?> confirmEmail(String confirmationToken) {
         log.debug("Receive token to confirm email {}", confirmationToken);
@@ -196,6 +197,7 @@ public class AuthenticationService implements AuthenticationServiceInterface {
         log.error("Error occurred during the request {}", token);
         throw new ServerException("Error occurred during the request");
     }
+
     @Override
     public AuthenticationResponse register(RegisterRequest request) {
         log.info("Transaction has been started");
@@ -244,6 +246,7 @@ public class AuthenticationService implements AuthenticationServiceInterface {
 
         return generateResponseTokens(jwtService.generateToken(user), jwtService.generateRefreshToken(user));
     }
+
     @Override
     public AuthenticationResponse refreshToken(AuthenticationRefreshRequest request) {
         log.debug("Service receives params for refreshing {} , verifying refresh token", request.getRefreshToken());
@@ -281,7 +284,7 @@ public class AuthenticationService implements AuthenticationServiceInterface {
 
                 log.debug("Service returns authentication response with two tokens");
 
-                return generateResponseTokens(jwtService.generateToken(userByName.get()),
+                return generateResponseTokens(jwtService.generateToken(userByName.orElseThrow(() -> new ServerException("There are no user " + username))),
                         jwtService.generateRefreshToken(userByName.get()));
 
             }
