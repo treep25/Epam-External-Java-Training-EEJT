@@ -63,6 +63,7 @@ google:
 server:
   error:
     include-message: always
+  port: 8081
 management:
   health:
     mail:
