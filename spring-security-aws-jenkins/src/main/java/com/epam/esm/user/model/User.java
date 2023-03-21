@@ -1,6 +1,6 @@
 package com.epam.esm.user.model;
 
-import com.epam.esm.jacoco.Generated;
+import com.epam.esm.jacoco.JacocoCoverageExcludesGenerated;
 import com.epam.esm.orders.model.Order;
 import com.epam.esm.role.Role;
 import jakarta.persistence.*;
@@ -17,7 +17,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-@Generated
+@JacocoCoverageExcludesGenerated
 @Entity
 @Getter
 @Setter

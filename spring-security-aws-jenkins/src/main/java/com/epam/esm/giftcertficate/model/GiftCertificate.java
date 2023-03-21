@@ -1,6 +1,6 @@
 package com.epam.esm.giftcertficate.model;
 
-import com.epam.esm.jacoco.Generated;
+import com.epam.esm.jacoco.JacocoCoverageExcludesGenerated;
 import com.epam.esm.tag.model.Tag;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,7 +13,7 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
-@Generated
+@JacocoCoverageExcludesGenerated
 @Entity
 @Getter
 @Setter

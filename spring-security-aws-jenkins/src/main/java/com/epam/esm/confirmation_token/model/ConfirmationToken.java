@@ -1,6 +1,6 @@
 package com.epam.esm.confirmation_token.model;
 
-import com.epam.esm.jacoco.Generated;
+import com.epam.esm.jacoco.JacocoCoverageExcludesGenerated;
 import com.epam.esm.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -9,7 +9,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
-@Generated
+@JacocoCoverageExcludesGenerated
 @Entity
 @Getter
 @Setter

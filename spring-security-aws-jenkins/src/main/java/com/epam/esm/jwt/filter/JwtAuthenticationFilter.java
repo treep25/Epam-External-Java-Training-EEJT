@@ -1,6 +1,6 @@
 package com.epam.esm.jwt.filter;
 
-import com.epam.esm.jacoco.Generated;
+import com.epam.esm.jacoco.JacocoCoverageExcludesGenerated;
 import com.epam.esm.jwt.service.JwtService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
@@ -19,7 +19,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Generated
+@JacocoCoverageExcludesGenerated
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {

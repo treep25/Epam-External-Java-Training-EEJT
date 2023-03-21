@@ -1,6 +1,6 @@
 package com.epam.esm.tag.model;
 
-import com.epam.esm.jacoco.Generated;
+import com.epam.esm.jacoco.JacocoCoverageExcludesGenerated;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import org.springframework.hateoas.RepresentationModel;
 
-@Generated
+@JacocoCoverageExcludesGenerated
 @Entity
 @Data
 @Builder

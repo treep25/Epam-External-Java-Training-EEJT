@@ -1,7 +1,7 @@
 package com.epam.esm.giftcertficate.model;
 
 import com.epam.esm.giftcertficate.controller.GiftCertificateController;
-import com.epam.esm.jacoco.Generated;
+import com.epam.esm.jacoco.JacocoCoverageExcludesGenerated;
 import com.epam.esm.tag.controller.TagController;
 import com.epam.esm.tag.model.Tag;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +19,7 @@ import java.util.Set;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-@Generated
+@JacocoCoverageExcludesGenerated
 @Slf4j
 @Component
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))

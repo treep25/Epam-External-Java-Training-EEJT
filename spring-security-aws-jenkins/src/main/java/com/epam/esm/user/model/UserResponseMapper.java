@@ -1,6 +1,6 @@
 package com.epam.esm.user.model;
 
-import com.epam.esm.jacoco.Generated;
+import com.epam.esm.jacoco.JacocoCoverageExcludesGenerated;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Generated
+@JacocoCoverageExcludesGenerated
 @Slf4j
 @Component
 public class UserResponseMapper {

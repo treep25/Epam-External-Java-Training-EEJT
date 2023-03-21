@@ -1,12 +1,12 @@
 package com.epam.esm.authentication.model;
 
-import com.epam.esm.jacoco.Generated;
+import com.epam.esm.jacoco.JacocoCoverageExcludesGenerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Generated
+@JacocoCoverageExcludesGenerated
 @Data
 @Builder
 @AllArgsConstructor

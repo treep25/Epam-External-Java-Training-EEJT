@@ -1,7 +1,7 @@
 package com.epam.esm.jwt.config;
 
 import com.epam.esm.exceptionhandler.exception.UserInvalidData;
-import com.epam.esm.jacoco.Generated;
+import com.epam.esm.jacoco.JacocoCoverageExcludesGenerated;
 import com.epam.esm.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@Generated
+@JacocoCoverageExcludesGenerated
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {

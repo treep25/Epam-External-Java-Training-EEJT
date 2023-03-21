@@ -1,7 +1,7 @@
 package com.epam.esm.orders.model;
 
 import com.epam.esm.giftcertficate.model.GiftCertificate;
-import com.epam.esm.jacoco.Generated;
+import com.epam.esm.jacoco.JacocoCoverageExcludesGenerated;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,7 +10,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Date;
 
-@Generated
+@JacocoCoverageExcludesGenerated
 @Entity
 @Getter
 @Setter
