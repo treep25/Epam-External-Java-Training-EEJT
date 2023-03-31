@@ -13,13 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @EnableTransactionManagement
 public class GiftCertificateCommerceService {
 
-    private final GiftCertificateCommerceRepository giftCertificateCommerceRepository;
+    private final GiftCertificateCommerceRepository<CommerceGiftCertificate> giftCertificateCommerceRepository;
 
     @Transactional
     public CommerceGiftCertificate createGiftCertificate(GiftCertificate giftCertificate) {
@@ -66,5 +68,11 @@ public class GiftCertificateCommerceService {
                 .preDeleteActionSetPublishFalse(id, giftCertificateCommerceRepository.getProductVersion(id));
 
         giftCertificateCommerceRepository.delete(id, giftCertificateCommerceRepository.getProductVersion(id));
+    }
+
+    public List<CommerceGiftCertificate> findByName(String name) {
+        log.info("Service receives params for searching by name {}", name);
+
+        return giftCertificateCommerceRepository.findByName(name);
     }
 }
