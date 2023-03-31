@@ -2,8 +2,6 @@ package com.epam.esm.commercetools.model;
 
 import com.commercetools.api.models.product.Attribute;
 import com.commercetools.api.models.product.Product;
-import com.epam.esm.giftcertficate.model.GiftCertificate;
-import org.apache.commons.lang.NotImplementedException;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
@@ -57,6 +55,8 @@ public class GiftCertificateCommerceProductMapper {
             tagNames.forEach(name -> tags.add(CommerceTag.builder().name(name).build()));
 
             giftCertificate.setTags(tags);
+        } else {
+            giftCertificate.setTags(Set.of());
         }
         return giftCertificate;
     }
@@ -66,10 +66,5 @@ public class GiftCertificateCommerceProductMapper {
         products.forEach(product -> giftCertificate.add(getGiftCertificateFromProductModel(product)));
 
         return giftCertificate;
-    }
-
-    public Product getProductFromGiftCertificate(GiftCertificate giftCertificate) {
-        throw new NotImplementedException();
-
     }
 }
