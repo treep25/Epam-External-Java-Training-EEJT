@@ -1,21 +1,20 @@
 package com.epam.esm.commercetools.repository;
 
-import com.epam.esm.commercetools.model.CommerceGiftCertificate;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
-public interface GiftCertificateCommerceRepository {
-    CommerceGiftCertificate create(GiftCertificate giftCertificate);
+public interface GiftCertificateCommerceRepository<T> {
+    T create(GiftCertificate giftCertificate);
 
-    List<CommerceGiftCertificate> read(PageRequest pageRequest);
+    List<T> read(PageRequest pageRequest);
 
-    CommerceGiftCertificate readById(String id);
+    T readById(String id);
 
-    CommerceGiftCertificate updatePrice(String id, long version, int price);
+    T updatePrice(String id, long version, int price);
 
-    CommerceGiftCertificate updateGiftCertificate(String id, long version, GiftCertificate giftCertificate);
+    T updateGiftCertificate(String id, long version, GiftCertificate giftCertificate);
 
     void delete(String id, long version);
 
@@ -23,5 +22,5 @@ public interface GiftCertificateCommerceRepository {
 
     long getProductVersion(String id);
 
-
+    List<T> findByName(String name);
 }
