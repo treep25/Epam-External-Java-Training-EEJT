@@ -21,7 +21,8 @@ import java.util.function.Predicate;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class GiftCertificateCommerceRepositoryImpl implements GiftCertificateCommerceRepository {
+public class GiftCertificateCommerceRepositoryImpl
+        implements GiftCertificateCommerceRepository<CommerceGiftCertificate> {
 
     private final ProjectApiRoot apiRoot;
     private final GiftCertificateCommerceProductMapper giftCertificateCommerceProductMapper;
@@ -151,6 +152,8 @@ public class GiftCertificateCommerceRepositoryImpl implements GiftCertificateCom
             }
         });
 
+        productUpdateActions.add(ProductUpdateAction.publishBuilder().build());
+
         return productUpdateActions;
     }
 
@@ -230,16 +233,17 @@ public class GiftCertificateCommerceRepositoryImpl implements GiftCertificateCom
                         .builder()
                         .version(version)
                         .actions(ProductUpdateAction.setPricesBuilder()
-                                .variantId(1L)
-                                .prices(PriceDraft
-                                        .builder()
-                                        .value(Money
+                                        .variantId(1L)
+                                        .prices(PriceDraft
                                                 .builder()
-                                                .currencyCode(CURRENCY_CODE)
-                                                .centAmount(Long.parseLong(String.valueOf(price)))
+                                                .value(Money
+                                                        .builder()
+                                                        .currencyCode(CURRENCY_CODE)
+                                                        .centAmount(Long.parseLong(String.valueOf(price)))
+                                                        .build())
                                                 .build())
-                                        .build())
-                                .build())
+                                        .build()
+                                , ProductUpdateAction.publishBuilder().build())
                         .build()
                 )
                 .executeBlocking()
@@ -296,4 +300,50 @@ public class GiftCertificateCommerceRepositoryImpl implements GiftCertificateCom
                 .executeBlocking()
                 .getBody().getVersion();
     }
+
+    @Override
+    public List<CommerceGiftCertificate> findByName(String name) {
+        return giftCertificateCommerceProductMapper
+                .getListGiftCertificatesFromProductModelsList(apiRoot
+                        .products()
+                        .get()
+                        .executeBlocking()
+                        .getBody()
+                        .getResults())
+                .stream()
+                .filter(commerceGiftCertificate ->
+                        commerceGiftCertificate
+                                .getName()
+                                .startsWith(name))
+                .toList();
+    }
+
+//    return giftCertificateCommerceProductMapper.getListGiftCertificatesFromProductModelsList(apiRoot
+//            .products()
+//            .get()
+//                .executeBlocking()
+//                .getBody()
+//                .getResults()
+//                .stream()
+//                .filter(product -> {
+//        List<Attribute> attributes = product
+//                .getMasterData()
+//                .getCurrent()
+//                .getMasterVariant()
+//                .getAttributes();
+//        Stream<Attribute> streamOfAttributes = attributes.stream();
+//
+//        streamOfAttributes.iterator().next();
+//
+//        if (streamOfAttributes.iterator().hasNext()) {
+//            List<String> tagNames = (List<String>) streamOfAttributes
+//                    .iterator()
+//                    .next()
+//                    .getValue();
+//            return tagNames.contains(name);
+//        }
+//        return false;
+//    })
+//            .collect(Collectors.toList()));
+
 }
