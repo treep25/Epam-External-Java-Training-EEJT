@@ -1,5 +1,6 @@
 package com.epam.esm.commercetools.controller;
 
+import com.epam.esm.commercetools.model.CommerceGiftCertificate;
 import com.epam.esm.commercetools.service.GiftCertificateCommerceService;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -112,5 +114,23 @@ public class GiftCertificateCommerceController {
         }
         log.error("The ID is not valid: id = " + id);
         throw new ServerException("The ID is not valid: id = " + id);
+    }
+
+    @GetMapping("search/gift-certificate-name")
+    public ResponseEntity<?> readByCertificateNameOrByPartOfName(@RequestParam("name") String partOfName,
+                                                                 @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                 @RequestParam(value = "size", defaultValue = "20") int size) {
+        log.debug("Validation of request model of gift-certificate name " + partOfName);
+        if (DataValidation.isStringValid(partOfName)) {
+            log.debug("Validation of request model fields " + page + " " + size);
+            DataValidation.validatePageAndSizePagination(page, size);
+
+            List<CommerceGiftCertificate> certificatesByName = giftCertificateCommerceService.findByName(partOfName);
+            log.debug("Receive gift-certificates");
+
+            return ResponseEntity.ok(certificatesByName);
+        }
+        log.error("gift-certificate name is not valid " + partOfName);
+        throw new ServerException("gift-certificate name is not valid " + partOfName);
     }
 }
