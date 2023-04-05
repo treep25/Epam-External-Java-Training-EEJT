@@ -4,8 +4,11 @@ import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.LocalizedString;
 import com.commercetools.api.models.common.Money;
 import com.commercetools.api.models.common.PriceDraft;
+import com.commercetools.api.models.graph_ql.GraphQLRequest;
 import com.commercetools.api.models.product.*;
 import com.commercetools.api.models.product_type.ProductTypeResourceIdentifier;
+import com.epam.esm.commercetools.graphql.GraphQlQueries;
+import com.epam.esm.commercetools.graphql.GraphQlResponseMapper;
 import com.epam.esm.commercetools.model.CommerceGiftCertificate;
 import com.epam.esm.commercetools.model.GiftCertificateCommerceProductMapper;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
@@ -26,11 +29,15 @@ public class GiftCertificateCommerceRepositoryImpl
 
     private final ProjectApiRoot apiRoot;
     private final GiftCertificateCommerceProductMapper giftCertificateCommerceProductMapper;
+    private final GraphQlResponseMapper graphQlResponseMapper;
 
     private static final String CURRENCY_CODE = "UAH";
     private static final String DURATION = "Duration";
     private static final String TAGS = "Tags";
     private static final String PRODUCT_TYPE_ID = "a812e72c-c176-41a8-b710-9ec34fa8fe71";
+    private static final String OFFSET = "offset";
+    private static final String LIMIT = "limit";
+    private static final String WHERE = "where";
 
     private Attribute setDurationAttribute(int duration) {
         return Attribute
@@ -177,8 +184,10 @@ public class GiftCertificateCommerceRepositoryImpl
                                         .builder()
                                         .id(PRODUCT_TYPE_ID)
                                         .build())
-                                .slug(LocalizedString.ofEnglish(giftCertificate.getName().replaceAll("\\s", "")))
-                                .name(LocalizedString.ofEnglish(giftCertificate.getName()))
+                                .slug(LocalizedString.ofEnglish(giftCertificate
+                                        .getName().replaceAll("\\s", "")))
+                                .name(LocalizedString.ofEnglish(giftCertificate
+                                        .getName()))
                                 .description(LocalizedString.ofEnglish(giftCertificate.getDescription()))
                                 .publish(true)
                                 .masterVariant(ProductVariantDraft
@@ -318,32 +327,31 @@ public class GiftCertificateCommerceRepositoryImpl
                 .toList();
     }
 
-//    return giftCertificateCommerceProductMapper.getListGiftCertificatesFromProductModelsList(apiRoot
-//            .products()
-//            .get()
-//                .executeBlocking()
-//                .getBody()
-//                .getResults()
-//                .stream()
-//                .filter(product -> {
-//        List<Attribute> attributes = product
-//                .getMasterData()
-//                .getCurrent()
-//                .getMasterVariant()
-//                .getAttributes();
-//        Stream<Attribute> streamOfAttributes = attributes.stream();
-//
-//        streamOfAttributes.iterator().next();
-//
-//        if (streamOfAttributes.iterator().hasNext()) {
-//            List<String> tagNames = (List<String>) streamOfAttributes
-//                    .iterator()
-//                    .next()
-//                    .getValue();
-//            return tagNames.contains(name);
-//        }
-//        return false;
-//    })
-//            .collect(Collectors.toList()));
+    private String getVariableGetByTagName(String tagName) {
+        return "masterData(current(masterVariant(attributes(value = \"" + tagName + "\"))))";
+    }
 
+    public List<CommerceGiftCertificate> findByTagName(String tagName, PageRequest pageRequest) {
+        GraphQLRequest request =
+                GraphQLRequest
+                        .builder()
+                        .query(GraphQlQueries.getAllGiftCertificatesByTagName)
+                        .variables(builder
+                                -> builder
+                                .addValue(WHERE, getVariableGetByTagName(tagName))
+                                .addValue(OFFSET, pageRequest.getPageNumber())
+                                .addValue(LIMIT, pageRequest.getPageSize()))
+                        .build();
+
+        return giftCertificateCommerceProductMapper
+                .getGiftCertificateListFromGraphQlResponseModelList(
+                        graphQlResponseMapper
+                                .getGiftCertificateModelFromGraphQlResponse(
+                                        apiRoot
+                                                .graphql()
+                                                .post(request)
+                                                .executeBlocking()
+                                                .getBody()
+                                                .getData()));
+    }
 }
