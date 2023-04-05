@@ -23,4 +23,6 @@ public interface GiftCertificateCommerceRepository<T> {
     long getProductVersion(String id);
 
     List<T> findByName(String name);
+
+    List<T> findByTagName(String tagName, PageRequest pageRequest);
 }
