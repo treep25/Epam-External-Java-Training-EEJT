@@ -27,6 +27,8 @@ public class CommerceToolsClient {
         this.projectKey = projectKey;
     }
 
+    //TODO by tagName graphql
+
     @Bean
     public ProjectApiRoot projectApiRoot() {
         System.out.println(clientId);
