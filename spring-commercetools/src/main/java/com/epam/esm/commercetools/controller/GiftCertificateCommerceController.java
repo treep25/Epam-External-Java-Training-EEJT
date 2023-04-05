@@ -133,4 +133,21 @@ public class GiftCertificateCommerceController {
         log.error("gift-certificate name is not valid " + partOfName);
         throw new ServerException("gift-certificate name is not valid " + partOfName);
     }
+
+    @GetMapping("search/tag")
+    public ResponseEntity<?> readByTagName(@RequestParam("name") String tagName,
+                                           @RequestParam(value = "page", defaultValue = "0") int page,
+                                           @RequestParam(value = "size", defaultValue = "20") int size) {
+        if (DataValidation.isStringValid(tagName)) {
+            log.debug("Validation of request model fields " + page + " " + size);
+            DataValidation.validatePageAndSizePagination(page, size);
+
+            List<CommerceGiftCertificate> byTagName = giftCertificateCommerceService.findByTagName(tagName, PageRequest.of(page, size));
+            log.debug("Receive gift-certificates");
+
+            return ResponseEntity.ok(byTagName);
+        }
+        log.error("tag name is not valid " + tagName);
+        throw new ServerException("tag name is not valid " + tagName);
+    }
 }
