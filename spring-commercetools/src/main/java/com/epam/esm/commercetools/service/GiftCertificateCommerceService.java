@@ -76,9 +76,9 @@ public class GiftCertificateCommerceService {
         return giftCertificateCommerceRepository.findByName(name);
     }
 
-    public List<CommerceGiftCertificate> findByTagName(String name, PageRequest pageRequest) {
+    public Page<CommerceGiftCertificate> findByTagName(String name, PageRequest pageRequest) {
         log.info("Service receives params for searching by tag name {}", name);
 
-        return giftCertificateCommerceRepository.findByTagName(name, pageRequest);
+        return new PageImpl<>(giftCertificateCommerceRepository.findByTagName(name, pageRequest));
     }
 }
