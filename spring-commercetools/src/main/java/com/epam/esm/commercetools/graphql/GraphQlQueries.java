@@ -35,4 +35,8 @@ public class GraphQlQueries {
                 }
             }
             """;
+
+    public static String getVariableForTagName(String tagName) {
+        return "masterData(current(masterVariant(attributes(value = \"" + tagName + "\"))))";
+    }
 }
