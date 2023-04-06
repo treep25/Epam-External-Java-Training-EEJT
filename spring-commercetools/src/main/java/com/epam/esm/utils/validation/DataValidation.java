@@ -104,4 +104,8 @@ public class DataValidation {
         return isStringValid(request.getUsername()) && request.getPassword().matches(".{6,}");
 
     }
+
+    public static boolean isObjectNull(String object) {
+        return object == null;
+    }
 }
