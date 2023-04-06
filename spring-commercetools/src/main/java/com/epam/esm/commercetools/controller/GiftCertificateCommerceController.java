@@ -2,6 +2,7 @@ package com.epam.esm.commercetools.controller;
 
 import com.epam.esm.commercetools.model.CommerceGiftCertificate;
 import com.epam.esm.commercetools.service.GiftCertificateCommerceService;
+import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.giftcertficate.model.GiftCertificateHateoasBuilder;
@@ -9,6 +10,7 @@ import com.epam.esm.utils.validation.DataValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -116,38 +118,29 @@ public class GiftCertificateCommerceController {
         throw new ServerException("The ID is not valid: id = " + id);
     }
 
-    @GetMapping("search/gift-certificate-name")
-    public ResponseEntity<?> readByCertificateNameOrByPartOfName(@RequestParam("name") String partOfName,
-                                                                 @RequestParam(value = "page", defaultValue = "0") int page,
-                                                                 @RequestParam(value = "size", defaultValue = "20") int size) {
-        log.debug("Validation of request model of gift-certificate name " + partOfName);
-        if (DataValidation.isStringValid(partOfName)) {
-            log.debug("Validation of request model fields " + page + " " + size);
-            DataValidation.validatePageAndSizePagination(page, size);
+    @GetMapping("search")
+    public ResponseEntity<?> searchByGiftCertificateNameOrTagName(@RequestParam(value = "gift", required = false) String giftCertificateName,
+                                                                  @RequestParam(value = "tag", required = false) String tagName,
+                                                                  @RequestParam(value = "page", defaultValue = "0") int page,
+                                                                  @RequestParam(value = "size", defaultValue = "20") int size) {
+        log.debug("Validation of request model of gift-certificate name " + giftCertificateName);
+        log.debug("Validation of request model of gift-certificate tag " + tagName);
 
-            List<CommerceGiftCertificate> certificatesByName = giftCertificateCommerceService.findByName(partOfName);
-            log.debug("Receive gift-certificates");
+        if (DataValidation.isObjectNull(giftCertificateName) || DataValidation.isObjectNull(tagName)) {
+            if (DataValidation.isStringValid(giftCertificateName)) {
+                List<CommerceGiftCertificate> byName = giftCertificateCommerceService.findByName(giftCertificateName);
+                log.debug("Receive gift-certificates by name{}", giftCertificateName);
 
-            return ResponseEntity.ok(certificatesByName);
+                return ResponseEntity.ok(byName);
+            } else if (DataValidation.isStringValid(tagName)) {
+                Page<CommerceGiftCertificate> byTagName = giftCertificateCommerceService.findByTagName(tagName, PageRequest.of(page, size));
+                log.debug("Receive gift-certificates by tagName{}", tagName);
+
+                return ResponseEntity.ok(byTagName);
+            }
         }
-        log.error("gift-certificate name is not valid " + partOfName);
-        throw new ServerException("gift-certificate name is not valid " + partOfName);
+        log.error("Not implemented both types of searching");
+        throw new ItemNotFoundException("Not implemented both types of searching");
     }
 
-    @GetMapping("search/tag")
-    public ResponseEntity<?> readByTagName(@RequestParam("name") String tagName,
-                                           @RequestParam(value = "page", defaultValue = "0") int page,
-                                           @RequestParam(value = "size", defaultValue = "20") int size) {
-        if (DataValidation.isStringValid(tagName)) {
-            log.debug("Validation of request model fields " + page + " " + size);
-            DataValidation.validatePageAndSizePagination(page, size);
-
-            List<CommerceGiftCertificate> byTagName = giftCertificateCommerceService.findByTagName(tagName, PageRequest.of(page, size));
-            log.debug("Receive gift-certificates");
-
-            return ResponseEntity.ok(byTagName);
-        }
-        log.error("tag name is not valid " + tagName);
-        throw new ServerException("tag name is not valid " + tagName);
-    }
 }
