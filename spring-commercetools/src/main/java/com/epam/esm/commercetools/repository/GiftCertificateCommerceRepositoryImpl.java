@@ -6,6 +6,7 @@ import com.commercetools.api.models.common.Money;
 import com.commercetools.api.models.common.PriceDraft;
 import com.commercetools.api.models.product.*;
 import com.commercetools.api.models.product_type.ProductTypeResourceIdentifier;
+import com.epam.esm.commercetools.PagePaginationBuilder;
 import com.epam.esm.commercetools.UpdateActionsBuilder;
 import com.epam.esm.commercetools.graphql.GraphQlRequest;
 import com.epam.esm.commercetools.model.CommerceGiftCertificate;
@@ -14,7 +15,6 @@ import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.model.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -101,16 +101,15 @@ public class GiftCertificateCommerceRepositoryImpl
     }
 
     @Override
-    public List<CommerceGiftCertificate> read(PageRequest pageRequest) {
+    public List<CommerceGiftCertificate> read(PagePaginationBuilder pageRequest) {
         return giftCertificateCommerceProductMapper.getListGiftCertificatesFromProductModelsList(apiRoot
                 .products()
                 .get()
-                .withOffset(pageRequest.getPageNumber())
-                .withLimit(pageRequest.getPageSize())
+                .withOffset(pageRequest.getOffset())
+                .withLimit(pageRequest.getLimit())
                 .executeBlocking()
                 .getBody()
                 .getResults());
-
     }
 
     @Override
@@ -202,7 +201,7 @@ public class GiftCertificateCommerceRepositoryImpl
     }
 
     @Override
-    public List<CommerceGiftCertificate> findByName(String name) {
+    public List<CommerceGiftCertificate> findByName(String name, PagePaginationBuilder pageRequest) {
         return giftCertificateCommerceProductMapper
                 .getListGiftCertificatesFromProductModelsList(apiRoot
                         .products()
@@ -215,10 +214,12 @@ public class GiftCertificateCommerceRepositoryImpl
                         commerceGiftCertificate
                                 .getName()
                                 .startsWith(name))
+                .skip(pageRequest.getOffset())
+                .limit(pageRequest.getLimit())
                 .toList();
     }
 
-    public List<CommerceGiftCertificate> findByTagName(String tagName, PageRequest pageRequest) {
+    public List<CommerceGiftCertificate> findByTagName(String tagName, PagePaginationBuilder pageRequest) {
         return graphQlRequest
                 .executeGetByTagName(tagName, pageRequest);
     }

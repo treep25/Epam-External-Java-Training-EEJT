@@ -1,11 +1,11 @@
 package com.epam.esm.commercetools.controller;
 
+import com.epam.esm.commercetools.PagePaginationBuilder;
 import com.epam.esm.commercetools.model.CommerceGiftCertificate;
 import com.epam.esm.commercetools.service.GiftCertificateCommerceService;
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
-import com.epam.esm.giftcertficate.model.GiftCertificateHateoasBuilder;
 import com.epam.esm.utils.validation.DataValidation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,8 +26,6 @@ import java.util.Optional;
 public class GiftCertificateCommerceController {
 
     private final GiftCertificateCommerceService giftCertificateCommerceService;
-
-    private final GiftCertificateHateoasBuilder giftCertificateHateoasBuilder;
 
     @PostMapping
     public ResponseEntity<?> create(@RequestBody GiftCertificate giftCertificate) {
@@ -49,8 +46,9 @@ public class GiftCertificateCommerceController {
         log.debug("Validation of request model fields " + page + " " + size);
         DataValidation.validatePageAndSizePagination(page, size);
         log.debug("Receive all gift-certificates");
+
         return ResponseEntity.ok(giftCertificateCommerceService
-                .getAll(PageRequest.of(page, size)));
+                .getAll(new PagePaginationBuilder(PageRequest.of(page, size))));
     }
 
     @GetMapping("/{id}")
@@ -126,14 +124,21 @@ public class GiftCertificateCommerceController {
         log.debug("Validation of request model of gift-certificate name " + giftCertificateName);
         log.debug("Validation of request model of gift-certificate tag " + tagName);
 
+        log.debug("Validation of request model fields " + page + " " + size);
+        DataValidation.validatePageAndSizePagination(page, size);
+
         if (DataValidation.isObjectNull(giftCertificateName) || DataValidation.isObjectNull(tagName)) {
             if (DataValidation.isStringValid(giftCertificateName)) {
-                List<CommerceGiftCertificate> byName = giftCertificateCommerceService.findByName(giftCertificateName);
+                Page<CommerceGiftCertificate> byName = giftCertificateCommerceService.findByName(giftCertificateName,
+                        new PagePaginationBuilder(PageRequest.of(page, size)));
+
                 log.debug("Receive gift-certificates by name{}", giftCertificateName);
 
                 return ResponseEntity.ok(byName);
             } else if (DataValidation.isStringValid(tagName)) {
-                Page<CommerceGiftCertificate> byTagName = giftCertificateCommerceService.findByTagName(tagName, PageRequest.of(page, size));
+                Page<CommerceGiftCertificate> byTagName = giftCertificateCommerceService.findByTagName(tagName,
+                        new PagePaginationBuilder(PageRequest.of(page, size)));
+
                 log.debug("Receive gift-certificates by tagName{}", tagName);
 
                 return ResponseEntity.ok(byTagName);

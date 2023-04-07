@@ -1,14 +1,14 @@
 package com.epam.esm.commercetools.repository;
 
+import com.epam.esm.commercetools.PagePaginationBuilder;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
-import org.springframework.data.domain.PageRequest;
 
 import java.util.List;
 
 public interface GiftCertificateCommerceRepository<T> {
     T create(GiftCertificate giftCertificate);
 
-    List<T> read(PageRequest pageRequest);
+    List<T> read(PagePaginationBuilder pageRequest);
 
     T readById(String id);
 
@@ -22,7 +22,7 @@ public interface GiftCertificateCommerceRepository<T> {
 
     long getProductVersion(String id);
 
-    List<T> findByName(String name);
+    List<T> findByName(String name, PagePaginationBuilder pageRequest);
 
-    List<T> findByTagName(String tagName, PageRequest pageRequest);
+    List<T> findByTagName(String tagName, PagePaginationBuilder pageRequest);
 }

@@ -1,5 +1,6 @@
 package com.epam.esm.commercetools.service;
 
+import com.epam.esm.commercetools.PagePaginationBuilder;
 import com.epam.esm.commercetools.model.CommerceGiftCertificate;
 import com.epam.esm.commercetools.repository.GiftCertificateCommerceRepository;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
@@ -8,12 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Slf4j
 @Service
@@ -30,7 +28,7 @@ public class GiftCertificateCommerceService {
         return giftCertificateCommerceRepository.create(giftCertificate);
     }
 
-    public Page<CommerceGiftCertificate> getAll(PageRequest pageRequest) {
+    public Page<CommerceGiftCertificate> getAll(PagePaginationBuilder pageRequest) {
         log.info("Service receives params for getting all");
 
         log.debug("Service returns all gift-certificates");
@@ -70,15 +68,14 @@ public class GiftCertificateCommerceService {
         giftCertificateCommerceRepository.delete(id, giftCertificateCommerceRepository.getProductVersion(id));
     }
 
-    public List<CommerceGiftCertificate> findByName(String name) {
+    public Page<CommerceGiftCertificate> findByName(String name, PagePaginationBuilder pageRequest) {
         log.info("Service receives params for searching by name {}", name);
 
-        return giftCertificateCommerceRepository.findByName(name);
+        return new PageImpl<>(giftCertificateCommerceRepository.findByName(name, pageRequest));
     }
 
-    public Page<CommerceGiftCertificate> findByTagName(String name, PageRequest pageRequest) {
+    public Page<CommerceGiftCertificate> findByTagName(String name, PagePaginationBuilder pageRequest) {
         log.info("Service receives params for searching by tag name {}", name);
-
         return new PageImpl<>(giftCertificateCommerceRepository.findByTagName(name, pageRequest));
     }
 }
