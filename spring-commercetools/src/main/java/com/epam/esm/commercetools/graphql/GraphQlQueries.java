@@ -3,8 +3,8 @@ package com.epam.esm.commercetools.graphql;
 public class GraphQlQueries {
 
     public static final String getAllGiftCertificatesByTagName = """
-            query($where:String!) {
-              products (where: $where){
+            query($where:String! $limit:Int! $offset:Int!) {
+              products (offset:$offset limit: $limit where: $where){
                 	results{
                     id
                     createdAt
