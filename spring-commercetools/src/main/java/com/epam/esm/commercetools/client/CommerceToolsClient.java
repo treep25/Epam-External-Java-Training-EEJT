@@ -29,7 +29,6 @@ public class CommerceToolsClient {
 
     @Bean
     public ProjectApiRoot projectApiRoot() {
-        System.out.println(clientId);
         return ApiRootBuilder.of()
                 .defaultClient(ClientCredentials.of()
                                 .withClientId(clientId)
