@@ -1,0 +1,878 @@
+{
+  "info": {
+    "_postman_id": "23430624-b703-4fc3-aa82-44072cd5bcff",
+    "name": "Rest API Advanced + Security",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "23817306"
+  },
+  "item": [
+    {
+      "name": "Gift-certificate",
+      "item": [
+        {
+          "name": "create gift-certificate",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"HateosGiftCertificate4\",\r\n    \"description\":\"tooort\",\r\n    \"price\": 1000,\r\n    \"durationDays\":31,\r\n    \"tags\":[\r\n    {\r\n        \"name\":\"to1\"\r\n    }\r\n]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all gift-certificates",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get gift-certificate by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search by tag-name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates/search/tag-name?name=pavel",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates",
+                "search",
+                "tag-name"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "pavel"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search by gift-certificate name or by part od name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates/search/gift-certificate-name?name=updateTest3&page=0&size=20",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates",
+                "search",
+                "gift-certificate-name"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "updateTest3"
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all gift-certificates order by date",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates/search/sort-date",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates",
+                "search",
+                "sort-date"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search all gift-certificates order by name and by date",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates/search/sort-name-date",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates",
+                "search",
+                "sort-name-date"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search all gift-certificates by two tags and price more then",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates/search/tag-name/cost?tag1=pavel&tag2=e&price=2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates",
+                "search",
+                "tag-name",
+                "cost"
+              ],
+              "query": [
+                {
+                  "key": "tag1",
+                  "value": "pavel"
+                },
+                {
+                  "key": "tag2",
+                  "value": "e"
+                },
+                {
+                  "key": "price",
+                  "value": "2"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "search all gift-certificates by tag-name",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates/search/tag-name?name=e",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates",
+                "search",
+                "tag-name"
+              ],
+              "query": [
+                {
+                  "key": "name",
+                  "value": "e"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update gift-certificate price",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "1000324",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates/update-price/162",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates",
+                "update-price",
+                "162"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update gift-certificate",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"tags\":[\r\n        {\r\n            \"name\": \"test12\"\r\n        }\r\n    ]\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/certificates/162",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "certificates",
+                "162"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Tag",
+      "item": [
+        {
+          "name": "create tag",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\":\"topp11\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/tags",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "tags"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get tag by id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/tags/136",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "tags",
+                "136"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get the most widely used tag",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/tags/widely-used-tag",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "tags",
+                "widely-used-tag"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all tags",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/tags",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "tags"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete tag",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/tags//147",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "tags",
+                "",
+                "147"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\":\"bohdan.hryhorenko@nure.ua\",\r\n    \"password\":\"qwertyu\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"username\":\"w\",\r\n    \"password\":\"qwerty123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Google auth",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"googleToken\":\"eyJhbGciOiJSUzI1NiIsImtpZCI6ImQyNWY4ZGJjZjk3ZGM3ZWM0MDFmMDE3MWZiNmU2YmRhOWVkOWU3OTIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxMDkxNjkwNzI0MTI1LXRsNzV0NWUyczZrdW12OGVhbHFrc2E1cTZyZmlkY2VsLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMTA5MTY5MDcyNDEyNS10bDc1dDVlMnM2a3VtdjhlYWxxa3NhNXE2cmZpZGNlbC5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjExNTA4OTcxMTczODcyOTg1NjM5MCIsImhkIjoibnVyZS51YSIsImVtYWlsIjoiYm9oZGFuLmhyeWhvcmVua29AbnVyZS51YSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdF9oYXNoIjoiMW1hZlNvNVhJdEdTUXd4WDVIeDJyUSIsIm5hbWUiOiLQkdC-0LPQtNCw0L0g0JPRgNC40LPQvtGA0LXQvdC60L4iLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUVkRlRwNnJPRkR5cEktM0Q1OEJlakw2X2NUaXBJVHN1djdFajhOc2U5X049czk2LWMiLCJnaXZlbl9uYW1lIjoi0JHQvtCz0LTQsNC9IiwiZmFtaWx5X25hbWUiOiLQk9GA0LjQs9C-0YDQtdC90LrQviIsImxvY2FsZSI6InJ1IiwiaWF0IjoxNjc2OTEyOTU1LCJleHAiOjE2NzY5MTY1NTV9.XROBYaXJAPi7TQmm_rIJfoOWbtRj0Thmd8WCwdoyLC7v4K2GArwR7KoGkuQ9j_414j4nu0mZaoGBJoCfp-xqZAOusT1jAXg3035TbOSa3sLAX4r3hqSxyqAKO_gBEHjhKlm2H_f03UdfW0rre-z3SqYZP9QcjrsR7Vff1q8JMtn2fooNGLR8ON6AdYsyTKRAYR11g5zOjkKqgrbM9P0uTS8JtO_GSufYDA9mUT5PWb8vmK3AwzRd6wxysSgGKALlrYOQepPTpJ0PZI3447PYG4ESYxQW2DJN8d-py2A-p_3Lj2-qwDHSz__xQgulytEFH35NiKixlWwmc0uFlnetcg\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/google-auth",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "google-auth"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Refresh token",
+          "protocolProfileBehavior": {
+            "disabledSystemHeaders": {}
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"refreshToken\":\"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJib2hkYW4uaHJ5aG9yZW5rb0BudXJlLnVhIiwiaWF0IjoxNjc2OTIzODcyLCJleHAiOjE2NzcwMTExNzJ9.j5GUUaJ5f1RlgjgbCKpfbp2GMA_7GpmN8ANxEguEOxM\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/v1/auth/refresh",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "refresh"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "google ",
+          "request": {
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "grant_type",
+                  "value": "authorization_code",
+                  "type": "string"
+                },
+                {
+                  "key": "addTokenTo",
+                  "value": "header",
+                  "type": "string"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://oauth2.googleapis.com/token",
+                  "type": "string"
+                },
+                {
+                  "key": "redirect_uri",
+                  "value": "https://www.getpostman.com/oauth2/callback",
+                  "type": "string"
+                },
+                {
+                  "key": "useBrowser",
+                  "value": false,
+                  "type": "boolean"
+                },
+                {
+                  "key": "scope",
+                  "value": "openid profile email",
+                  "type": "string"
+                },
+                {
+                  "key": "authUrl",
+                  "value": "https://accounts.google.com/o/oauth2/auth",
+                  "type": "string"
+                },
+                {
+                  "key": "clientId",
+                  "value": "1091690724125-tl75t5e2s6kumv8ealqksa5q6rfidcel.apps.googleusercontent.com",
+                  "type": "string"
+                },
+                {
+                  "key": "clientSecret",
+                  "value": "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",
+                  "type": "string"
+                },
+                {
+                  "key": "tokenName",
+                  "value": "Google OAuth getpostman",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": ""
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User",
+      "item": [
+        {
+          "name": "get users",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/users",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get user by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/users/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Order",
+      "item": [
+        {
+          "name": "create order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/orders/3",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "orders",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all orders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get order by id",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/v1/orders/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "v1",
+                "orders",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
