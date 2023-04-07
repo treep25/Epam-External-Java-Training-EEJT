@@ -2,11 +2,11 @@ package com.epam.esm.commercetools.graphql;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.graph_ql.GraphQLRequest;
+import com.epam.esm.commercetools.PagePaginationBuilder;
 import com.epam.esm.commercetools.model.CommerceGiftCertificate;
 import com.epam.esm.commercetools.model.GiftCertificateCommerceProductMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -22,19 +22,20 @@ public class GraphQlRequest {
     private static final String LIMIT = "limit";
     private static final String WHERE = "where";
 
-    private GraphQLRequest getRequestGetByTagName(PageRequest pageRequest, String tagName) {
+    private GraphQLRequest getRequestGetByTagName(PagePaginationBuilder pageRequest, String tagName) {
         return GraphQLRequest
                 .builder()
                 .query(GraphQlQueries.getAllGiftCertificatesByTagName)
                 .variables(builder
                         -> builder
                         .addValue(WHERE, GraphQlQueries.getVariableForTagName(tagName))
-                        .addValue(OFFSET, pageRequest.getPageNumber())
-                        .addValue(LIMIT, pageRequest.getPageSize()))
+                        .addValue(OFFSET, pageRequest.getOffset())
+                        .addValue(LIMIT, pageRequest.getLimit()))
                 .build();
+
     }
 
-    public List<CommerceGiftCertificate> executeGetByTagName(String tagName, PageRequest pageRequest) {
+    public List<CommerceGiftCertificate> executeGetByTagName(String tagName, PagePaginationBuilder pageRequest) {
         return giftCertificateCommerceProductMapper
                 .getGiftCertificateListFromGraphQlResponseModelList(
                         graphQlResponseMapper
