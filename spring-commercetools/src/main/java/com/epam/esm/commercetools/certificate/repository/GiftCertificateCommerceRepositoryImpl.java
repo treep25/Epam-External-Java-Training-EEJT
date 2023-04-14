@@ -161,7 +161,7 @@ public class GiftCertificateCommerceRepositoryImpl
                 .post(ProductUpdate
                         .builder()
                         .version(version)
-                        .actions(updateActionsBuilder.preparingUpdatesForGiftCertificate(giftCertificate, id))
+                        .actions(updateActionsBuilder.preparingUpdatesForGiftCertificate(giftCertificate))
                         .build()
                 )
                 .executeBlocking()
