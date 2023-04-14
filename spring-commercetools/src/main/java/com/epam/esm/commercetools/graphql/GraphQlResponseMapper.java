@@ -24,16 +24,16 @@ public class GraphQlResponseMapper {
         return getResponseGraphQlModelListOfProductsList(listOfPureProducts);
     }
 
-    private List<ResponseGraphQlModel> getResponseGraphQlModelListOfProductsList(List<?> listOfPureProducts) {
+    private List<ResponseGraphQlModel> getResponseGraphQlModelListOfProductsList(List<?> responseList) {
         List<ResponseGraphQlModel> responseGraphQlModelList = new ArrayList<>();
 
-        listOfPureProducts
+        responseList
                 .forEach(
-                        o -> {
+                        attribute -> {
                             try {
                                 responseGraphQlModelList.add(mapper
                                         .readValue(mapper
-                                                .writeValueAsString(o), ResponseGraphQlModel.class));
+                                                .writeValueAsString(attribute), ResponseGraphQlModel.class));
                             } catch (JsonProcessingException e) {
                                 throw new RuntimeException(e);
                             }
