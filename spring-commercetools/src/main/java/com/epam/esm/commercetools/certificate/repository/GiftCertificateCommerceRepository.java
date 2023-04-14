@@ -1,4 +1,4 @@
-package com.epam.esm.commercetools.repository;
+package com.epam.esm.commercetools.certificate.repository;
 
 import com.epam.esm.commercetools.PagePaginationBuilder;
 import com.epam.esm.giftcertficate.model.GiftCertificate;

@@ -1,8 +1,8 @@
-package com.epam.esm.commercetools.service;
+package com.epam.esm.commercetools.certificate.service;
 
 import com.epam.esm.commercetools.PagePaginationBuilder;
-import com.epam.esm.commercetools.model.CommerceGiftCertificate;
-import com.epam.esm.commercetools.repository.GiftCertificateCommerceRepository;
+import com.epam.esm.commercetools.certificate.model.CommerceGiftCertificate;
+import com.epam.esm.commercetools.certificate.repository.GiftCertificateCommerceRepository;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

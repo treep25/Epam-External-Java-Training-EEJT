@@ -1,4 +1,4 @@
-package com.epam.esm.commercetools.model;
+package com.epam.esm.commercetools.certificate.model;
 
 import com.commercetools.api.models.product.Attribute;
 import com.commercetools.api.models.product.Product;

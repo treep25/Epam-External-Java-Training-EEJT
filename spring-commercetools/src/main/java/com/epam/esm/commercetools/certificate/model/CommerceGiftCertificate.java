@@ -1,4 +1,4 @@
-package com.epam.esm.commercetools.model;
+package com.epam.esm.commercetools.certificate.model;
 
 import lombok.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;

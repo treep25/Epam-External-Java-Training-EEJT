@@ -1,4 +1,4 @@
-package com.epam.esm.commercetools.repository;
+package com.epam.esm.commercetools.certificate.repository;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.LocalizedString;
@@ -6,11 +6,12 @@ import com.commercetools.api.models.common.Money;
 import com.commercetools.api.models.common.PriceDraft;
 import com.commercetools.api.models.product.*;
 import com.commercetools.api.models.product_type.ProductTypeResourceIdentifier;
+import com.commercetools.api.models.tax_category.TaxCategoryResourceIdentifier;
 import com.epam.esm.commercetools.PagePaginationBuilder;
-import com.epam.esm.commercetools.UpdateActionsBuilder;
+import com.epam.esm.commercetools.certificate.UpdateActionsBuilder;
+import com.epam.esm.commercetools.certificate.model.CommerceGiftCertificate;
+import com.epam.esm.commercetools.certificate.model.GiftCertificateCommerceProductMapper;
 import com.epam.esm.commercetools.graphql.GraphQlRequest;
-import com.epam.esm.commercetools.model.CommerceGiftCertificate;
-import com.epam.esm.commercetools.model.GiftCertificateCommerceProductMapper;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
 import com.epam.esm.tag.model.Tag;
 import lombok.RequiredArgsConstructor;
@@ -65,7 +66,6 @@ public class GiftCertificateCommerceRepositoryImpl
         if (giftCertificate.getTags() != null && !giftCertificate.getTags().isEmpty()) {
             attributes.add(setTagsAttribute(giftCertificate.getTags()));
         }
-
         return giftCertificateCommerceProductMapper
                 .getGiftCertificateFromProductModel(apiRoot
                         .products()
@@ -81,6 +81,10 @@ public class GiftCertificateCommerceRepositoryImpl
                                         .getName()))
                                 .description(LocalizedString.ofEnglish(giftCertificate.getDescription()))
                                 .publish(true)
+                                .taxCategory(TaxCategoryResourceIdentifier
+                                        .builder()
+                                        .key("tax1")
+                                        .build())
                                 .masterVariant(ProductVariantDraft
                                         .builder()
                                         .prices(PriceDraft

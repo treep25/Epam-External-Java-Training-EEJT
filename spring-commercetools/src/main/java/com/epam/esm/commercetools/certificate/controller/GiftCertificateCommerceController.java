@@ -1,8 +1,8 @@
-package com.epam.esm.commercetools.controller;
+package com.epam.esm.commercetools.certificate.controller;
 
 import com.epam.esm.commercetools.PagePaginationBuilder;
-import com.epam.esm.commercetools.model.CommerceGiftCertificate;
-import com.epam.esm.commercetools.service.GiftCertificateCommerceService;
+import com.epam.esm.commercetools.certificate.model.CommerceGiftCertificate;
+import com.epam.esm.commercetools.certificate.service.GiftCertificateCommerceService;
 import com.epam.esm.exceptionhandler.exception.ItemNotFoundException;
 import com.epam.esm.exceptionhandler.exception.ServerException;
 import com.epam.esm.giftcertficate.model.GiftCertificate;
