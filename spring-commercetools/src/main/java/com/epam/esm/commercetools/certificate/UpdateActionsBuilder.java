@@ -1,6 +1,5 @@
 package com.epam.esm.commercetools.certificate;
 
-import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.LocalizedString;
 import com.commercetools.api.models.common.Money;
 import com.commercetools.api.models.common.PriceDraft;
@@ -24,9 +23,7 @@ public class UpdateActionsBuilder {
     private static final String CURRENCY_CODE = "UAH";
     private static final String DURATION = "Duration";
     private static final String TAGS = "Tags";
-    private final ProjectApiRoot apiRoot;
-
-
+    private final Map<Predicate<GiftCertificate>, Consumer<List<ProductUpdateAction>>> updatesMap = new HashMap<>();
     private Attribute setDurationAttribute(int duration) {
         return Attribute
                 .builder()
@@ -55,9 +52,7 @@ public class UpdateActionsBuilder {
                 .build();
     }
 
-    public List<ProductUpdateAction> preparingUpdatesForGiftCertificate(GiftCertificate giftCertificateUpdates, String id) {
-        Map<Predicate<GiftCertificate>, Consumer<List<ProductUpdateAction>>> updatesMap = new HashMap<>();
-
+    public List<ProductUpdateAction> preparingUpdatesForGiftCertificate(GiftCertificate giftCertificateUpdates) {
         List<ProductUpdateAction> productUpdateActions = new ArrayList<>();
 
         updatesMap.put(giftCertificate -> giftCertificateUpdates.getName() != null,
