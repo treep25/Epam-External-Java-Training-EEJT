@@ -1,4 +1,4 @@
-package com.epam.esm.commercetools;
+package com.epam.esm.commercetools.certificate;
 
 import com.commercetools.api.client.ProjectApiRoot;
 import com.commercetools.api.models.common.LocalizedString;
