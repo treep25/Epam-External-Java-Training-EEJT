@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Component
@@ -35,7 +36,7 @@ public class UpdateActionsBuilder {
 
     }
 
-    private Attribute setTagsAttributeWhenUpdateGiftCertificate(Set<Tag> tags, String giftCertificateId) {
+    private Attribute setTagsAttributeWhenUpdateGiftCertificate(Set<Tag> tags) {
         if (tags.isEmpty()) {
             return Attribute
                     .builder()
@@ -44,37 +45,36 @@ public class UpdateActionsBuilder {
                     .build();
         }
 
-        Set<String> tagsNames = new HashSet<>();
-
-        tags.forEach(tag -> tagsNames.add(tag.getName()));
-
         return Attribute
                 .builder()
                 .name(TAGS)
-                .value(tagsNames)
+                .value(
+                        tags.stream().map(Tag::getName)
+                                .collect(Collectors.toSet())
+                )
                 .build();
     }
 
-    public List<ProductUpdateAction> preparingUpdatesForGiftCertificate(GiftCertificate giftCertificate, String id) {
+    public List<ProductUpdateAction> preparingUpdatesForGiftCertificate(GiftCertificate giftCertificateUpdates, String id) {
         Map<Predicate<GiftCertificate>, Consumer<List<ProductUpdateAction>>> updatesMap = new HashMap<>();
 
         List<ProductUpdateAction> productUpdateActions = new ArrayList<>();
 
-        updatesMap.put(cert -> giftCertificate.getName() != null,
+        updatesMap.put(giftCertificate -> giftCertificateUpdates.getName() != null,
                 list -> list.add(ProductUpdateAction
                         .changeNameBuilder()
                         .name(LocalizedString
-                                .ofEnglish(giftCertificate.getName()))
+                                .ofEnglish(giftCertificateUpdates.getName()))
                         .build()));
 
-        updatesMap.put(cert -> giftCertificate.getDescription() != null,
+        updatesMap.put(giftCertificate -> giftCertificateUpdates.getDescription() != null,
                 list -> list.add(ProductUpdateAction
                         .setDescriptionBuilder()
                         .description(LocalizedString
-                                .ofEnglish(giftCertificate.getDescription()))
+                                .ofEnglish(giftCertificateUpdates.getDescription()))
                         .build()));
 
-        updatesMap.put(cert -> giftCertificate.getPrice() != null,
+        updatesMap.put(giftCertificate -> giftCertificateUpdates.getPrice() != null,
                 list -> list.add(ProductUpdateAction
                         .setPricesBuilder()
                         .variantId(1L)
@@ -83,14 +83,14 @@ public class UpdateActionsBuilder {
                                 .value(Money
                                         .builder()
                                         .currencyCode(CURRENCY_CODE)
-                                        .centAmount(Long.parseLong(String.valueOf(giftCertificate.getPrice())))
+                                        .centAmount(Long.parseLong(String.valueOf(giftCertificateUpdates.getPrice())))
                                         .build())
                                 .build())
                         .build()));
 
-        updatesMap.put(cert -> giftCertificate.getDurationDays() != null,
+        updatesMap.put(giftCertificate -> giftCertificateUpdates.getDurationDays() != null,
                 list -> {
-                    Attribute durationAttribute = setDurationAttribute(giftCertificate.getDurationDays());
+                    Attribute durationAttribute = setDurationAttribute(giftCertificateUpdates.getDurationDays());
 
                     list.add(ProductUpdateAction
                             .setAttributeBuilder()
@@ -99,9 +99,9 @@ public class UpdateActionsBuilder {
                             .value(durationAttribute.getValue())
                             .build());
                 });
-        updatesMap.put(cert -> giftCertificate.getTags() != null,
+        updatesMap.put(giftCertificate -> giftCertificateUpdates.getTags() != null,
                 list -> {
-                    Attribute tagAttribute = setTagsAttributeWhenUpdateGiftCertificate(giftCertificate.getTags(), id);
+                    Attribute tagAttribute = setTagsAttributeWhenUpdateGiftCertificate(giftCertificateUpdates.getTags());
 
                     list.add(ProductUpdateAction
                             .setAttributeBuilder()
@@ -112,7 +112,7 @@ public class UpdateActionsBuilder {
                 });
 
         updatesMap.forEach((key, value) -> {
-            if (key.test(giftCertificate)) {
+            if (key.test(giftCertificateUpdates)) {
                 value.accept(productUpdateActions);
             }
         });
