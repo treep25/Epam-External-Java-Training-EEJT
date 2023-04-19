@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class CustomerCommerceService {
 
-    private final CustomerCommerceRepository<Customer> customerCustomerCommerceRepository;
+    private final CustomerCommerceRepository customerCustomerCommerceRepository;
 
     public Customer create(CommerceCustomer customer) {
 

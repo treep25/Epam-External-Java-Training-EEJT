@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @EnableTransactionManagement
 public class GiftCertificateCommerceService {
 
-    private final GiftCertificateCommerceRepository<CommerceGiftCertificate> giftCertificateCommerceRepository;
+    private final GiftCertificateCommerceRepository giftCertificateCommerceRepository;
 
     @Transactional
     public CommerceGiftCertificate createGiftCertificate(GiftCertificate giftCertificate) {

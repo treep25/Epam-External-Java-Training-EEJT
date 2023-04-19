@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class OrderCommerceRepositoryImpl implements OrderCommerceRepository<Order> {
+public class OrderCommerceRepositoryImpl implements OrderCommerceRepository {
 
     private final ProjectApiRoot apiRoot;
 

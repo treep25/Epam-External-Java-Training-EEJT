@@ -13,7 +13,7 @@ import java.util.List;
 
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class CustomerCommerceRepositoryImpl implements CustomerCommerceRepository<Customer> {
+public class CustomerCommerceRepositoryImpl implements CustomerCommerceRepository {
 
     private final ProjectApiRoot apiRoot;
 

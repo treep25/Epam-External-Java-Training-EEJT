@@ -1,6 +1,8 @@
 package com.epam.esm.commercetools.order;
 
-public interface OrderCommerceRepository<T> {
+import com.commercetools.api.models.order.Order;
 
-    T create();
+public interface OrderCommerceRepository {
+
+    Order create();
 }

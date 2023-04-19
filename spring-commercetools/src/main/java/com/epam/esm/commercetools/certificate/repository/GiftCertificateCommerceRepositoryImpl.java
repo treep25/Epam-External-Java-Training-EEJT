@@ -25,7 +25,7 @@ import java.util.Set;
 @Repository
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class GiftCertificateCommerceRepositoryImpl
-        implements GiftCertificateCommerceRepository<CommerceGiftCertificate> {
+        implements GiftCertificateCommerceRepository {
 
     private final ProjectApiRoot apiRoot;
     private final GiftCertificateCommerceProductMapper giftCertificateCommerceProductMapper;
